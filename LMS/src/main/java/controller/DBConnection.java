@@ -1,7 +1,5 @@
 package controller;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.sql.*;
 
 public class DBConnection {
@@ -45,7 +43,7 @@ public class DBConnection {
 
     }
 
-    public static @Nullable ResultSet search(String query){
+    public static ResultSet search(String query){
 
         try {
             Statement statement = connection.createStatement();

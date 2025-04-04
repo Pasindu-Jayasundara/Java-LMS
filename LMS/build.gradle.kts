@@ -31,6 +31,9 @@ dependencies {
 //    db connection
     implementation("mysql:mysql-connector-java:8.0.33")
 
+//    image panel
+    implementation("net.jakubec:image-panel:0.1")
+
 }
 
 tasks.test {
