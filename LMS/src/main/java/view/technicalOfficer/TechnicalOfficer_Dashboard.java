@@ -1,18 +1,22 @@
 /*
- * Created by JFormDesigner on Fri Apr 04 20:57:31 IST 2025
+ * Created by JFormDesigner on Sat Apr 05 01:29:33 IST 2025
  */
 
 package view.technicalOfficer;
 
+import model.TechnicalOfficerModel;
+
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
-/**
- * @author Asus
- */
-public class text extends JFrame {
-    public text() {
+public class TechnicalOfficer_Dashboard extends JFrame {
+
+    private TechnicalOfficerModel LoginTechnicalOfficerModel;
+
+    public TechnicalOfficer_Dashboard(TechnicalOfficerModel LoginTechnicalOfficerModel) {
+
         initComponents();
+        this.LoginTechnicalOfficerModel = LoginTechnicalOfficerModel;
     }
 
     private void initComponents() {

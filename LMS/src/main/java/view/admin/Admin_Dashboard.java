@@ -1,18 +1,21 @@
 /*
- * Created by JFormDesigner on Fri Apr 04 20:57:13 IST 2025
+ * Created by JFormDesigner on Sat Apr 05 01:28:34 IST 2025
  */
 
-package view.lecturer;
+package view.admin;
+
+import model.AdminModel;
 
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
-/**
- * @author Asus
- */
-public class test extends JFrame {
-    public test() {
+public class Admin_Dashboard extends JFrame {
+
+    private AdminModel loginAdminModel;
+
+    public Admin_Dashboard(AdminModel loginAdminModel) {
         initComponents();
+        this.loginAdminModel = loginAdminModel;
     }
 
     private void initComponents() {
