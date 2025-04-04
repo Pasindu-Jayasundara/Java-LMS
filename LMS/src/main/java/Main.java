@@ -12,6 +12,7 @@ public class Main {
             UIManager.setLookAndFeel(new FlatMacLightLaf());
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
+            
         }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
