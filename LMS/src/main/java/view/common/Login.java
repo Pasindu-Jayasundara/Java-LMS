@@ -1,8 +1,8 @@
 /*
- * Created by JFormDesigner on Tue Apr 01 17:28:54 IST 2025
+ * Created by JFormDesigner on Fri Apr 04 22:00:50 IST 2025
  */
 
-package view;
+package view.common;
 
 import javax.swing.*;
 import javax.swing.GroupLayout;
@@ -10,8 +10,8 @@ import javax.swing.GroupLayout;
 /**
  * @author Asus
  */
-public class View_Login extends JFrame {
-    public View_Login() {
+public class Login extends JFrame {
+    public Login() {
         initComponents();
     }
 

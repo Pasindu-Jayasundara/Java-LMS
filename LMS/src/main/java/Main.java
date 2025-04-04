@@ -1,6 +1,5 @@
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-import view.View_Login;
+import view.common.Login;
 
 import javax.swing.*;
 
@@ -18,7 +17,7 @@ public class Main {
             @Override
             public void run() {
 
-                View_Login loginView = new View_Login();
+                Login loginView = new Login();
                 loginView.setLocationRelativeTo(null);
                 loginView.setVisible(true);
                 loginView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
