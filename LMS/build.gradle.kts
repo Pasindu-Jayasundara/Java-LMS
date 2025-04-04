@@ -27,6 +27,10 @@ dependencies {
     // ARM 64-bit (not needed if your application does not support Windows on ARM)
     implementation( "com.formdev:flatlaf:${flatlafVersion}:windows-arm64@dll" )
 
+
+//    db connection
+    implementation("mysql:mysql-connector-java:8.0.33")
+
 }
 
 tasks.test {
