@@ -7,7 +7,7 @@ public class Validation {
     private static final String MOBILE_NUMBER_REGEX = "^(07|\\+947)([1245678]\\d{7})$";
 
     public static boolean isValidMobile(String mobile) {
-        return Pattern.compile(MOBILE_NUMBER_REGEX).matcher(mobile).matches();
+        return Pattern.compile(MOBILE_NUMBER_REGEX).matcher(mobile).matches()
     }
 
 
