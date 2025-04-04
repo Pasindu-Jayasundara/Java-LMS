@@ -1,18 +1,22 @@
 /*
- * Created by JFormDesigner on Fri Apr 04 20:57:23 IST 2025
+ * Created by JFormDesigner on Sat Apr 05 01:28:56 IST 2025
  */
 
-package view.student;
+package view.lecturer;
+
+import model.LecturerModel;
 
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
-/**
- * @author Asus
- */
-public class test extends JFrame {
-    public test() {
+public class Lecturer_Dashboard extends JFrame {
+
+    private LecturerModel loginLecturerModel;
+
+    public Lecturer_Dashboard(LecturerModel loginLecturerModel) {
+
         initComponents();
+        this.loginLecturerModel = loginLecturerModel;
     }
 
     private void initComponents() {
