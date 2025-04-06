@@ -214,41 +214,37 @@ public class LoginDialog extends javax.swing.JDialog {
             jPanel3.setLayout(new FlowLayout());
             jPanel3.add(errorLabel);
 
-pack();            
-
+            pack();
 
             return;
         }
 
-        jPanel3.removeAll();              
-        jPanel2.setLayout(null);
-pack();            
-
+        jPanel3.removeAll();
+        jPanel3.setLayout(null);
+        pack();
 
         if (!Validation.isValidPassword(password)) {
             JOptionPane.showMessageDialog(this, "Incorrect Password Format", "Incorrect Data", JOptionPane.WARNING_MESSAGE);
             jPasswordField1.requestFocus();
-            
-            JLabel errorLabel = new JLabel("<html>Password Must Contain At Least:<br>"
-                                       + "    1)  One Uppercase Letter<br>"
-                                       + "    2)  One Lowercase Letter<br>"
-                                       + "    3)  One Digit<br>"
-                                       + "    4)  One Special Character<br>"
-                                       + "    5)  Minimum Length of 8 Characters</html>");
+
+            JLabel errorLabel = new JLabel("<html>Password Must Contain At Least:<br><br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;    1)  One Uppercase Letter<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;    2)  One Lowercase Letter<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;    3)  One Digit<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;    4)  One Special Character<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;    5)  Minimum Length of 8 Characters</html>");
             errorLabel.setForeground(java.awt.Color.RED);
             jPanel2.setLayout(new FlowLayout());
             jPanel2.add(errorLabel);
 
-pack();            
+            pack();
             return;
         }
 
-              jPanel2.removeAll();
-              jPanel2.setLayout(null);
-pack();            
+        jPanel2.removeAll();
+        jPanel2.setLayout(null);
+        pack();
 
-
-        
         query += " WHERE `username`='" + username + "' AND `password`='" + password + "'";
 
         ResultSet searchResult = DBConnection.search(query);
