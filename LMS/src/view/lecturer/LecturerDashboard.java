@@ -26,7 +26,8 @@ public class LecturerDashboard extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,8 +102,10 @@ public class LecturerDashboard extends javax.swing.JFrame {
 
         jSplitPane2.setLeftComponent(jPanel1);
 
-        jPanel2.setLayout(new java.awt.CardLayout());
-        jSplitPane2.setRightComponent(jPanel2);
+        jPanel3.setLayout(new java.awt.CardLayout());
+        jScrollPane1.setViewportView(jPanel3);
+
+        jSplitPane2.setRightComponent(jScrollPane1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -136,7 +139,8 @@ public class LecturerDashboard extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane2;
     // End of variables declaration//GEN-END:variables
 }

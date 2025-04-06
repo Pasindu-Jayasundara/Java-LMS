@@ -27,7 +27,7 @@ public class LoginDialog extends javax.swing.JDialog {
     }
 
     private void setUpBg() {
-        jLabel1.setText(type + "Login");
+        jLabel1.setText(type + " Login");
     }
 
     @SuppressWarnings("unchecked")
