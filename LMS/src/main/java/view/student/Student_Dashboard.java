@@ -11,7 +11,7 @@ import javax.swing.GroupLayout;
 
 public class Student_Dashboard extends JFrame {
 
-    private StudentModel loginStudentModel;
+    private final StudentModel loginStudentModel;
     public Student_Dashboard(StudentModel loginStudentModel) {
 
         initComponents();

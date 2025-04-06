@@ -32,8 +32,7 @@ public class Login extends JFrame {
 
     private void login(String type) {
 
-        Login_Dialog loginDialog = new Login_Dialog(frame, type);
-        loginDialog.setVisible(true);
+        new Login_Dialog(frame, type);
 
     }
 
@@ -57,12 +56,13 @@ public class Login extends JFrame {
 
             //======== panel1 ========
             {
-                panel1.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing. border .EmptyBorder
-                ( 0, 0 ,0 , 0) ,  "JF\u006frmDes\u0069gner \u0045valua\u0074ion" , javax. swing .border . TitledBorder. CENTER ,javax . swing. border
-                .TitledBorder . BOTTOM, new java. awt .Font ( "D\u0069alog", java .awt . Font. BOLD ,12 ) ,java . awt
-                . Color .red ) ,panel1. getBorder () ) ); panel1. addPropertyChangeListener( new java. beans .PropertyChangeListener ( ){ @Override public void
-                propertyChange (java . beans. PropertyChangeEvent e) { if( "\u0062order" .equals ( e. getPropertyName () ) )throw new RuntimeException( )
-                ;} } );
+                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new
+                javax. swing. border. EmptyBorder( 0, 0, 0, 0) , "", javax
+                . swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java
+                .awt .Font ("Dialo\u0067" ,java .awt .Font .BOLD ,12 ), java. awt
+                . Color. red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans.
+                PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("borde\u0072" .
+                equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
                 panel1.setLayout(new CardLayout());
 
                 //======== panel2 ========
@@ -153,8 +153,12 @@ public class Login extends JFrame {
                 panel1.add(panel2, "card2");
             }
             frameContentPane.add(panel1, "card1");
+            frame.setLocationRelativeTo(null);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setResizable(false);
             frame.pack();
             frame.setLocationRelativeTo(frame.getOwner());
+            frame.setVisible(true);
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }

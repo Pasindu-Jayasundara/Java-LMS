@@ -11,7 +11,7 @@ import javax.swing.GroupLayout;
 
 public class TechnicalOfficer_Dashboard extends JFrame {
 
-    private TechnicalOfficerModel LoginTechnicalOfficerModel;
+    private final TechnicalOfficerModel LoginTechnicalOfficerModel;
 
     public TechnicalOfficer_Dashboard(TechnicalOfficerModel LoginTechnicalOfficerModel) {
 

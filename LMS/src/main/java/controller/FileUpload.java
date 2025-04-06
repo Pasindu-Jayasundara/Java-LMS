@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class FileUpload {
 
-    private static HashMap<String, String> map = new HashMap<>();
+    private static final HashMap<String, String> map = new HashMap<>();
 
     public static HashMap upload(HashMap<String,String> imageMap) {
 
@@ -28,7 +28,7 @@ public class FileUpload {
             Files.copy(sourcePath, destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
 
             map.put("status", "1"); // success
-            map.put("url", String.valueOf(destinationPath));
+            map.put("url", destinationPath);
 
             return map;
 
