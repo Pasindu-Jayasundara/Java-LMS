@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class SelectImage {
 
-    private static HashMap<String, String> map = new HashMap<>();
+    private static final HashMap<String, String> map = new HashMap<>();
 
     public static HashMap getImage() {
 

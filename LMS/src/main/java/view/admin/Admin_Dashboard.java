@@ -11,7 +11,7 @@ import javax.swing.GroupLayout;
 
 public class Admin_Dashboard extends JFrame {
 
-    private AdminModel loginAdminModel;
+    private final AdminModel loginAdminModel;
 
     public Admin_Dashboard(AdminModel loginAdminModel) {
         initComponents();

@@ -1,14 +1,16 @@
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import view.common.Login;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
 
     public static void main(String[] args) {
 
         try {
-            UIManager.setLookAndFeel(new FlatMacLightLaf());
+            UIManager.setLookAndFeel(new FlatMacDarkLaf());
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
             
@@ -17,12 +19,7 @@ public class Main {
             @Override
             public void run() {
 
-                Login loginView = new Login();
-                loginView.setLocationRelativeTo(null);
-                loginView.setVisible(true);
-                loginView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                loginView.setResizable(false);
-
+                new Login();
             }
         });
 

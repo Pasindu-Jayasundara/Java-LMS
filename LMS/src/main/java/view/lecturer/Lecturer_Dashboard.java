@@ -11,7 +11,7 @@ import javax.swing.GroupLayout;
 
 public class Lecturer_Dashboard extends JFrame {
 
-    private LecturerModel loginLecturerModel;
+    private final LecturerModel loginLecturerModel;
 
     public Lecturer_Dashboard(LecturerModel loginLecturerModel) {
 

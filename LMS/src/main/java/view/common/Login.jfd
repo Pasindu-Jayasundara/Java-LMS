@@ -1,10 +1,11 @@
-JFDML JFormDesigner: "8.2.4.0.393" Java: "21.0.5" encoding: "UTF-8"
+JFDML JFormDesigner: "8.2.4.0.393" Java: "21.0.6" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.CardLayout ) ) {
 			name: "frame"
+			"preferredSize": new java.awt.Dimension( 140, 37 )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.CardLayout ) ) {
 				name: "panel1"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {

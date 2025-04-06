@@ -20,12 +20,15 @@ import javax.swing.GroupLayout;
 
 public class Login_Dialog extends JDialog {
 
-    private String type;
+    private final String type;
+    private final Window window;
 
     public Login_Dialog(Window owner, String type) {
         super(owner);
         initComponents();
+
         this.type = type;
+        this.window = owner;
 
         setUpBg();
     }
@@ -177,12 +180,13 @@ public class Login_Dialog extends JDialog {
 
         //======== logindialog ========
         {
+            logindialog.setModal(true);
             var logindialogContentPane = logindialog.getContentPane();
 
             //======== panel1 ========
             {
                 panel1.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new
-                javax.swing.border.EmptyBorder(0,0,0,0), "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e",javax
+                javax.swing.border.EmptyBorder(0,0,0,0), "",javax
                 .swing.border.TitledBorder.CENTER,javax.swing.border.TitledBorder.BOTTOM,new java
                 .awt.Font("D\u0069al\u006fg",java.awt.Font.BOLD,12),java.awt
                 .Color.red),panel1. getBorder()));panel1. addPropertyChangeListener(new java.beans.
@@ -259,7 +263,9 @@ public class Login_Dialog extends JDialog {
                     .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             );
             logindialog.pack();
-            logindialog.setLocationRelativeTo(logindialog.getOwner());
+            logindialog.setLocationRelativeTo(window);
+            logindialog.setAlwaysOnTop(true);
+            logindialog.setVisible(true);
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
