@@ -1,8 +1,13 @@
 package view.common;
 
 import controller.DBConnection;
+import controller.Validation;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.LayoutManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import model.AdminModel;
 import model.DepartmentModel;
@@ -28,6 +33,7 @@ public class LoginDialog extends javax.swing.JDialog {
 
     private void setUpBg() {
         jLabel1.setText(type + " Login");
+        jTextField1.requestFocus();
     }
 
     @SuppressWarnings("unchecked")
@@ -41,6 +47,8 @@ public class LoginDialog extends javax.swing.JDialog {
         jTextField1 = new javax.swing.JTextField();
         jPasswordField1 = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -67,6 +75,28 @@ public class LoginDialog extends javax.swing.JDialog {
             }
         });
 
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -79,9 +109,9 @@ public class LoginDialog extends javax.swing.JDialog {
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 56, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel3)
@@ -91,7 +121,9 @@ public class LoginDialog extends javax.swing.JDialog {
                                         .addGap(16, 16, 16)))
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jTextField1)
-                                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(59, 59, 59))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -103,13 +135,17 @@ public class LoginDialog extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(45, 45, 45)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -132,20 +168,20 @@ public class LoginDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jPasswordField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       
+
         String query = "SELECT * FROM ";
 
         switch (type) {
-            case "admin":
+            case "Admin":
                 query += "`admin`";
                 break;
-            case "lecturer":
+            case "Lecturer":
                 query += "`lecturer`";
                 break;
-            case "student":
+            case "Student":
                 query += "`student`";
                 break;
-            case "technicalOfficer":
+            case "Technical Officer":
                 query += "`technical_officer` INNER JOIN `department` ON `department`.`department_id` = `technical_officer`.`department_department_id`";
                 break;
             default:
@@ -169,16 +205,67 @@ public class LoginDialog extends javax.swing.JDialog {
             return;
         }
 
-        query += " WHERE `username`=" + username + " AND `password`=" + password;
+        if (!Validation.isValidName(username)) {
+            JOptionPane.showMessageDialog(this, "Incorrect Username Format", "Incorrect Data", JOptionPane.WARNING_MESSAGE);
+            jTextField1.requestFocus();
+
+            JLabel errorLabel = new JLabel("Username Can Only Contains Letters");
+            errorLabel.setForeground(java.awt.Color.RED);
+            jPanel3.setLayout(new FlowLayout());
+            jPanel3.add(errorLabel);
+
+pack();            
+
+
+            return;
+        }
+
+        jPanel3.removeAll();              
+        jPanel2.setLayout(null);
+pack();            
+
+
+        if (!Validation.isValidPassword(password)) {
+            JOptionPane.showMessageDialog(this, "Incorrect Password Format", "Incorrect Data", JOptionPane.WARNING_MESSAGE);
+            jPasswordField1.requestFocus();
+            
+            JLabel errorLabel = new JLabel("<html>Password Must Contain At Least:<br>"
+                                       + "    1)  One Uppercase Letter<br>"
+                                       + "    2)  One Lowercase Letter<br>"
+                                       + "    3)  One Digit<br>"
+                                       + "    4)  One Special Character<br>"
+                                       + "    5)  Minimum Length of 8 Characters</html>");
+            errorLabel.setForeground(java.awt.Color.RED);
+            jPanel2.setLayout(new FlowLayout());
+            jPanel2.add(errorLabel);
+
+pack();            
+            return;
+        }
+
+              jPanel2.removeAll();
+              jPanel2.setLayout(null);
+pack();            
+
+
+        
+        query += " WHERE `username`='" + username + "' AND `password`='" + password + "'";
 
         ResultSet searchResult = DBConnection.search(query);
         if (searchResult != null) {
             try {
 
+                searchResult.last();
+                int rowCount = searchResult.getRow();
+                if (rowCount == 0) {
+                    JOptionPane.showMessageDialog(this, "Could Not Find The " + type, type + " Not Found", JOptionPane.INFORMATION_MESSAGE);
+                }
+                searchResult.beforeFirst();
+
                 while (searchResult.next()) {
 
                     switch (type) {
-                        case "admin":
+                        case "Admin":
 
                             AdminModel admin = new AdminModel();
                             admin.setId(searchResult.getInt("user_id"));
@@ -193,7 +280,7 @@ public class LoginDialog extends javax.swing.JDialog {
                             this.dispose();
 
                             break;
-                        case "lecturer":
+                        case "Lecturer":
 
                             LecturerModel lecturer = new LecturerModel();
                             lecturer.setId(searchResult.getInt("user_id"));
@@ -208,7 +295,7 @@ public class LoginDialog extends javax.swing.JDialog {
                             this.dispose();
 
                             break;
-                        case "student":
+                        case "Student":
 
                             StudentModel student = new StudentModel();
                             student.setId(searchResult.getInt("user_id"));
@@ -225,7 +312,7 @@ public class LoginDialog extends javax.swing.JDialog {
                             this.dispose();
 
                             break;
-                        case "technicalOfficer":
+                        case "Technical Officer":
 
                             TechnicalOfficerModel technicalOfficer = new TechnicalOfficerModel();
                             technicalOfficer.setId(searchResult.getInt("user_id"));
@@ -257,8 +344,10 @@ public class LoginDialog extends javax.swing.JDialog {
                 ex.printStackTrace();
             }
 
+        } else {
+            JOptionPane.showMessageDialog(this, "Something Went Wrong !", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
@@ -268,6 +357,8 @@ public class LoginDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables

@@ -4,9 +4,9 @@ import java.sql.*;
 
 public class DBConnection {
 
-    private static final String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
+    private static final String URL = "jdbc:mysql://localhost/java_lms ";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "Pasindu328@Bhathiya";
 
     private static Connection connection;
 
@@ -45,8 +45,10 @@ public class DBConnection {
 
     public static ResultSet search(String query){
 
+        System.out.println(query);
+        
         try {
-            Statement statement = connection.createStatement();
+            Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
             return statement.executeQuery(query);
 
         } catch (SQLException e) {
