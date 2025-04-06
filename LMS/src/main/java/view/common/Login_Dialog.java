@@ -21,22 +21,16 @@ import javax.swing.GroupLayout;
 public class Login_Dialog extends JDialog {
 
     private final String type;
-    private final Window window;
+    private final String loginTxt;
 
     public Login_Dialog(Window owner, String type) {
-        super(owner);
-        initComponents();
+        super(owner,ModalityType.APPLICATION_MODAL);
 
         this.type = type;
-        this.window = owner;
+        loginTxt = String.valueOf(type.charAt(0)).toUpperCase()+type.substring(1)+" Login";
 
-        setUpBg();
-    }
+        initComponents();
 
-    private void setUpBg() {
-
-        String c = String.valueOf(type.charAt(0)).toUpperCase();
-        label1.setText(c);
     }
 
     private void loginBtn(ActionEvent e) {
@@ -182,7 +176,6 @@ public class Login_Dialog extends JDialog {
 
         //======== logindialog ========
         {
-            logindialog.setModal(true);
             var logindialogContentPane = logindialog.getContentPane();
 
             //======== panel1 ========
@@ -195,7 +188,7 @@ public class Login_Dialog extends JDialog {
                 getPropertyName () )) throw new RuntimeException( ); }} );
 
                 //---- label1 ----
-                label1.setText("LOGIN");
+                label1.setText(loginTxt);
                 label1.setFont(new Font("Segoe UI", Font.BOLD, 16));
                 label1.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -263,9 +256,11 @@ public class Login_Dialog extends JDialog {
                 logindialogContentPaneLayout.createParallelGroup()
                     .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             );
+            logindialog.setModal(true);
             logindialog.pack();
             logindialog.setLocationRelativeTo(logindialog.getOwner());
             logindialog.setVisible(true);
+
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
