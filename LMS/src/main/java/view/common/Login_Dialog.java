@@ -34,7 +34,9 @@ public class Login_Dialog extends JDialog {
     }
 
     private void setUpBg() {
-        label1.setText(type);
+
+        String c = String.valueOf(type.charAt(0)).toUpperCase();
+        label1.setText(c);
     }
 
     private void loginBtn(ActionEvent e) {
@@ -185,17 +187,17 @@ public class Login_Dialog extends JDialog {
 
             //======== panel1 ========
             {
-                panel1.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new
-                javax.swing.border.EmptyBorder(0,0,0,0), "",javax
-                .swing.border.TitledBorder.CENTER,javax.swing.border.TitledBorder.BOTTOM,new java
-                .awt.Font("D\u0069al\u006fg",java.awt.Font.BOLD,12),java.awt
-                .Color.red),panel1. getBorder()));panel1. addPropertyChangeListener(new java.beans.
-                PropertyChangeListener(){@Override public void propertyChange(java.beans.PropertyChangeEvent e){if("\u0062or\u0064er".
-                equals(e.getPropertyName()))throw new RuntimeException();}});
+                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border
+                . EmptyBorder( 0, 0, 0, 0) , "", javax. swing. border. TitledBorder. CENTER, javax
+                . swing. border. TitledBorder. BOTTOM, new java .awt .Font ("D\u0069al\u006fg" ,java .awt .Font .BOLD ,
+                12 ), java. awt. Color. red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans
+                . PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062or\u0064er" .equals (e .
+                getPropertyName () )) throw new RuntimeException( ); }} );
 
                 //---- label1 ----
                 label1.setText("LOGIN");
                 label1.setFont(new Font("Segoe UI", Font.BOLD, 16));
+                label1.setHorizontalAlignment(SwingConstants.CENTER);
 
                 //---- label2 ----
                 label2.setText("Username:");
@@ -212,26 +214,25 @@ public class Login_Dialog extends JDialog {
                 panel1Layout.setHorizontalGroup(
                     panel1Layout.createParallelGroup()
                         .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                            .addContainerGap(80, Short.MAX_VALUE)
-                            .addGroup(panel1Layout.createParallelGroup()
-                                .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                    .addComponent(label1)
-                                    .addGap(188, 188, 188))
-                                .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(button1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addContainerGap(68, Short.MAX_VALUE)
+                            .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(button1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(panel1Layout.createSequentialGroup()
+                                    .addGroup(panel1Layout.createParallelGroup()
+                                        .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                            .addComponent(label2)
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED))
                                         .addGroup(panel1Layout.createSequentialGroup()
-                                            .addGroup(panel1Layout.createParallelGroup()
-                                                .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                                    .addComponent(label2)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED))
-                                                .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addComponent(label3)
-                                                    .addGap(9, 9, 9)))
-                                            .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(textField1, GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
-                                                .addComponent(passwordField1, GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE))))
-                                    .addGap(73, 73, 73))))
+                                            .addComponent(label3)
+                                            .addGap(9, 9, 9)))
+                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(textField1, GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                                        .addComponent(passwordField1, GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE))))
+                            .addGap(73, 73, 73))
+                        .addGroup(panel1Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(label1, GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+                            .addContainerGap())
                 );
                 panel1Layout.setVerticalGroup(
                     panel1Layout.createParallelGroup()
@@ -246,7 +247,7 @@ public class Login_Dialog extends JDialog {
                             .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(label3, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(passwordField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                             .addComponent(button1)
                             .addGap(42, 42, 42))
                 );
@@ -263,8 +264,7 @@ public class Login_Dialog extends JDialog {
                     .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             );
             logindialog.pack();
-            logindialog.setLocationRelativeTo(window);
-            logindialog.setAlwaysOnTop(true);
+            logindialog.setLocationRelativeTo(logindialog.getOwner());
             logindialog.setVisible(true);
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
