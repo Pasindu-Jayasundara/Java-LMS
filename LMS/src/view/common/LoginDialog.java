@@ -205,7 +205,7 @@ public class LoginDialog extends javax.swing.JDialog {
             return;
         }
 
-        if (!Validation.isValidName(username)) {
+        if (!Validation.isValidName(username.trim())) {
             JOptionPane.showMessageDialog(this, "Incorrect Username Format", "Incorrect Data", JOptionPane.WARNING_MESSAGE);
             jTextField1.requestFocus();
 
@@ -223,7 +223,7 @@ public class LoginDialog extends javax.swing.JDialog {
         jPanel3.setLayout(null);
         pack();
 
-        if (!Validation.isValidPassword(password)) {
+        if (!Validation.isValidPassword(password.trim())) {
             JOptionPane.showMessageDialog(this, "Incorrect Password Format", "Incorrect Data", JOptionPane.WARNING_MESSAGE);
             jPasswordField1.requestFocus();
 
@@ -245,9 +245,9 @@ public class LoginDialog extends javax.swing.JDialog {
         jPanel2.setLayout(null);
         pack();
 
-        query += " WHERE `username`='" + username + "' AND `password`='" + password + "'";
+        query += " WHERE `username`=? AND `password`=?";
 
-        ResultSet searchResult = DBConnection.search(query);
+        ResultSet searchResult = DBConnection.search(query,username,password);
         if (searchResult != null) {
             try {
 
