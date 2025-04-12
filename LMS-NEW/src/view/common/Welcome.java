@@ -1,5 +1,7 @@
 package view.common;
 
+import controller.callback.LoginSuccessCallback;
+
 import javax.swing.*;
 
 public class Welcome extends JFrame {
@@ -187,16 +189,18 @@ public class Welcome extends JFrame {
 
     private void login(String type) {
 
-        Login loginDialog = new Login(this, type);
+        Login loginDialog = new Login(this, type, new LoginSuccessCallback() {
+            @Override
+            public void login(boolean isSuccess) {
+                if (isSuccess) {
+                    dispose();
+                }
+            }
+        });
         loginDialog.setVisible(true);
 
     }
 
-//    private void setUpBg() {
-//
-//        jPanel2.setBackground(new Color(0, 0, 0, 20));
-//        jPanel3.setBackground(new Color(196, 196, 196, 100));
-//    }
 }
 
 
