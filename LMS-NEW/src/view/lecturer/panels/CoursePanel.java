@@ -1,22 +1,31 @@
 package view.lecturer.panels;
 
+import controller.DBConnection;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
 
 public class CoursePanel extends JPanel {
 
     private JPanel panel1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
+
 
     private void createUIComponents() {
         initComponents();
+        loadCourses("");
     }
 
     private void initComponents() {
@@ -24,16 +33,14 @@ public class CoursePanel extends JPanel {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
 
-        jLabel1.setText("Search By :");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jLabel1.setText("Search By Course Code:");
 
         jButton1.setText("Search");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -43,19 +50,19 @@ public class CoursePanel extends JPanel {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "#", "Code", "Name", "Credit", "Hourse"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -64,6 +71,11 @@ public class CoursePanel extends JPanel {
         }
 
         jButton2.setText("Reset");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -76,7 +88,7 @@ public class CoursePanel extends JPanel {
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addComponent(jLabel1)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jButton1)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -89,9 +101,9 @@ public class CoursePanel extends JPanel {
                                 .addGap(24, 24, 24)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jButton1)
-                                        .addComponent(jButton2))
+                                        .addComponent(jButton2)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, Short.MAX_VALUE)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(19, 19, 19))
@@ -124,6 +136,52 @@ public class CoursePanel extends JPanel {
         );
     }// </editor-fold>
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        // reset
+        loadCourses("");
+    }
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        // search
+        String courseCode = jTextField1.getText();
+        if (courseCode.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Course Code", "Missing Info", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        courseCode = courseCode.toLowerCase();
+
+        loadCourses(courseCode);
+    }
+
+    private void loadCourses(String courseCode) {
+
+        String query = "SELECT * FROM `course` WHERE `course_code` LIKE '%?%' ";
+
+        ResultSet resultSet = DBConnection.search(query, courseCode);
+        if(resultSet == null){
+            JOptionPane.showMessageDialog(this, "Course Code Not Found", "Missing Info", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+
+        defaultTableModel.setRowCount(0);
+
+        try {
+            while (resultSet.next()) {
+
+                Vector<String> row = new Vector<>();
+
+                row.add(resultSet.getString("course_id"));
+                row.add(resultSet.getString("course_code"));
+                row.add(resultSet.getString("course"));
+                row.add(resultSet.getString("credit"));
+                row.add(resultSet.getString("course_hours"));
+
+                defaultTableModel.addRow(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
