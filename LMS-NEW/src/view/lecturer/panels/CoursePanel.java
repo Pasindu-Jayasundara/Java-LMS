@@ -138,6 +138,7 @@ public class CoursePanel extends JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         // reset
+        jTextField1.setText("");
         loadCourses("");
     }
 
