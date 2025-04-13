@@ -6,6 +6,9 @@ import javax.swing.*;
 
 public class AdminDashboard extends JFrame{
     private JPanel panel1;
+    private JButton button1;
+    private JButton button2;
+    private JButton button3;
     private final AdminModel loginAdminModel;
 
     public AdminDashboard(AdminModel loginAdminModel) {
