@@ -65,6 +65,10 @@ public class CoursePanel extends JPanel {
     private boolean isFirstTimeTableRow;
 
     private HashMap<String, CourseModel> courseHashMap = new HashMap<>();
+    private HashMap<String, DepartmentModel> departmentHashMap = new HashMap<>();
+    private HashMap<String, SemesterModel> semesterHashMap = new HashMap<>();
+    private HashMap<String, UndergraduateLevelModel> levelHashMap = new HashMap<>();
+
 
     private void createUIComponents() {
         initComponents();
@@ -485,11 +489,49 @@ public class CoursePanel extends JPanel {
             String level = String.valueOf(jComboBox2.getSelectedItem());
             String semester = String.valueOf(jComboBox3.getSelectedItem());
 
+            // department has undergraduate level table
+            String q1 = "SELECT * FROM `department_has_undergraduate_level` " +
+                    "INNER JOIN `department` ON `department`.`department_id`=`department_has_undergraduate_level`.`department_department_id` " +
+                    "INNER JOIN `semester` ON `semester`.`semester_id`=`department_has_undergraduate_level`.`semester_semester_id` " +
+                    "INNER JOIN `undergraduate_level` ON `undergraduate_level`.`level_id`=`department_has_undergraduate_level`.`undergraduate_level_level_id` " +
+                    "WHERE `department`.`name`=? AND `undergraduate_level`.`level`=? AND `semester`.`semester`=? AND `status_status_id`=? ";
+            ResultSet resultSet = DBConnection.search(q1, department, level, semester,'1');
+            if(resultSet != null){
 
+                try {
+                    resultSet.last();
+                    int row = resultSet.getRow();
+                    resultSet.first();
 
-            // course table
-            String query = "INSERT INTO `course`(`course`,`credit`,`course_code`,`course_hours`,`department_has_undergraduate_level_id`) VALUES(?,?,?,?,?)";
-            DBConnection.iud(query, newCourseName,credit,newCourseCode,dhulId);
+                    String dhulID = "";
+
+                    if (row == 0) {
+
+                        String q2 = "INSERT INTO `department_has_undergraduate_level`(`department_department_id`,`undergraduate_level_level_id`,`semester_semester_id`,`status_status_id) " +
+                                "VALUES(?,?,?,?)";
+
+                        Integer insertedId = DBConnection.iud(q2, departmentHashMap.get(department), levelHashMap.get(level), semesterHashMap.get(semester), '1');
+                        dhulID = String.valueOf(insertedId);
+
+                    } else {
+                        dhulID = resultSet.getString("department_has_undergraduate_level.id");
+                    }
+
+                    // course table
+                    String query = "INSERT INTO `course`(`course`,`credit`,`course_code`,`course_hours`,`department_has_undergraduate_level_id`) VALUES(?,?,?,?,?)";
+                    Integer courseId = DBConnection.iud(query, newCourseName, credit, newCourseCode, dhulID);
+
+                    // course hashmap
+                    String departmentId = ((DepartmentModel) departmentHashMap.get(department)).getId();
+                    String semesterId = ((SemesterModel) semesterHashMap.get(semester)).getId();
+                    String undergraduateLevelId = ((UndergraduateLevelModel) levelHashMap.get(level)).getId();
+
+                    addToCourseHashMap(departmentId, department, semesterId, semester, undergraduateLevelId, level, dhulID, newCourseCode, String.valueOf(courseId), newCourseName, credit, hours);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
 
         }
 
@@ -606,38 +648,42 @@ public class CoursePanel extends JPanel {
 
 
                 // load hashmap
+                addToCourseHashMap(departmentId,department,semesterId,semester,undergraduateLevelId,undergraduateLevel,dhulId,courseCode,courseId,courseName,credit,courseHours);
 
-                DepartmentModel departmentModel = new DepartmentModel();
-                departmentModel.setId(departmentId);
-                departmentModel.setName(department);
-
-                SemesterModel semesterModel = new SemesterModel();
-                semesterModel.setId(semesterId);
-                semesterModel.setSemester(semester);
-
-                UndergraduateLevelModel undergraduateLevelModel = new UndergraduateLevelModel();
-                undergraduateLevelModel.setId(undergraduateLevelId);
-                undergraduateLevelModel.setLevel(undergraduateLevel);
-
-                DepartmentHasUndergraduateLevelModel dhulm = new DepartmentHasUndergraduateLevelModel();
-                dhulm.setDepartment(departmentModel);
-                dhulm.setId(dhulId);
-                dhulm.setSemester(semesterModel);
-                dhulm.setUndergraduateLevel(undergraduateLevelModel);
-
-                CourseModel courseModel = new CourseModel();
-                courseModel.setCourseCode(courseCode);
-                courseModel.setCourseId(courseId);
-                courseModel.setCourseName(courseName);
-                courseModel.setCredit(credit);
-                courseModel.setHours(courseHours);
-                courseModel.setDepartmentHasUndergraduateLevelModel(dhulm);
-
-                courseHashMap.put(courseCode,courseModel);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void addToCourseHashMap(String departmentId,String department,String semesterId,String semester,String undergraduateLevelId,String undergraduateLevel,String dhulId,String courseCode,String courseId,String courseName,String credit,String courseHours){
+        DepartmentModel departmentModel = new DepartmentModel();
+        departmentModel.setId(departmentId);
+        departmentModel.setName(department);
+
+        SemesterModel semesterModel = new SemesterModel();
+        semesterModel.setId(semesterId);
+        semesterModel.setSemester(semester);
+
+        UndergraduateLevelModel undergraduateLevelModel = new UndergraduateLevelModel();
+        undergraduateLevelModel.setId(undergraduateLevelId);
+        undergraduateLevelModel.setLevel(undergraduateLevel);
+
+        DepartmentHasUndergraduateLevelModel dhulm = new DepartmentHasUndergraduateLevelModel();
+        dhulm.setDepartment(departmentModel);
+        dhulm.setId(dhulId);
+        dhulm.setSemester(semesterModel);
+        dhulm.setUndergraduateLevel(undergraduateLevelModel);
+
+        CourseModel courseModel = new CourseModel();
+        courseModel.setCourseCode(courseCode);
+        courseModel.setCourseId(courseId);
+        courseModel.setCourseName(courseName);
+        courseModel.setCredit(credit);
+        courseModel.setHours(courseHours);
+        courseModel.setDepartmentHasUndergraduateLevelModel(dhulm);
+
+        courseHashMap.put(courseCode,courseModel);
     }
 }
