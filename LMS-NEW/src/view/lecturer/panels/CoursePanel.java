@@ -1,12 +1,22 @@
 package view.lecturer.panels;
 
 import controller.DBConnection;
+import controller.Validation;
+import model.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalField;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Vector;
 
 public class CoursePanel extends JPanel {
@@ -50,6 +60,11 @@ public class CoursePanel extends JPanel {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
 
+
+    private int timetableRowCount;
+    private boolean isFirstTimeTableRow;
+
+    private HashMap<String, CourseModel> courseHashMap = new HashMap<>();
 
     private void createUIComponents() {
         initComponents();
@@ -239,6 +254,11 @@ public class CoursePanel extends JPanel {
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Save Course");
         jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -388,17 +408,162 @@ public class CoursePanel extends JPanel {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
         // add timetable
+
+        if (!isFirstTimeTableRow) {
+            isFirstTimeTableRow = true;
+        }
+
+        String selectedDay = String.valueOf(jComboBox4.getSelectedItem());
+        String from = jFormattedTextField1.getText();
+        String to = jFormattedTextField2.getText();
+
+        if(!Validation.isValidTime(from)){
+            JOptionPane.showMessageDialog(this, "Please enter a valid Time From", "Invalid Time", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        if(!Validation.isValidTime(to)){
+            JOptionPane.showMessageDialog(this, "Please enter a valid Time To", "Invalid Time", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        try {
+            Date fromTime = sdf.parse(from);
+            Date toTime = sdf.parse(to);
+
+            boolean before = fromTime.before(toTime);
+            if (!before) {
+                JOptionPane.showMessageDialog(this, "Time From Cannot be after Time To", "Invalid Time Duration", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        timetableRowCount++;
+
+        Vector<String> row = new Vector<>();
+        row.add(String.valueOf(timetableRowCount));
+        row.add(selectedDay);
+        row.add(from);
+        row.add(to);
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) jTable2.getModel();
+        defaultTableModel.addRow(row);
+
     }
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        // table
+        if (evt.getClickCount() == 2) {
+
+            int confirm = JOptionPane.showConfirmDialog(this, "Are You Sure You Want To Remove This From Timetable ?", "Confirm", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                jTable2.remove(jTable2.getSelectedRow());
+
+                timetableRowCount--;
+                if (timetableRowCount == 0) {
+                    isFirstTimeTableRow = false;
+                }
+            }
+        }
     }
 
-    private void loadCourses(String courseCode) {
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
+        // save course
+
+        if(isCourseDetailsCorrect()){
+
+            String newCourseCode = jTextField2.getText();
+            String newCourseName = jTextField3.getText();
+            String credit = jTextField4.getText();
+            String hours = jTextField5.getText();
+
+            String department = String.valueOf(jComboBox1.getSelectedItem());
+            String level = String.valueOf(jComboBox2.getSelectedItem());
+            String semester = String.valueOf(jComboBox3.getSelectedItem());
+
+
+
+            // course table
+            String query = "INSERT INTO `course`(`course`,`credit`,`course_code`,`course_hours`,`department_has_undergraduate_level_id`) VALUES(?,?,?,?,?)";
+            DBConnection.iud(query, newCourseName,credit,newCourseCode,dhulId);
+
+        }
+
+    }
+
+    private boolean isCourseDetailsCorrect() {
+
+        String newCourseCode = jTextField2.getText();
+        String newCourseName = jTextField3.getText();
+        String credit = jTextField4.getText();
+        String hours = jTextField5.getText();
+
+        if(newCourseCode.isBlank()){
+            JOptionPane.showMessageDialog(this,"Course Code Cannot be Empty","Missing Data",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if(newCourseName.isBlank()){
+            JOptionPane.showMessageDialog(this,"Course Name Cannot be Empty","Missing Data",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if(credit.isBlank()){
+            JOptionPane.showMessageDialog(this,"Course Credit Cannot be Empty","Missing Data",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if(hours.isBlank()){
+            JOptionPane.showMessageDialog(this,"Course Hours Cannot be Empty","Missing Data",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        try{
+            Integer.parseInt(credit);
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this,"Course Credit Must Be a Number","Invalid Data",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        try{
+            Double.parseDouble(hours);
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this,"Course Hours Must Be a Number","Invalid Data",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if(courseHashMap.containsKey(newCourseCode)){
+            JOptionPane.showConfirmDialog(this,"Course Code Already Exists","Invalid Course Code",JOptionPane.ERROR_MESSAGE)
+            return false;
+        }
+
+        return true;
+
+    }
+
+    private void loadCourses(String enteredCourseCode) {
+
+        if(courseHashMap.isEmpty()){
+            loadCoursesFormDB(enteredCourseCode);
+        }else{
+            loadCoursesFromHashMap(enteredCourseCode);
+        }
+
+    }
+
+    private void loadCoursesFromHashMap(String enteredCourseCode) {
+
+    }
+
+    private void loadCoursesFormDB(String enteredCourseCode) {
 
         String query = "SELECT * FROM `course` WHERE `course_code` LIKE '%?%' ";
 
-        ResultSet resultSet = DBConnection.search(query, courseCode);
+        ResultSet resultSet = DBConnection.search(query, enteredCourseCode);
         if(resultSet == null){
             JOptionPane.showMessageDialog(this, "Course Code Not Found", "Missing Info", JOptionPane.INFORMATION_MESSAGE);
             return;
@@ -410,15 +575,65 @@ public class CoursePanel extends JPanel {
         try {
             while (resultSet.next()) {
 
+                String courseCode = resultSet.getString("course_code");
+                String courseId = resultSet.getString("course_id");
+                String courseName = resultSet.getString("course");
+                String credit = resultSet.getString("credit");
+                String courseHours = resultSet.getString("course_hours");
+
+                String departmentId = resultSet.getString("semester_id");
+                String department = resultSet.getString("semester");
+
+                String semesterId = resultSet.getString("semester_id");
+                String semester = resultSet.getString("semester");
+
+                String undergraduateLevelId = resultSet.getString("semester_id");
+                String undergraduateLevel = resultSet.getString("semester");
+
+                String dhulId = resultSet.getString("semester_id");
+
+
+                // load table
                 Vector<String> row = new Vector<>();
 
-                row.add(resultSet.getString("course_id"));
-                row.add(resultSet.getString("course_code"));
-                row.add(resultSet.getString("course"));
-                row.add(resultSet.getString("credit"));
-                row.add(resultSet.getString("course_hours"));
+                row.add(courseId);
+                row.add(courseCode);
+                row.add(courseName);
+                row.add(credit);
+                row.add(courseHours);
 
                 defaultTableModel.addRow(row);
+
+
+                // load hashmap
+
+                DepartmentModel departmentModel = new DepartmentModel();
+                departmentModel.setId(departmentId);
+                departmentModel.setName(department);
+
+                SemesterModel semesterModel = new SemesterModel();
+                semesterModel.setId(semesterId);
+                semesterModel.setSemester(semester);
+
+                UndergraduateLevelModel undergraduateLevelModel = new UndergraduateLevelModel();
+                undergraduateLevelModel.setId(undergraduateLevelId);
+                undergraduateLevelModel.setLevel(undergraduateLevel);
+
+                DepartmentHasUndergraduateLevelModel dhulm = new DepartmentHasUndergraduateLevelModel();
+                dhulm.setDepartment(departmentModel);
+                dhulm.setId(dhulId);
+                dhulm.setSemester(semesterModel);
+                dhulm.setUndergraduateLevel(undergraduateLevelModel);
+
+                CourseModel courseModel = new CourseModel();
+                courseModel.setCourseCode(courseCode);
+                courseModel.setCourseId(courseId);
+                courseModel.setCourseName(courseName);
+                courseModel.setCredit(credit);
+                courseModel.setHours(courseHours);
+                courseModel.setDepartmentHasUndergraduateLevelModel(dhulm);
+
+                courseHashMap.put(courseCode,courseModel);
             }
         } catch (SQLException e) {
             e.printStackTrace();
