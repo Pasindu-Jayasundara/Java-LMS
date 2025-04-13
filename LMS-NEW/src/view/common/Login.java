@@ -2,6 +2,7 @@ package view.common;
 
 import controller.DBConnection;
 import controller.Validation;
+import controller.callback.LoginSuccessCallback;
 import model.*;
 import view.admin.AdminDashboard;
 import view.lecturer.LecturerDashboard;
@@ -27,10 +28,14 @@ public class Login extends JDialog {
 
     private final String type;
 
-    public Login(java.awt.Frame parent, String type) {
+    private LoginSuccessCallback loginSuccessCallback;
+
+    public Login(java.awt.Frame parent, String type, LoginSuccessCallback loginSuccessCallback) {
         super(parent, true);
 
         this.type = type;
+        this.loginSuccessCallback = loginSuccessCallback;
+
         setUpBg();
     }
 
@@ -62,7 +67,7 @@ public class Login extends JDialog {
         jLabel1.setText("LOGIN");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setText("Username:");
+        jLabel2.setText("Email:");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Password:");
@@ -189,7 +194,7 @@ public class Login extends JDialog {
         String password = String.valueOf(jPasswordField1.getPassword());
 
         if (username.isBlank()) {
-            JOptionPane.showMessageDialog(this, "Missing Username", "Missing", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Missing Email", "Missing", JOptionPane.WARNING_MESSAGE);
             jTextField1.requestFocus();
             return;
         }
@@ -200,11 +205,11 @@ public class Login extends JDialog {
             return;
         }
 
-        if (!Validation.isValidName(username.trim())) {
-            JOptionPane.showMessageDialog(this, "Incorrect Username Format", "Incorrect Data", JOptionPane.WARNING_MESSAGE);
+        if (!Validation.isValidEmail(username.trim())) {
+            JOptionPane.showMessageDialog(this, "Incorrect Email Format", "Incorrect Data", JOptionPane.WARNING_MESSAGE);
             jTextField1.requestFocus();
 
-            JLabel errorLabel = new JLabel("Username Can Only Contains Letters");
+            JLabel errorLabel = new JLabel("Incorrect Email Address");
             errorLabel.setForeground(java.awt.Color.RED);
             jPanel3.setLayout(new FlowLayout());
             jPanel3.add(errorLabel);
@@ -240,7 +245,7 @@ public class Login extends JDialog {
         jPanel2.setLayout(null);
         pack();
 
-        query += " WHERE `username`=? AND `password`=?";
+        query += " WHERE (`email`=? AND `password`=?) AND `status_status_id`='1' ";
 
         ResultSet searchResult = DBConnection.search(query, username, password);
         if (searchResult != null) {
@@ -268,7 +273,7 @@ public class Login extends JDialog {
                             AdminDashboard adminDashboard = new AdminDashboard(admin);
                             adminDashboard.setVisible(true);
 
-                            this.dispose();
+                            dispose();
 
                             break;
                         case "Lecturer":
@@ -283,7 +288,9 @@ public class Login extends JDialog {
                             LecturerDashboard lecturerDashboard = new LecturerDashboard(lecturer);
                             lecturerDashboard.setVisible(true);
 
-                            this.dispose();
+                            dispose();
+
+                            loginSuccessCallback.login(true);
 
                             break;
                         case "Student":

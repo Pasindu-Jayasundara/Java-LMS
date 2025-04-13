@@ -1,6 +1,7 @@
 package view.lecturer;
 
 import model.LecturerModel;
+import view.common.Welcome;
 
 import javax.swing.*;
 
@@ -21,11 +22,21 @@ public class LecturerDashboard extends JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane2;
 
+    // panels
+    private view.lecturer.panels.AttendancePanel attendancePanel1;
+    private view.lecturer.panels.CoursePanel coursePanel1;
+    private view.lecturer.panels.ExamPanel examPanel1;
+    private view.lecturer.panels.NoticePanel noticePanel1;
+    private view.lecturer.panels.StudentPanel studentPanel1;
+
     public LecturerDashboard(LecturerModel loginLecturerModel) {
         this.loginLecturerModel = loginLecturerModel;
+
     }
 
     private void createUIComponents() {
+        initComponents();
+        changeUI("course");
     }
 
     private void initComponents() {
@@ -43,6 +54,13 @@ public class LecturerDashboard extends JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
 
+        // panels
+        attendancePanel1 = new view.lecturer.panels.AttendancePanel();
+        coursePanel1 = new view.lecturer.panels.CoursePanel();
+        examPanel1 = new view.lecturer.panels.ExamPanel();
+        noticePanel1 = new view.lecturer.panels.NoticePanel();
+        studentPanel1 = new view.lecturer.panels.StudentPanel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jSplitPane2.setDividerLocation(150);
@@ -56,19 +74,49 @@ public class LecturerDashboard extends JFrame {
         });
 
         jButton2.setText("Exam");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Student");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Attendance");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Logout");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("UOR Lecturer");
 
         jButton6.setText("...");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jButton7.setText("Notices");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -117,6 +165,12 @@ public class LecturerDashboard extends JFrame {
         jSplitPane2.setLeftComponent(jPanel1);
 
         jPanel3.setLayout(new java.awt.CardLayout());
+        jPanel3.add(attendancePanel1, "card2");
+        jPanel3.add(coursePanel1, "card3");
+        jPanel3.add(examPanel1, "card4");
+        jPanel3.add(noticePanel1, "card5");
+        jPanel3.add(studentPanel1, "card6");
+
         jScrollPane1.setViewportView(jPanel3);
 
         jSplitPane2.setRightComponent(jScrollPane1);
@@ -137,10 +191,175 @@ public class LecturerDashboard extends JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        // course
+        changeUI("course");
+    }
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        // exam
+        changeUI("exam");
+    }
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+        // student
+        changeUI("student");
+    }
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
+        // attendance
+        changeUI("attendance");
+    }
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
+        // notice
+        changeUI("notice");
+    }
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
+        // logout
+        new Welcome().setVisible(true);
+        this.dispose();
+    }
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
+        // settings
+        changeUI("setting");
+    }
+
+    private void changeUI(String type){
+
+        switch(type){
+            case "course":{
+
+                // panels
+                attendancePanel1.setVisible(false);
+                examPanel1.setVisible(false);
+                noticePanel1.setVisible(false);
+                studentPanel1.setVisible(false);
+
+                coursePanel1.setVisible(true);
+
+                // buttons
+                jButton2.setSelected(false);
+                jButton3.setSelected(false);
+                jButton4.setSelected(false);
+                jButton5.setSelected(false);
+                jButton6.setSelected(false);
+                jButton7.setSelected(false);
+
+                jButton1.setSelected(true);
+
+                break;
+            }
+            case "exam":{
+
+                // panels
+                attendancePanel1.setVisible(false);
+                coursePanel1.setVisible(false);
+                noticePanel1.setVisible(false);
+                studentPanel1.setVisible(false);
+
+                examPanel1.setVisible(true);
+
+                // buttons
+                jButton1.setSelected(false);
+                jButton3.setSelected(false);
+                jButton4.setSelected(false);
+                jButton5.setSelected(false);
+                jButton6.setSelected(false);
+                jButton7.setSelected(false);
+
+                jButton2.setSelected(true);
+
+                break;
+            }
+            case "notice":{
+
+                // panels
+                attendancePanel1.setVisible(false);
+                examPanel1.setVisible(false);
+                studentPanel1.setVisible(false);
+                coursePanel1.setVisible(false);
+
+                noticePanel1.setVisible(true);
+
+                // buttons
+                jButton1.setSelected(false);
+                jButton2.setSelected(false);
+                jButton3.setSelected(false);
+                jButton4.setSelected(false);
+                jButton5.setSelected(false);
+                jButton6.setSelected(false);
+
+                jButton7.setSelected(true);
+
+                break;
+            }
+            case "student":{
+
+                attendancePanel1.setVisible(false);
+                examPanel1.setVisible(false);
+                noticePanel1.setVisible(false);
+                coursePanel1.setVisible(false);
+
+                studentPanel1.setVisible(true);
+
+                // buttons
+                jButton1.setSelected(false);
+                jButton2.setSelected(false);
+                jButton4.setSelected(false);
+                jButton5.setSelected(false);
+                jButton6.setSelected(false);
+                jButton7.setSelected(false);
+
+                jButton3.setSelected(true);
+
+                break;
+            }
+            case "attendance":{
+
+                examPanel1.setVisible(false);
+                noticePanel1.setVisible(false);
+                studentPanel1.setVisible(false);
+                coursePanel1.setVisible(false);
+
+                attendancePanel1.setVisible(true);
+
+                // buttons
+                jButton1.setSelected(false);
+                jButton2.setSelected(false);
+                jButton3.setSelected(false);
+                jButton5.setSelected(false);
+                jButton6.setSelected(false);
+                jButton7.setSelected(false);
+
+                jButton4.setSelected(true);
+
+                break;
+            }
+            case "setting":{
+
+                // buttons
+                jButton1.setSelected(false);
+                jButton2.setSelected(false);
+                jButton3.setSelected(false);
+                jButton4.setSelected(false);
+                jButton5.setSelected(false);
+                jButton7.setSelected(false);
+
+                jButton6.setSelected(true);
+
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+
+    }
 
 }
