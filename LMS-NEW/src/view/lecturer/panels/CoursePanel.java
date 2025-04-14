@@ -579,7 +579,7 @@ public class CoursePanel extends JPanel {
         }
 
         if(courseHashMap.containsKey(newCourseCode)){
-            JOptionPane.showConfirmDialog(this,"Course Code Already Exists","Invalid Course Code",JOptionPane.ERROR_MESSAGE)
+            JOptionPane.showConfirmDialog(this,"Course Code Already Exists","Invalid Course Code",JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
