@@ -31,7 +31,7 @@ public class PDFPreviewDialog extends JDialog {
     private void loadPreview() {
 
         try {
-            PDDocument document = new PDDocument();
+            PDDocument document = PDDocument.load(new File(filePath));
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             JPanel pdfPanel = new JPanel() {
                 @Override
