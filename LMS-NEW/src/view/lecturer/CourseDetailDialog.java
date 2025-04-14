@@ -20,6 +20,7 @@ public class CourseDetailDialog extends JDialog {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -28,7 +29,9 @@ public class CourseDetailDialog extends JDialog {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable2;
@@ -45,48 +48,6 @@ public class CourseDetailDialog extends JDialog {
     private void createUIComponents() {
         initComponents();
         loadData();
-    }
-
-    private void loadData() {
-
-        jLabel2.setText(courseModel.getCourseName());
-        jLabel15.setText(courseModel.getCourseCode());
-        jLabel14.setText(courseModel.getCredit());
-        jLabel13.setText(courseModel.getHours());
-        jLabel12.setText(courseModel.getDepartmentHasUndergraduateLevelModel().getDepartment().getName());
-        jLabel11.setText(courseModel.getDepartmentHasUndergraduateLevelModel().getUndergraduateLevel().getLevel());
-        jLabel10.setText(courseModel.getDepartmentHasUndergraduateLevelModel().getSemester().getSemester());
-
-        String courseId = courseModel.getCourseId();
-
-        String query = "SELECT * FROM `timetable` WHERE `course_course_id`=?";
-        ResultSet resultSet = DBConnection.search(query, courseId);
-        if (resultSet != null) {
-
-            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable2.getModel();
-            defaultTableModel.setRowCount(0);
-
-            try{
-
-                while(resultSet.next()){
-
-                    Vector<String> row = new Vector<>();
-                    row.add(resultSet.getString("day"));
-                    row.add(resultSet.getString("from"));
-                    row.add(resultSet.getString("to"));
-
-                    defaultTableModel.addRow(row);
-
-                }
-
-            }catch(SQLException e){
-                e.printStackTrace();
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-
-        }
-
     }
 
     private void initComponents() {
@@ -110,6 +71,9 @@ public class CourseDetailDialog extends JDialog {
         jLabel15 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        jLabel16 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -161,7 +125,23 @@ public class CourseDetailDialog extends JDialog {
                 return canEdit [columnIndex];
             }
         });
+        jTable2.setEnabled(false);
         jScrollPane2.setViewportView(jTable2);
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel16.setText("Course Meterials");
+
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList1MouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jList1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -189,10 +169,10 @@ public class CourseDetailDialog extends JDialog {
                                                                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addContainerGap(145, Short.MAX_VALUE))
                                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 739, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
                                                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                                                 .addComponent(jLabel3)
@@ -204,8 +184,10 @@ public class CourseDetailDialog extends JDialog {
                                                                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(jLabel5))
-                                                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(0, 21, Short.MAX_VALUE))))
+                                                        .addComponent(jSeparator1)
+                                                        .addComponent(jLabel16)
+                                                        .addComponent(jScrollPane1))
+                                                .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -228,22 +210,24 @@ public class CourseDetailDialog extends JDialog {
                                         .addComponent(jLabel11)
                                         .addComponent(jLabel5)
                                         .addComponent(jLabel10))
-                                .addGap(31, 31, 31)
+                                .addGap(25, 25, 25)
                                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel16)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(22, Short.MAX_VALUE))
+                                .addGap(16, 16, 16))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,4 +237,61 @@ public class CourseDetailDialog extends JDialog {
         pack();
     }// </editor-fold>
 
+    private void loadData() {
+
+        jLabel2.setText(courseModel.getCourseName());
+        jLabel15.setText(courseModel.getCourseCode());
+        jLabel14.setText(courseModel.getCredit());
+        jLabel13.setText(courseModel.getHours());
+        jLabel12.setText(courseModel.getDepartmentHasUndergraduateLevelModel().getDepartment().getName());
+        jLabel11.setText(courseModel.getDepartmentHasUndergraduateLevelModel().getUndergraduateLevel().getLevel());
+        jLabel10.setText(courseModel.getDepartmentHasUndergraduateLevelModel().getSemester().getSemester());
+
+        loadTimeTable(courseModel.getCourseId());
+
+        loadMaterialList(courseModel.getCourseId());
+
+    }
+
+    private void loadMaterialList(String courseId) {
+
+
+
+    }
+
+    private void loadTimeTable(String courseId) {
+
+        String query = "SELECT * FROM `timetable` WHERE `course_course_id`=?";
+        ResultSet resultSet = DBConnection.search(query, courseId);
+        if (resultSet != null) {
+
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable2.getModel();
+            defaultTableModel.setRowCount(0);
+
+            try{
+
+                while(resultSet.next()){
+
+                    Vector<String> row = new Vector<>();
+                    row.add(resultSet.getString("day"));
+                    row.add(resultSet.getString("from"));
+                    row.add(resultSet.getString("to"));
+
+                    defaultTableModel.addRow(row);
+
+                }
+
+            }catch(SQLException e){
+                e.printStackTrace();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {
+        // TODO: remove material from list
+    }
 }
