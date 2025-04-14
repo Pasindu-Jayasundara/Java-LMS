@@ -66,11 +66,10 @@ public class CoursePanel extends JPanel {
     private int timetableRowCount;
     private boolean isFirstTimeTableRow;
 
-    private HashMap<String, CourseModel> courseHashMap = new HashMap<>();
-    private HashMap<String, DepartmentModel> departmentHashMap = new HashMap<>();
-    private HashMap<String, SemesterModel> semesterHashMap = new HashMap<>();
-    private HashMap<String, UndergraduateLevelModel> levelHashMap = new HashMap<>();
-
+    public static HashMap<String, CourseModel> courseHashMap = new HashMap<>();
+    public static HashMap<String, DepartmentModel> departmentHashMap = new HashMap<>();
+    public static HashMap<String, SemesterModel> semesterHashMap = new HashMap<>();
+    public static HashMap<String, UndergraduateLevelModel> levelHashMap = new HashMap<>();
 
     private void createUIComponents() {
         initComponents();
