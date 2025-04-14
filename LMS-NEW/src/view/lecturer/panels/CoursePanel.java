@@ -4,6 +4,7 @@ import controller.DBConnection;
 import controller.Validation;
 import model.*;
 import view.lecturer.CourseDetailDialog;
+import view.lecturer.LecturerDashboard;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -662,9 +663,9 @@ public class CoursePanel extends JPanel {
 
     private void loadCoursesFormDB(String enteredCourseCode) {
 
-        String query = "SELECT * FROM `course` WHERE `course_code` LIKE '%?%' ";
+        String query = "SELECT * FROM `course` WHERE `lecturer_user_id`=? AND `course_code` LIKE '%?%' ";
 
-        ResultSet resultSet = DBConnection.search(query, enteredCourseCode);
+        ResultSet resultSet = DBConnection.search(query, LecturerDashboard.loginLecturerModel.getId(), enteredCourseCode);
         if (resultSet == null) {
             JOptionPane.showMessageDialog(this, "Course Code Not Found", "Missing Info", JOptionPane.INFORMATION_MESSAGE);
             return;
