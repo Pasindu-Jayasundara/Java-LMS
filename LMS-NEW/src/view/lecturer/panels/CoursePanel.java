@@ -125,19 +125,19 @@ public class CoursePanel extends JPanel {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "#", "Code", "Name", "Credit", "Hourse"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -191,17 +191,17 @@ public class CoursePanel extends JPanel {
 
         jLabel6.setText("Department:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         jComboBox1.setPreferredSize(new java.awt.Dimension(64, 22));
 
         jLabel7.setText("Level:");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         jComboBox2.setPreferredSize(new java.awt.Dimension(64, 22));
 
         jLabel8.setText("Semester:");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Timetable");
@@ -211,7 +211,7 @@ public class CoursePanel extends JPanel {
 
         jLabel11.setText("Day of the Week:");
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         jLabel12.setText("From:");
 
@@ -225,19 +225,19 @@ public class CoursePanel extends JPanel {
         });
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "#", "Day", "From", "To"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -421,12 +421,12 @@ public class CoursePanel extends JPanel {
         String from = jFormattedTextField1.getText();
         String to = jFormattedTextField2.getText();
 
-        if(!Validation.isValidTime(from)){
+        if (!Validation.isValidTime(from)) {
             JOptionPane.showMessageDialog(this, "Please enter a valid Time From", "Invalid Time", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
-        if(!Validation.isValidTime(to)){
+        if (!Validation.isValidTime(to)) {
             JOptionPane.showMessageDialog(this, "Please enter a valid Time To", "Invalid Time", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -478,7 +478,7 @@ public class CoursePanel extends JPanel {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
         // save course
 
-        if(isCourseDetailsCorrect()){
+        if (isCourseDetailsCorrect()) {
 
             String newCourseCode = jTextField2.getText();
             String newCourseName = jTextField3.getText();
@@ -495,8 +495,8 @@ public class CoursePanel extends JPanel {
                     "INNER JOIN `semester` ON `semester`.`semester_id`=`department_has_undergraduate_level`.`semester_semester_id` " +
                     "INNER JOIN `undergraduate_level` ON `undergraduate_level`.`level_id`=`department_has_undergraduate_level`.`undergraduate_level_level_id` " +
                     "WHERE `department`.`name`=? AND `undergraduate_level`.`level`=? AND `semester`.`semester`=? AND `status_status_id`=? ";
-            ResultSet resultSet = DBConnection.search(q1, department, level, semester,'1');
-            if(resultSet != null){
+            ResultSet resultSet = DBConnection.search(q1, department, level, semester, '1');
+            if (resultSet != null) {
 
                 try {
                     resultSet.last();
@@ -528,7 +528,7 @@ public class CoursePanel extends JPanel {
 
                     addToCourseHashMap(departmentId, department, semesterId, semester, undergraduateLevelId, level, dhulID, newCourseCode, String.valueOf(courseId), newCourseName, credit, hours);
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -544,42 +544,42 @@ public class CoursePanel extends JPanel {
         String credit = jTextField4.getText();
         String hours = jTextField5.getText();
 
-        if(newCourseCode.isBlank()){
-            JOptionPane.showMessageDialog(this,"Course Code Cannot be Empty","Missing Data",JOptionPane.ERROR_MESSAGE);
+        if (newCourseCode.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Course Code Cannot be Empty", "Missing Data", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        if(newCourseName.isBlank()){
-            JOptionPane.showMessageDialog(this,"Course Name Cannot be Empty","Missing Data",JOptionPane.ERROR_MESSAGE);
+        if (newCourseName.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Course Name Cannot be Empty", "Missing Data", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        if(credit.isBlank()){
-            JOptionPane.showMessageDialog(this,"Course Credit Cannot be Empty","Missing Data",JOptionPane.ERROR_MESSAGE);
+        if (credit.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Course Credit Cannot be Empty", "Missing Data", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        if(hours.isBlank()){
-            JOptionPane.showMessageDialog(this,"Course Hours Cannot be Empty","Missing Data",JOptionPane.ERROR_MESSAGE);
+        if (hours.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Course Hours Cannot be Empty", "Missing Data", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        try{
+        try {
             Integer.parseInt(credit);
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(this,"Course Credit Must Be a Number","Invalid Data",JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Course Credit Must Be a Number", "Invalid Data", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        try{
+        try {
             Double.parseDouble(hours);
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(this,"Course Hours Must Be a Number","Invalid Data",JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Course Hours Must Be a Number", "Invalid Data", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        if(courseHashMap.containsKey(newCourseCode)){
-            JOptionPane.showConfirmDialog(this,"Course Code Already Exists","Invalid Course Code",JOptionPane.ERROR_MESSAGE);
+        if (courseHashMap.containsKey(newCourseCode)) {
+            JOptionPane.showConfirmDialog(this, "Course Code Already Exists", "Invalid Course Code", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -589,15 +589,47 @@ public class CoursePanel extends JPanel {
 
     private void loadCourses(String enteredCourseCode) {
 
-        if(courseHashMap.isEmpty()){
+        if (courseHashMap.isEmpty()) {
             loadCoursesFormDB(enteredCourseCode);
-        }else{
+        } else {
             loadCoursesFromHashMap(enteredCourseCode);
         }
 
     }
 
     private void loadCoursesFromHashMap(String enteredCourseCode) {
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+        defaultTableModel.setRowCount(0);
+
+        courseHashMap.forEach((key, courseModel) -> {
+
+            Vector<String> row = new Vector<>();
+
+            if(enteredCourseCode.isBlank()){
+
+                row.add(courseModel.getCourseId());
+                row.add(courseModel.getCourseCode());
+                row.add(courseModel.getCourseName());
+                row.add(courseModel.getCredit());
+                row.add(courseModel.getHours());
+
+            }else{
+
+                if(enteredCourseCode.equals(courseModel.getCourseCode())){
+
+                    row.add(courseModel.getCourseId());
+                    row.add(courseModel.getCourseCode());
+                    row.add(courseModel.getCourseName());
+                    row.add(courseModel.getCredit());
+                    row.add(courseModel.getHours());
+                }
+
+            }
+
+            defaultTableModel.addRow(row);
+
+        });
 
     }
 
@@ -606,7 +638,7 @@ public class CoursePanel extends JPanel {
         String query = "SELECT * FROM `course` WHERE `course_code` LIKE '%?%' ";
 
         ResultSet resultSet = DBConnection.search(query, enteredCourseCode);
-        if(resultSet == null){
+        if (resultSet == null) {
             JOptionPane.showMessageDialog(this, "Course Code Not Found", "Missing Info", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -648,7 +680,7 @@ public class CoursePanel extends JPanel {
 
 
                 // load hashmap
-                addToCourseHashMap(departmentId,department,semesterId,semester,undergraduateLevelId,undergraduateLevel,dhulId,courseCode,courseId,courseName,credit,courseHours);
+                addToCourseHashMap(departmentId, department, semesterId, semester, undergraduateLevelId, undergraduateLevel, dhulId, courseCode, courseId, courseName, credit, courseHours);
 
             }
         } catch (SQLException e) {
@@ -657,7 +689,7 @@ public class CoursePanel extends JPanel {
 
     }
 
-    private void addToCourseHashMap(String departmentId,String department,String semesterId,String semester,String undergraduateLevelId,String undergraduateLevel,String dhulId,String courseCode,String courseId,String courseName,String credit,String courseHours){
+    private void addToCourseHashMap(String departmentId, String department, String semesterId, String semester, String undergraduateLevelId, String undergraduateLevel, String dhulId, String courseCode, String courseId, String courseName, String credit, String courseHours) {
         DepartmentModel departmentModel = new DepartmentModel();
         departmentModel.setId(departmentId);
         departmentModel.setName(department);
@@ -684,6 +716,6 @@ public class CoursePanel extends JPanel {
         courseModel.setHours(courseHours);
         courseModel.setDepartmentHasUndergraduateLevelModel(dhulm);
 
-        courseHashMap.put(courseCode,courseModel);
+        courseHashMap.put(courseCode, courseModel);
     }
 }
