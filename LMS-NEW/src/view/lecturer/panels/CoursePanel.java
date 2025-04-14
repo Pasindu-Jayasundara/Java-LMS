@@ -152,6 +152,11 @@ public class CoursePanel extends JPanel {
         }
 
         jButton2.setText("Reset");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -547,8 +552,15 @@ public class CoursePanel extends JPanel {
         // all course table click
 
         if(evt.getClickCount() == 2) {
-            CourseDetailDialog courseDetailDialog = new CourseDetailDialog(this);
-            courseDetailDialog.setVisible(true);
+
+            String courseCode = String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 2));
+            if(courseHashMap.containsKey(courseCode)) {
+
+                CourseModel courseModel = courseHashMap.get(courseCode);
+
+                CourseDetailDialog courseDetailDialog = new CourseDetailDialog(this,courseModel);
+                courseDetailDialog.setVisible(true);
+            }
         }
     }
 

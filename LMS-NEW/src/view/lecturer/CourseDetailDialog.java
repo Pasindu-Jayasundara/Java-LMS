@@ -1,8 +1,14 @@
 package view.lecturer;
 
+import controller.DBConnection;
+import model.CourseModel;
 import view.lecturer.panels.CoursePanel;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
 
 public class CourseDetailDialog extends JDialog {
     private JPanel contentPane;
@@ -27,10 +33,13 @@ public class CourseDetailDialog extends JDialog {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable2;
 
+    private CourseModel courseModel;
 
-    public CourseDetailDialog(CoursePanel parent) {
+    public CourseDetailDialog(CoursePanel parent, CourseModel courseModel) {
         setLocationRelativeTo(parent);
         setModal(true);
+
+        this.courseModel = courseModel;
     }
 
     private void createUIComponents() {
@@ -40,7 +49,43 @@ public class CourseDetailDialog extends JDialog {
 
     private void loadData() {
 
+        jLabel2.setText(courseModel.getCourseName());
+        jLabel15.setText(courseModel.getCourseCode());
+        jLabel14.setText(courseModel.getCredit());
+        jLabel13.setText(courseModel.getHours());
+        jLabel12.setText(courseModel.getDepartmentHasUndergraduateLevelModel().getDepartment().getName());
+        jLabel11.setText(courseModel.getDepartmentHasUndergraduateLevelModel().getUndergraduateLevel().getLevel());
+        jLabel10.setText(courseModel.getDepartmentHasUndergraduateLevelModel().getSemester().getSemester());
 
+        String courseId = courseModel.getCourseId();
+
+        String query = "SELECT * FROM `timetable` WHERE `course_course_id`=?";
+        ResultSet resultSet = DBConnection.search(query, courseId);
+        if (resultSet != null) {
+
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable2.getModel();
+            defaultTableModel.setRowCount(0);
+
+            try{
+
+                while(resultSet.next()){
+
+                    Vector<String> row = new Vector<>();
+                    row.add(resultSet.getString("day"));
+                    row.add(resultSet.getString("from"));
+                    row.add(resultSet.getString("to"));
+
+                    defaultTableModel.addRow(row);
+
+                }
+
+            }catch(SQLException e){
+                e.printStackTrace();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }
 
     }
 
