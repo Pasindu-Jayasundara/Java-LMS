@@ -3,20 +3,15 @@ package view.lecturer.panels;
 import controller.DBConnection;
 import controller.Validation;
 import model.*;
-import view.lecturer.CourseDetailDialog;
+import view.lecturer.dialog.CourseDetailDialog;
 import view.lecturer.LecturerDashboard;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalField;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
@@ -717,6 +712,8 @@ public class CoursePanel extends JPanel {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO upload material:
     }
+
+
 
     private boolean isCourseDetailsCorrect() {
 

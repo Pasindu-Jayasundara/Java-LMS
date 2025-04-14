@@ -111,11 +111,11 @@ public class CourseDetailDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "#", "Type", "Name", "Preview"
+                "#", "Type", "Name", " ", " "
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

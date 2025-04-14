@@ -1,13 +1,17 @@
-package view.lecturer;
+package view.lecturer.dialog;
 
 import controller.DBConnection;
+import model.CourseMaterialModel;
 import model.CourseModel;
 import view.lecturer.panels.CoursePanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Vector;
 
 public class CourseDetailDialog extends JDialog {
@@ -37,6 +41,7 @@ public class CourseDetailDialog extends JDialog {
     private javax.swing.JTable jTable3;
 
     private CourseModel courseModel;
+    private HashMap<String, CourseMaterialModel> courseMaterialModelHashMap = new HashMap<>();
 
     public CourseDetailDialog(CoursePanel parent, CourseModel courseModel) {
         setLocationRelativeTo(parent);
@@ -136,11 +141,11 @@ public class CourseDetailDialog extends JDialog {
 
                 },
                 new String [] {
-                        "#", "Type", "Name", "Preview"
+                        "#", "Type", "Name", " ", " "
                 }
         ) {
             boolean[] canEdit = new boolean [] {
-                    false, false, false, false
+                    false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -267,7 +272,98 @@ public class CourseDetailDialog extends JDialog {
 
     private void loadMaterialList(String courseId) {
 
+        String query = "SELECT * FROM `material` INNER JOIN `type` ON `material`.`type_type_id`=`type`.`type_id` " +
+                "WHERE `course_course_id`=?";
+        ResultSet resultSet = DBConnection.search(query, courseId);
 
+        if(resultSet != null) {
+
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable3.getModel();
+            defaultTableModel.setRowCount(0);
+
+            try{
+
+                while(resultSet.next()){
+
+                    JButton previewBtn = new JButton("Preview");
+                    previewBtn.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            try {
+                                previewPDFMaterial(resultSet.getString("material_id"));
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
+
+                    JButton deleteBtn = new JButton("Delete");
+                    deleteBtn.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            try {
+                                deleteMaterial(resultSet.getString("material_id"),resultSet.getString("name"));
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
+
+                    String materialId = resultSet.getString("material_id");
+                    String type = resultSet.getString("type.type");
+                    String name = resultSet.getString("name");
+
+                    Vector<Object> row = new Vector<>();
+                    row.add(materialId);
+                    row.add(type);
+                    row.add(name);
+                    row.add(previewBtn);
+                    row.add(deleteBtn);
+
+                    defaultTableModel.addRow(row);
+
+                    // hash map
+                    CourseMaterialModel courseMaterialModel = new CourseMaterialModel();
+                    courseMaterialModel.setId(materialId);
+                    courseMaterialModel.setName(name);
+                    courseMaterialModel.setType(type);
+
+                    courseMaterialModelHashMap.put(materialId, courseMaterialModel);
+
+                }
+
+            }catch (SQLException e){
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private void deleteMaterial(String materialId, String name) {
+
+        int confirmDialog = JOptionPane.showConfirmDialog(this, "Are You Sure, You Want to Delete Material: " + name + "?");
+        if(confirmDialog == JOptionPane.YES_OPTION) {
+
+            String query = "DELETE FROM `material` WHERE `material_id`=?";
+            DBConnection.iud(query, materialId);
+
+            updateCourseMaterialTable(materialId);
+
+        }
+
+    }
+
+    private void updateCourseMaterialTable(String materialId) {
+
+    }
+
+    private void previewPDFMaterial(String filePath) {
+
+        PDFPreviewDialog previewDialog = new PDFPreviewDialog(CourseDetailDialog.this, filePath);
+        previewDialog.setVisible(true);
 
     }
 
