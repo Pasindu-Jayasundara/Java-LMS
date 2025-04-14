@@ -153,11 +153,6 @@ public class CourseDetailDialog extends JDialog {
             }
         });
         jTable3.setEnabled(false);
-        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable3MouseClicked(evt);
-            }
-        });
         jScrollPane3.setViewportView(jTable3);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -276,14 +271,14 @@ public class CourseDetailDialog extends JDialog {
                 "WHERE `course_course_id`=?";
         ResultSet resultSet = DBConnection.search(query, courseId);
 
-        if(resultSet != null) {
+        if (resultSet != null) {
 
             DefaultTableModel defaultTableModel = (DefaultTableModel) jTable3.getModel();
             defaultTableModel.setRowCount(0);
 
-            try{
+            try {
 
-                while(resultSet.next()){
+                while (resultSet.next()) {
 
                     JButton previewBtn = new JButton("Preview");
                     previewBtn.addActionListener(new ActionListener() {
@@ -302,7 +297,7 @@ public class CourseDetailDialog extends JDialog {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             try {
-                                deleteMaterial(resultSet.getString("material_id"),resultSet.getString("name"));
+                                deleteMaterial(resultSet.getString("material_id"), resultSet.getString("name"));
                             } catch (SQLException ex) {
                                 ex.printStackTrace();
                             }
@@ -332,7 +327,7 @@ public class CourseDetailDialog extends JDialog {
 
                 }
 
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -345,7 +340,7 @@ public class CourseDetailDialog extends JDialog {
     private void deleteMaterial(String materialId, String name) {
 
         int confirmDialog = JOptionPane.showConfirmDialog(this, "Are You Sure, You Want to Delete Material: " + name + "?");
-        if(confirmDialog == JOptionPane.YES_OPTION) {
+        if (confirmDialog == JOptionPane.YES_OPTION) {
 
             String query = "DELETE FROM `material` WHERE `material_id`=?";
             DBConnection.iud(query, materialId);
@@ -357,6 +352,42 @@ public class CourseDetailDialog extends JDialog {
     }
 
     private void updateCourseMaterialTable(String materialId) {
+
+        if (courseMaterialModelHashMap.containsKey(materialId)) {
+            courseMaterialModelHashMap.remove(materialId);
+
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable3.getModel();
+            defaultTableModel.setRowCount(0);
+
+            courseMaterialModelHashMap.forEach((key, model) -> {
+
+                JButton previewBtn = new JButton("Preview");
+                previewBtn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        previewPDFMaterial(model.getId());
+                    }
+                });
+
+                JButton deleteBtn = new JButton("Delete");
+                deleteBtn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        deleteMaterial(model.getId(), model.getName());
+                    }
+                });
+
+                Vector<Object> row = new Vector<>();
+                row.add(model.getId());
+                row.add(model.getType());
+                row.add(model.getName());
+                row.add(previewBtn);
+                row.add(deleteBtn);
+
+                defaultTableModel.addRow(row);
+
+            });
+        }
 
     }
 
@@ -376,9 +407,9 @@ public class CourseDetailDialog extends JDialog {
             DefaultTableModel defaultTableModel = (DefaultTableModel) jTable2.getModel();
             defaultTableModel.setRowCount(0);
 
-            try{
+            try {
 
-                while(resultSet.next()){
+                while (resultSet.next()) {
 
                     Vector<String> row = new Vector<>();
                     row.add(resultSet.getString("day"));
@@ -389,18 +420,14 @@ public class CourseDetailDialog extends JDialog {
 
                 }
 
-            }catch(SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
 
-    }
-
-    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO remove material from list:
     }
 
 }
