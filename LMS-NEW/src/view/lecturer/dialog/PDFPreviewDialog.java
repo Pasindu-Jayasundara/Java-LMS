@@ -22,6 +22,13 @@ public class PDFPreviewDialog extends JDialog {
         this.filePath = filePath;
     }
 
+    public PDFPreviewDialog(JPanel panel, String filePath) {
+        setModal(true);
+        setLocationRelativeTo(panel);
+
+        this.filePath = filePath;
+    }
+
     private void createUIComponents() {
         initComponents();
 
