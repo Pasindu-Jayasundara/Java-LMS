@@ -1,13 +1,17 @@
 package view.lecturer.panels;
 
 import controller.DBConnection;
+import controller.callback.MarksUpdateCallBack;
 import model.ExamModel;
+import model.MarksModel;
 import view.lecturer.LecturerDashboard;
+import view.lecturer.dialog.MarksDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -31,8 +35,6 @@ public class ExamPanel extends JPanel {
     private void loadExams() {
 
         String query = "SELECT * FROM `exam` " +
-                "INNER JOIN `marks` ON `exam`.`exam_id`=`exam`.`exam_exam_id` " +
-                "INNER JOIN `grade` ON `grade`.`grade_id=`marks`.`grade_grade_id` " +
                 "INNER JOIN `course` ON `exam`.`course_course_id`=`course`.`course_id` " +
                 "INNER JOIN `lecturer` ON `lecturer`.`user_id`=`course`.`lecturer_user_id` " +
                 "WHERE `lecturer`.`user_id`=?";
@@ -54,9 +56,37 @@ public class ExamPanel extends JPanel {
                     String venue = resultSet.getString("exam.venue");
                     String desc = resultSet.getString("exam.description");
 
+                    String q2 = "SELECT * FROM `marks` WHERE `exam_exam_id`=?";
+                    ResultSet rs = DBConnection.search(q2, examId);
+
+                    Vector<MarksModel> marksModelVector = new Vector<>();
+
+                    if(rs != null) {
+
+                        while (rs.next()) {
+
+                            MarksModel marksModel = new MarksModel();
+                            marksModel.setFileName(rs.getString("file_name"));
+                            marksModel.setUrl(rs.getString("url"));
+                            marksModel.setId(rs.getString("id"));
+
+                            marksModelVector.add(marksModel);
+                        }
+
+                    }
+
+                    ExamModel examModel = new ExamModel();
+                    examModel.setId(examId);
+                    examModel.setCourseName(courseName);
+                    examModel.setDateTime(dateTime);
+                    examModel.setVenue(venue);
+                    examModel.setDescription(desc);
+                    examModel.setCourseCode(courseCode);
+                    examModel.setMarksModel(marksModelVector);
+
                     JButton updateMarksBtn = new JButton("Update Marks");
                     updateMarksBtn.addActionListener(e -> {
-                        showMarksDialog(examId);
+                        showMarksDialog(examModel);
                     });
 
                     Vector<Object> row = new Vector<>();
@@ -68,15 +98,6 @@ public class ExamPanel extends JPanel {
                     row.add(updateMarksBtn);
 
                     defaultTableModel.addRow(row);
-
-                    // hashmap
-                    ExamModel examModel = new ExamModel();
-                    examModel.setId(examId);
-                    examModel.setCourseName(courseName);
-                    examModel.setDateTime(dateTime);
-                    examModel.setVenue(venue);
-                    examModel.setDescription(desc);
-                    examModel.setCourseCode(courseCode);
 
                     examModelHashMap.put(examId, examModel);
 
@@ -116,19 +137,19 @@ public class ExamPanel extends JPanel {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
 
                 },
-                new String[]{
-                        "#", "Subject", "Date & Time", "Venue", "Description"
+                new String [] {
+                        "#", "Subject", "Date & Time", "Venue", "Description", ""
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
-                    false, false, false, false, false
+            boolean[] canEdit = new boolean [] {
+                    false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -188,7 +209,7 @@ public class ExamPanel extends JPanel {
 
         JButton updateMarksBtn = new JButton("Update Marks");
         updateMarksBtn.addActionListener(e -> {
-            showMarksDialog(examModel.getId());
+            showMarksDialog(examModel);
         });
 
         Vector<Object> row = new Vector<>();
@@ -226,9 +247,18 @@ public class ExamPanel extends JPanel {
 
     }
 
-    private void showMarksDialog(String examId) {
+    private void showMarksDialog(ExamModel examModel) {
 
-
+        MarksDialog marksDialog = new MarksDialog(ExamPanel.this,examModel,new MarksUpdateCallBack(){
+            @Override
+            public void onUpdateMarks(boolean isUpdated) {
+                if(isUpdated){
+                    examModelHashMap.clear();
+                    loadExams();
+                }
+            }
+        });
+        marksDialog.setVisible(true);
 
     }
 

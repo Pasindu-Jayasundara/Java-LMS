@@ -15,9 +15,9 @@ public class PDFPreviewDialog extends JDialog {
 
     private String filePath;
 
-    public PDFPreviewDialog(CourseDetailDialog courseDetailDialog, String filePath) {
+    public PDFPreviewDialog(Dialog dialog, String filePath) {
         setModal(true);
-        setLocationRelativeTo(courseDetailDialog);
+        setLocationRelativeTo(dialog);
 
         this.filePath = filePath;
     }

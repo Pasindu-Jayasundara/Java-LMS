@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Vector;
 
 public class ExamModel implements Serializable {
 
@@ -10,17 +11,19 @@ public class ExamModel implements Serializable {
     private String description;
     private String courseName;
     private String courseCode;
+    private Vector<MarksModel> marksModel;
 
     public ExamModel() {
     }
 
-    public ExamModel(String id, String dateTime, String venue, String description, String courseName, String courseCode) {
+    public ExamModel(String id, String dateTime, String venue, String description, String courseName, String courseCode, Vector<MarksModel> marksModel) {
         this.id = id;
         this.dateTime = dateTime;
         this.venue = venue;
         this.description = description;
         this.courseName = courseName;
         this.courseCode = courseCode;
+        this.marksModel = marksModel;
     }
 
     public String getId() {
@@ -69,5 +72,13 @@ public class ExamModel implements Serializable {
 
     public void setCourseCode(String courseCode) {
         this.courseCode = courseCode;
+    }
+
+    public Vector<MarksModel> getMarksModel() {
+        return marksModel;
+    }
+
+    public void setMarksModel(Vector<MarksModel> marksModel) {
+        this.marksModel = marksModel;
     }
 }
