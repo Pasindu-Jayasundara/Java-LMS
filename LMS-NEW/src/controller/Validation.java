@@ -1,5 +1,8 @@
 package controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class Validation {
@@ -31,6 +34,17 @@ public class Validation {
 
     public static boolean isValidPassword(String password) {
         return Pattern.compile(PASSWORD_REGEX).matcher(password).matches();
+    }
+
+    public static boolean isValidTime(String time) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        sdf.setLenient(false); // Set lenient to false to strictly parse the time
+        try {
+            Date date = sdf.parse(time);
+            return true; // If parsing is successful, the time is valid
+        } catch (ParseException e) {
+            return false; // If parsing fails, the time is invalid
+        }
     }
 
 }
