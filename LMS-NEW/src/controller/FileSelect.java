@@ -10,7 +10,7 @@ public class FileSelect {
 
     public static HashMap<String,String> getPDFFile() {
 
-        FileDialog fileDialog = new FileDialog((java.awt.Frame) null, "Select PDF Marks File");// Create a file dialog
+        FileDialog fileDialog = new FileDialog((java.awt.Frame) null, "Select PDF File");// Create a file dialog
         fileDialog.setMode(FileDialog.LOAD);// Set the mode to select files
         fileDialog.setMultipleMode(false);// Disable multiple file selection
 
