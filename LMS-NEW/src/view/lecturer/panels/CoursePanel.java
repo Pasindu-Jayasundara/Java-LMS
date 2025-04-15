@@ -1,6 +1,7 @@
 package view.lecturer.panels;
 
 import controller.DBConnection;
+import controller.FileSelect;
 import controller.Validation;
 import model.*;
 import view.lecturer.dialog.CourseDetailDialog;
@@ -8,6 +9,7 @@ import view.lecturer.LecturerDashboard;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.FocusEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -26,6 +28,8 @@ public class CoursePanel extends JPanel {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
@@ -77,6 +81,8 @@ public class CoursePanel extends JPanel {
     public static HashMap<String, DepartmentModel> departmentHashMap = new HashMap<>();
     public static HashMap<String, SemesterModel> semesterHashMap = new HashMap<>();
     public static HashMap<String, UndergraduateLevelModel> levelHashMap = new HashMap<>();
+
+    private HashMap<String, String> selectedPdfFile;
 
     private void createUIComponents() {
         initComponents();
@@ -134,6 +140,8 @@ public class CoursePanel extends JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         jButton5 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
 
         jLabel1.setText("Search By Course Code:");
 
@@ -413,13 +421,18 @@ public class CoursePanel extends JPanel {
         jLabel15.setText("Select Course:");
 
         jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox5ActionPerformed(evt);
+            }
+        });
 
         jLabel16.setText("Meterial Type:");
 
-        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PDF" }));
 
         jLabel17.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel17.setText("Selceted File Name ....");
+        jLabel17.setText("Selected File Name ....");
 
         jButton6.setText("Choose File");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -490,6 +503,20 @@ public class CoursePanel extends JPanel {
                                 .addContainerGap())
         );
 
+        jButton8.setText("Search");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
+        jButton9.setText("Reset");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -498,15 +525,21 @@ public class CoursePanel extends JPanel {
                                 .addGap(17, 17, 17)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel3Layout.createSequentialGroup()
+                                                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addContainerGap(25, Short.MAX_VALUE))
+                                        .addGroup(jPanel3Layout.createSequentialGroup()
                                                 .addComponent(jLabel15)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(18, 18, 18)
                                                 .addComponent(jLabel16)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(25, Short.MAX_VALUE))
+                                                .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jButton8)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jButton9)
+                                                .addGap(33, 33, 33))))
         );
         jPanel3Layout.setVerticalGroup(
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -516,10 +549,12 @@ public class CoursePanel extends JPanel {
                                         .addComponent(jLabel15)
                                         .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel16)
-                                        .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jButton8)
+                                        .addComponent(jButton9))
                                 .addGap(18, 18, 18)
                                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(16, Short.MAX_VALUE))
+                                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Add Course Meterials ", jPanel3);
@@ -702,7 +737,12 @@ public class CoursePanel extends JPanel {
     }
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO choose material:
+        // choose material:
+
+        selectedPdfFile = FileSelect.getPDFFile();
+        if(selectedPdfFile.get("pdf").equals("1")){
+            jLabel17.setText(selectedPdfFile.get("filename"));
+        }
     }
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -713,7 +753,23 @@ public class CoursePanel extends JPanel {
         // TODO upload material:
     }
 
+    private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO select course change:
+    }
 
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO search material:
+    }
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO reset search material:
+    }
+
+    private void loadCourseMaterials() {
+
+
+
+    }
 
     private boolean isCourseDetailsCorrect() {
 
