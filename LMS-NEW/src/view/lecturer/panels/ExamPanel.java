@@ -1,12 +1,14 @@
 package view.lecturer.panels;
 
 import controller.DBConnection;
+import model.ExamModel;
 import view.lecturer.LecturerDashboard;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Vector;
 
 public class ExamPanel extends JPanel {
@@ -18,6 +20,8 @@ public class ExamPanel extends JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
+
+    private HashMap<String, ExamModel> examModelHashMap = new HashMap<>();
 
     private void createUIComponents() {
         initComponents();
@@ -34,27 +38,51 @@ public class ExamPanel extends JPanel {
                 "WHERE `lecturer`.`user_id`=?";
 
         ResultSet resultSet = DBConnection.search(query, LecturerDashboard.loginLecturerModel.getId());
-        if(resultSet != null) {
+        if (resultSet != null) {
 
             DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
             defaultTableModel.setRowCount(0);
 
-            try{
+            try {
 
-                while(resultSet.next()){
+                while (resultSet.next()) {
 
-                    Vector<String> row = new Vector<>();
-                    row.add(resultSet.getString("exam.id"));
-                    row.add(resultSet.getString("course.course"));
-                    row.add(resultSet.getString("exam.date_time"));
-                    row.add(resultSet.getString("exam.venue"));
-                    row.add(resultSet.getString("exam.description"));
+                    String examId = resultSet.getString("exam.id");
+                    String courseName = resultSet.getString("course.course");
+                    String courseCode = resultSet.getString("course.course_code");
+                    String dateTime = resultSet.getString("exam.date_time");
+                    String venue = resultSet.getString("exam.venue");
+                    String desc = resultSet.getString("exam.description");
+
+                    JButton updateMarksBtn = new JButton("Update Marks");
+                    updateMarksBtn.addActionListener(e -> {
+                        showMarksDialog(examId);
+                    });
+
+                    Vector<Object> row = new Vector<>();
+                    row.add(examId);
+                    row.add(courseName);
+                    row.add(dateTime);
+                    row.add(venue);
+                    row.add(desc);
+                    row.add(updateMarksBtn);
 
                     defaultTableModel.addRow(row);
 
+                    // hashmap
+                    ExamModel examModel = new ExamModel();
+                    examModel.setId(examId);
+                    examModel.setCourseName(courseName);
+                    examModel.setDateTime(dateTime);
+                    examModel.setVenue(venue);
+                    examModel.setDescription(desc);
+                    examModel.setCourseCode(courseCode);
+
+                    examModelHashMap.put(examId, examModel);
+
                 }
 
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
@@ -88,19 +116,19 @@ public class ExamPanel extends JPanel {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "#", "Subject", "Date & Time", "Venue", "Description"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -142,11 +170,64 @@ public class ExamPanel extends JPanel {
     }// </editor-fold>
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        // reset:
+
+        jTextField1.setText("");
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+        defaultTableModel.setRowCount(0);
+
+        examModelHashMap.forEach((examId, examModel) -> {
+
+            loadTableRows(examModel,defaultTableModel);
+
+        });
+    }
+
+    private void loadTableRows(ExamModel examModel, DefaultTableModel defaultTableModel) {
+
+        JButton updateMarksBtn = new JButton("Update Marks");
+        updateMarksBtn.addActionListener(e -> {
+            showMarksDialog(examModel.getId());
+        });
+
+        Vector<Object> row = new Vector<>();
+        row.add(examModel.getId());
+        row.add(examModel.getCourseName());
+        row.add(examModel.getDateTime());
+        row.add(examModel.getVenue());
+        row.add(examModel.getDescription());
+        row.add(updateMarksBtn);
+
+        defaultTableModel.addRow(row);
+
     }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         // search:
+
+        String searchText = jTextField1.getText();
+        if (searchText.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Please Enter Exam ID or Course Name");
+            return;
+        }
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+        defaultTableModel.setRowCount(0);
+
+        examModelHashMap.forEach((examId, examModel) -> {
+
+            if (examModel.getId().equals(searchText) || examModel.getCourseName().equals(searchText)) {
+
+                loadTableRows(examModel,defaultTableModel);
+
+            }
+        });
+
+    }
+
+    private void showMarksDialog(String examId) {
+
 
 
     }
