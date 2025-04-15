@@ -36,6 +36,11 @@ public class ExamPanel extends javax.swing.JPanel {
         jLabel1.setText("Search Exam:");
 
         jButton1.setText("Search");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Reset");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -49,11 +54,11 @@ public class ExamPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "#", "Subject", "Date & Time", "Venue", "Description"
+                "#", "Subject", "Date & Time", "Venue", "Description", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -101,6 +106,10 @@ public class ExamPanel extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

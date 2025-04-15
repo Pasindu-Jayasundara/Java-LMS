@@ -320,7 +320,7 @@ public class Login extends JDialog {
                             technicalOfficer.setContactNumber(searchResult.getString("contact_number"));
 
                             DepartmentModel departmentModel = new DepartmentModel();
-                            departmentModel.setId(searchResult.getInt("department.department_id"));
+                            departmentModel.setId(searchResult.getString("department.department_id"));
                             departmentModel.setName(searchResult.getString("department_name"));
 
                             technicalOfficer.setDepartment(departmentModel);

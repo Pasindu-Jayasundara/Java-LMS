@@ -68,8 +68,6 @@ public class DBConnection {
             setParameters(preparedStatement, params);
             return preparedStatement.executeQuery();
 
-//            Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-//            return statement.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
