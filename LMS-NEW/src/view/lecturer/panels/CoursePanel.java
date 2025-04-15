@@ -2,21 +2,23 @@ package view.lecturer.panels;
 
 import controller.DBConnection;
 import controller.FileSelect;
+import controller.FileUpload;
 import controller.Validation;
 import model.*;
 import view.lecturer.dialog.CourseDetailDialog;
 import view.lecturer.LecturerDashboard;
+import view.lecturer.dialog.MarksDialog;
+import view.lecturer.dialog.PDFPreviewDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
@@ -28,7 +30,6 @@ public class CoursePanel extends JPanel {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
@@ -86,10 +87,7 @@ public class CoursePanel extends JPanel {
     public static HashMap<String, UndergraduateLevelModel> levelHashMap = new HashMap<>();
 
     private HashMap<String, String> selectedPdfFile;
-    private ArrayList<String> materialNameList = new ArrayList<>();
-
-    private ArrayList<String> removeMaterialIdList = new ArrayList<>();
-    private ArrayList<String> addMaterialIdList = new ArrayList<>();
+    private CourseModel courseModel;
 
     private void createUIComponents() {
         initComponents();
@@ -144,7 +142,6 @@ public class CoursePanel extends JPanel {
         jLabel17 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
         jButton8 = new javax.swing.JButton();
@@ -160,19 +157,19 @@ public class CoursePanel extends JPanel {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
 
                 },
-                new String[]{
+                new String [] {
                         "#", "Code", "Name", "Credit", "Hourse"
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
+            boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
+                return canEdit [columnIndex];
             }
         });
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -221,7 +218,7 @@ public class CoursePanel extends JPanel {
                                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(36, Short.MAX_VALUE))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("My Courses", jPanel1);
@@ -236,17 +233,17 @@ public class CoursePanel extends JPanel {
 
         jLabel6.setText("Department:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.setPreferredSize(new java.awt.Dimension(64, 22));
 
         jLabel7.setText("Level:");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox2.setPreferredSize(new java.awt.Dimension(64, 22));
 
         jLabel8.setText("Semester:");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Timetable");
@@ -256,7 +253,7 @@ public class CoursePanel extends JPanel {
 
         jLabel11.setText("Day of the Week:");
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel12.setText("From:");
 
@@ -270,19 +267,19 @@ public class CoursePanel extends JPanel {
         });
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
 
                 },
-                new String[]{
+                new String [] {
                         "#", "Day", "From", "To"
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
+            boolean[] canEdit = new boolean [] {
                     false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
+                return canEdit [columnIndex];
             }
         });
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -420,7 +417,7 @@ public class CoursePanel extends JPanel {
                                 .addComponent(jLabel14)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton4)
-                                .addContainerGap(40, Short.MAX_VALUE))
+                                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Add New Course", jPanel2);
@@ -433,7 +430,7 @@ public class CoursePanel extends JPanel {
 
         jLabel15.setText("Select Course:");
 
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Select Course"}));
+        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Course" }));
         jComboBox5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox5ActionPerformed(evt);
@@ -442,7 +439,7 @@ public class CoursePanel extends JPanel {
 
         jLabel16.setText("Meterial Type:");
 
-        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"PDF"}));
+        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PDF" }));
 
         jLabel17.setForeground(new java.awt.Color(153, 153, 153));
         jLabel17.setText("Selected File Name ....");
@@ -454,36 +451,29 @@ public class CoursePanel extends JPanel {
             }
         });
 
-        jButton7.setText("Add +");
+        jButton7.setBackground(new java.awt.Color(0, 102, 0));
+        jButton7.setForeground(new java.awt.Color(255, 255, 255));
+        jButton7.setText("Upload");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
             }
         });
 
-        jButton5.setBackground(new java.awt.Color(0, 102, 0));
-        jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setText("Update");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
+                new Object [][] {
 
                 },
-                new String[]{
+                new String [] {
                         "#", "File Name", "Uploaded At", "", ""
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
+            boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
+                return canEdit [columnIndex];
             }
         });
         jScrollPane4.setViewportView(jTable3);
@@ -496,10 +486,6 @@ public class CoursePanel extends JPanel {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
                 jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButton5)
-                                .addContainerGap())
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 830, Short.MAX_VALUE)
                         .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addContainerGap()
@@ -518,10 +504,7 @@ public class CoursePanel extends JPanel {
                                         .addComponent(jButton6)
                                         .addComponent(jButton7))
                                 .addGap(18, 18, 18)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                                .addComponent(jButton5)
-                                .addContainerGap())
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE))
         );
 
         jButton8.setText("Search");
@@ -573,7 +556,7 @@ public class CoursePanel extends JPanel {
                                         .addComponent(jButton9))
                                 .addGap(18, 18, 18)
                                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 20, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Add Course Meterials ", jPanel3);
@@ -761,57 +744,57 @@ public class CoursePanel extends JPanel {
     }
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add material to list:
+        // upload:
 
-        Vector<Object> materialList = new Vector<>();
-        materialList.add("Pending");
-        materialList.add(selectedPdfFile.get("filename"));
-        materialList.add(new Date(System.currentTimeMillis()));
+        if(selectedPdfFile != null) {
 
-        JButton previewBtn = new JButton("Preview");
-        previewBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadPreview(selectedPdfFile.get("selectedFile"));
+            HashMap<String, String> uploaded = FileUpload.upload(selectedPdfFile,FileUpload.PDF_FILE);
+            if(uploaded.get("status").equals(FileUpload.SUCCESS)){
+
+                String query = "INSERT INTO `material`(`datetime`,`url`,`course_course_id`,`type_type_id`,`name`) " +
+                        "VALUES(?,?,?,?,?)";
+
+                DBConnection.iud(
+                        query,
+                        new SimpleDateFormat("yyyy-MM-dd HH:ii:ss").format(new Date()),
+                        uploaded.get("url"),
+                        courseModel.getCourseId(),
+                        '1',
+                        selectedPdfFile.get("filename")
+                );
+
+                loadCourseMaterials();
+
+                JOptionPane.showMessageDialog(this,"File Upload Success","Success",JOptionPane.INFORMATION_MESSAGE);
+
+            }else{
+                JOptionPane.showMessageDialog(this,"File Upload Failed","Failed",JOptionPane.ERROR_MESSAGE);
             }
-        });
-        materialList.add(previewBtn);
 
-        JButton deleteBtn = new JButton("Remove");
-        deleteBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removeMaterial();
-            }
-        });
-        materialList.add(deleteBtn);
-
-        loadCourseMaterials();
-
-    }
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO upload material:
+        }
     }
 
     private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO select course change:
+        // select course change:
+
+        loadCourseMaterials();
     }
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {
         // search material:
 
-        if (jComboBox5.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "Please select a course first", "Select Course", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
         loadCourseMaterials();
     }
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO reset search material:
+        // reset search material:
 
+        jComboBox5.setSelectedIndex(0);
+        jLabel17.setText("Selected File Name ....");
+        selectedPdfFile = null;
+
+        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+        model.setRowCount(0);
 
     }
 
@@ -821,12 +804,36 @@ public class CoursePanel extends JPanel {
         loadCourseNameList();
     }
 
-    private void removeMaterial(String materialId, String url) {
-        // TODO remove material:
+    private void removeMaterial(String materialId, String url, String name) {
+        // remove material:
+
+        File fileToDelete = new File(url);
+
+        if (fileToDelete.exists()) {
+
+            boolean deleted = fileToDelete.delete();
+            if (deleted) {
+
+                String query = "DELETE FROM `material` WHERE `material_id`=?";
+                DBConnection.iud(query, materialId);
+
+                loadCourseMaterials();
+
+                JOptionPane.showMessageDialog(this,"File Deleted","Success",JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,"Failed to delete the file: " + name,"Failed",JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,"File Not Found","File Not Found",JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     private void loadPreview(String url) {
-        // TODO preview material:
+        // preview material:
+
+        PDFPreviewDialog pdfPreviewDialog = new PDFPreviewDialog(CoursePanel.this,url);
+        pdfPreviewDialog.setVisible(true);
 
     }
 
@@ -847,10 +854,21 @@ public class CoursePanel extends JPanel {
 
     private void loadCourseMaterials() {
 
+        if (jComboBox5.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(null, "Please select a course first", "Select Course", JOptionPane.WARNING_MESSAGE);
+
+            DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+            model.setRowCount(0);
+
+            return;
+        }
+
         String selectedCourse = String.valueOf(jComboBox5.getSelectedItem());
         courseHashMap.forEach((key, courseModel) -> {
 
             if (courseModel.getCourseName().equals(selectedCourse)) {
+
+                this.courseModel = courseModel;
 
                 String query = "SELECT * FROM `material` INNER JOIN `course` ON `course`.`course_id`=`material`.`course_course_id` " +
                         "WHERE `course`.`course_code`=?";
@@ -867,10 +885,11 @@ public class CoursePanel extends JPanel {
 
                             String materialId = resultSet.getString("material_id");
                             String url = resultSet.getString("url");
+                            String name = resultSet.getString("name");
 
                             Vector<Object> materialList = new Vector<>();
                             materialList.add(materialId);
-                            materialList.add(resultSet.getString("name"));
+                            materialList.add(name);
                             materialList.add(resultSet.getString("datetime"));
 
                             JButton previewBtn = new JButton("Preview");
@@ -886,7 +905,7 @@ public class CoursePanel extends JPanel {
                             deleteBtn.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    removeMaterial(materialId, url);
+                                    removeMaterial(materialId, url,name);
                                 }
                             });
                             materialList.add(deleteBtn);
