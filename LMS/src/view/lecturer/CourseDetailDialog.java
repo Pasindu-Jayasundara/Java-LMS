@@ -123,11 +123,6 @@ public class CourseDetailDialog extends javax.swing.JDialog {
             }
         });
         jTable3.setEnabled(false);
-        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable3MouseClicked(evt);
-            }
-        });
         jScrollPane3.setViewportView(jTable3);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -223,10 +218,6 @@ public class CourseDetailDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTable3MouseClicked
 
     /**
      * @param args the command line arguments
