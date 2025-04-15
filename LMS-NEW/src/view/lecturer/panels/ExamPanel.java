@@ -1,6 +1,13 @@
 package view.lecturer.panels;
 
+import controller.DBConnection;
+import view.lecturer.LecturerDashboard;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
 
 public class ExamPanel extends JPanel {
     private JPanel panel1;
@@ -14,6 +21,45 @@ public class ExamPanel extends JPanel {
 
     private void createUIComponents() {
         initComponents();
+        loadExams();
+    }
+
+    private void loadExams() {
+
+        String query = "SELECT * FROM `exam` " +
+                "INNER JOIN `marks` ON `exam`.`exam_id`=`exam`.`exam_exam_id` " +
+                "INNER JOIN `grade` ON `grade`.`grade_id=`marks`.`grade_grade_id` " +
+                "INNER JOIN `course` ON `exam`.`course_course_id`=`course`.`course_id` " +
+                "INNER JOIN `lecturer` ON `lecturer`.`user_id`=`course`.`lecturer_user_id` " +
+                "WHERE `lecturer`.`user_id`=?";
+
+        ResultSet resultSet = DBConnection.search(query, LecturerDashboard.loginLecturerModel.getId());
+        if(resultSet != null) {
+
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            try{
+
+                while(resultSet.next()){
+
+                    Vector<String> row = new Vector<>();
+                    row.add(resultSet.getString("exam.id"));
+                    row.add(resultSet.getString("course.course"));
+                    row.add(resultSet.getString("exam.date_time"));
+                    row.add(resultSet.getString("exam.venue"));
+                    row.add(resultSet.getString("exam.description"));
+
+                    defaultTableModel.addRow(row);
+
+                }
+
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
     private void initComponents() {
@@ -28,6 +74,11 @@ public class ExamPanel extends JPanel {
         jLabel1.setText("Search Exam:");
 
         jButton1.setText("Search");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Reset");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -93,4 +144,11 @@ public class ExamPanel extends JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        // search:
+
+
+    }
+
 }
