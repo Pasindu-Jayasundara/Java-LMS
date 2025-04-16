@@ -21,6 +21,7 @@ public class LecturerDashboard extends JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane2;
+    private view.lecturer.panels.ProfilePanel profilePanel1;
 
     // panels
     private view.lecturer.panels.AttendancePanel attendancePanel1;
@@ -52,13 +53,7 @@ public class LecturerDashboard extends JFrame {
         jButton7 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
-
-        // panels
-        attendancePanel1 = new view.lecturer.panels.AttendancePanel();
-        coursePanel1 = new view.lecturer.panels.CoursePanel();
-        examPanel1 = new view.lecturer.panels.ExamPanel();
-        noticePanel1 = new view.lecturer.panels.NoticePanel();
-        studentPanel1 = new view.lecturer.panels.StudentPanel();
+        profilePanel1 = new view.lecturer.panels.ProfilePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -164,11 +159,7 @@ public class LecturerDashboard extends JFrame {
         jSplitPane2.setLeftComponent(jPanel1);
 
         jPanel3.setLayout(new java.awt.CardLayout());
-        jPanel3.add(attendancePanel1, "card2");
-        jPanel3.add(coursePanel1, "card3");
-        jPanel3.add(examPanel1, "card4");
-        jPanel3.add(noticePanel1, "card5");
-        jPanel3.add(studentPanel1, "card6");
+        jPanel3.add(profilePanel1, "card2");
 
         jScrollPane1.setViewportView(jPanel3);
 
@@ -190,8 +181,7 @@ public class LecturerDashboard extends JFrame {
         );
 
         pack();
-        setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         // course
@@ -239,6 +229,7 @@ public class LecturerDashboard extends JFrame {
                 examPanel1.setVisible(false);
                 noticePanel1.setVisible(false);
                 studentPanel1.setVisible(false);
+                profilePanel1.setVisible(false);
 
                 coursePanel1.setVisible(true);
 
@@ -261,6 +252,7 @@ public class LecturerDashboard extends JFrame {
                 coursePanel1.setVisible(false);
                 noticePanel1.setVisible(false);
                 studentPanel1.setVisible(false);
+                profilePanel1.setVisible(false);
 
                 examPanel1.setVisible(true);
 
@@ -283,6 +275,7 @@ public class LecturerDashboard extends JFrame {
                 examPanel1.setVisible(false);
                 studentPanel1.setVisible(false);
                 coursePanel1.setVisible(false);
+                profilePanel1.setVisible(false);
 
                 noticePanel1.setVisible(true);
 
@@ -304,6 +297,7 @@ public class LecturerDashboard extends JFrame {
                 examPanel1.setVisible(false);
                 noticePanel1.setVisible(false);
                 coursePanel1.setVisible(false);
+                profilePanel1.setVisible(false);
 
                 studentPanel1.setVisible(true);
 
@@ -325,6 +319,7 @@ public class LecturerDashboard extends JFrame {
                 noticePanel1.setVisible(false);
                 studentPanel1.setVisible(false);
                 coursePanel1.setVisible(false);
+                profilePanel1.setVisible(false);
 
                 attendancePanel1.setVisible(true);
 
@@ -341,6 +336,14 @@ public class LecturerDashboard extends JFrame {
                 break;
             }
             case "setting":{
+
+                examPanel1.setVisible(false);
+                noticePanel1.setVisible(false);
+                studentPanel1.setVisible(false);
+                coursePanel1.setVisible(false);
+                attendancePanel1.setVisible(false);
+
+                profilePanel1.setVisible(true);
 
                 // buttons
                 jButton1.setSelected(false);
