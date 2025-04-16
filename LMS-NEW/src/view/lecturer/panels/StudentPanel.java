@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -262,6 +263,19 @@ public class StudentPanel extends JPanel{
                     String department = resultSet.getString("department");
 
                     // hashmap
+                    ArrayList<String> subjectList = new ArrayList<>();
+
+                    String q2 = "SELECT * FROM `course` " +
+                            "INNER JOIN `department_has_undergraduate_level` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`course_course_id` " +
+                            "INNER JOIN `undergraduate_level` ON `undergraduate_level`.`level_id`=`department_has_undergraduate_level`.`undergraduate_level_level_id` " +
+                            "WHERE `level`<=?";
+                    ResultSet rs = DBConnection.search(q2, level);
+                    if(rs != null){
+                        while(rs.next()){
+                            subjectList.add(rs.getString("course"));
+                        }
+                    }
+
                     StudentFullDetailModel studentFullDetailModel = new StudentFullDetailModel();
                     studentFullDetailModel.setId(Integer.parseInt(userId));
                     studentFullDetailModel.setUsername(username);
@@ -272,6 +286,7 @@ public class StudentPanel extends JPanel{
                     studentFullDetailModel.setLevel(level);
                     studentFullDetailModel.setSemester(semester);
                     studentFullDetailModel.setDepartment(department);
+                    studentFullDetailModel.setSubjectList(subjectList);
 
                     // table
                     addRowToTable(studentFullDetailModel,defaultTableModel);

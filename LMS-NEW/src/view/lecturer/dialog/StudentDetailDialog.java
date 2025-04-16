@@ -4,6 +4,7 @@ import model.StudentFullDetailModel;
 import view.lecturer.panels.StudentPanel;
 
 import javax.swing.*;
+import java.util.Objects;
 
 public class StudentDetailDialog extends JDialog {
     private JPanel contentPane;
@@ -58,6 +59,7 @@ public class StudentDetailDialog extends JDialog {
 
     private void createUIComponents() {
         initComponents();
+        setUpStudentProfile();
     }
 
     private void initComponents() {
@@ -102,6 +104,12 @@ public class StudentDetailDialog extends JDialog {
         jTable2 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jImagePanel1Layout = new javax.swing.GroupLayout(jImagePanel1);
         jImagePanel1.setLayout(jImagePanel1Layout);
@@ -255,8 +263,8 @@ public class StudentDetailDialog extends JDialog {
                                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jLabel9)
                                                         .addComponent(jLabel12)))
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Student Profile", jPanel2);
@@ -419,4 +427,46 @@ public class StudentDetailDialog extends JDialog {
 
         pack();
     }// </editor-fold>
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {
+        // tab changed:
+
+        int selectedTabIndex = jTabbedPane1.getSelectedIndex();
+        switch (selectedTabIndex) {
+            case 0:
+                setUpStudentProfile();
+                break;
+            case 1:
+                setUpEligibility();
+                break;
+            case 2:
+                setUpAcademicPerformance();
+                break;
+        }
+    }
+
+    private void setUpAcademicPerformance() {
+        // todo
+    }
+
+    private void setUpEligibility() {
+        // todo
+    }
+
+    private void setUpStudentProfile() {
+
+        jImagePanel1.setImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(studentFullDetailModel.getProfilePicture()))));
+        jLabel6.setText(studentFullDetailModel.getUsername());
+        jLabel5.setText(studentFullDetailModel.getEmail());
+        jLabel4.setText(studentFullDetailModel.getContactNumber());
+        jLabel16.setText(studentFullDetailModel.getEnrollmentDate());
+        jLabel10.setText(studentFullDetailModel.getDepartment());
+        jLabel11.setText(studentFullDetailModel.getLevel());
+        jLabel12.setText(studentFullDetailModel.getSemester());
+
+        DefaultListModel<String> model = (DefaultListModel<String>) jList1.getModel();
+        model.addAll(studentFullDetailModel.getSubjectList());
+
+    }
+
 }
