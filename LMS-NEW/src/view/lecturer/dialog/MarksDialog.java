@@ -5,12 +5,19 @@ import controller.FileSelect;
 import controller.FileUpload;
 import controller.callback.MarksUpdateCallBack;
 import model.ExamModel;
+import model.IndividualMarksModel;
 import view.lecturer.panels.ExamPanel;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MarksDialog extends JDialog {
@@ -45,8 +52,11 @@ public class MarksDialog extends JDialog {
     private javax.swing.JTextArea jTextArea1;
 
     private ExamModel examModel;
-    private HashMap<String,String> pdfFile;
+    private HashMap<String, String> pdfFile;
     private MarksUpdateCallBack marksUpdateCallBack;
+
+    private static HashMap<String, String> individualMarksChangedHashMap = new HashMap<>();
+    private static ArrayList<IndividualMarksModel> individualMarksModelArrayList = new ArrayList<>();
 
     public MarksDialog(ExamPanel examPanel, ExamModel examModel, MarksUpdateCallBack marksUpdateCallBack) {
 
@@ -59,7 +69,7 @@ public class MarksDialog extends JDialog {
 
     private void createUIComponents() {
         initComponents();
-        setUpBg();
+        setUpMarksFileTab();
     }
 
     private void initComponents() {
@@ -154,19 +164,19 @@ public class MarksDialog extends JDialog {
         });
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "#", "File Name", "", ""
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jScrollPane3.setViewportView(jTable2);
@@ -209,19 +219,19 @@ public class MarksDialog extends JDialog {
         jTabbedPane1.addTab("Marks Files", jPanel2);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "#", "Reg Number", "Name", "Marks"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jScrollPane2.setViewportView(jTable1);
@@ -351,7 +361,180 @@ public class MarksDialog extends JDialog {
         pack();
     }// </editor-fold>
 
-    private void setUpBg() {
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        // choose file
+
+        HashMap<String, String> pdfFile1 = FileSelect.getPDFFile();
+        if (pdfFile1.get("pdf").equals("1")) {
+            pdfFile = pdfFile1;
+
+            jButton2.setEnabled(true);
+            jButton3.setEnabled(true);
+
+        }
+        jLabel11.setText(pdfFile.get("filename"));
+
+    }
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        // clear
+        setUpMarksFileTab();
+    }
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+        // upload
+
+        HashMap<String, String> uploadMap = FileUpload.upload(pdfFile, FileUpload.PDF_FILE);
+
+        if (uploadMap.get("status").equals(FileUpload.SUCCESS)) {
+            // success
+            // add to db
+            // update table
+
+            String query = "INSERT INTO `marks_document`(`url`,`file_name`,`exam_exam_id`) VALUES(?,?,?)";
+            DBConnection.iud(query, uploadMap.get("url"), pdfFile.get("filename"), examModel.getId());
+
+            JOptionPane.showMessageDialog(this, "Marks File added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+            setUpMarksFileTab();
+
+            marksUpdateCallBack.onUpdateMarks(true);
+
+        } else {
+            // failed
+            JOptionPane.showMessageDialog(this, "Marks File adding failed", "Failed", JOptionPane.ERROR_MESSAGE);
+
+        }
+    }
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {
+        // tab changed:
+
+        int selectedTabIndex = jTabbedPane1.getSelectedIndex();
+        if (selectedTabIndex == 0) {
+            setUpMarksFileTab();
+        } else if (selectedTabIndex == 1) {
+            setUpAddIndividualMarksTab();
+        }
+    }
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
+        // upload individual marks:
+
+        String updateQuery = "UPDATE `marks` SET `marks`.`marks`=? WHERE `student_user_id`=? AND `exam_exam_id`=?";
+        String insertQuery = "INSERT INTO `marks`(`student_user_id`,`exam_exam_id`,`marks`) VALUES(?,?,?)";
+
+        individualMarksChangedHashMap.forEach((studentId,marks)->{
+
+            AtomicBoolean isFound = new AtomicBoolean(false);
+            individualMarksModelArrayList.forEach(individualMarksModel -> {
+
+                if(individualMarksModel.getStudentRegisterNumber().equals(studentId)){
+                    isFound.set(true);
+                    return;
+                }
+            });
+
+            if(isFound.get()){
+                DBConnection.iud(updateQuery,marks,studentId,examModel.getId());
+            }else{
+                DBConnection.iud(insertQuery,marks,studentId,examModel.getId());
+            }
+        });
+
+        JOptionPane.showMessageDialog(this,"Marks Update Success","Done",JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void setUpAddIndividualMarksTab() {
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+        defaultTableModel.setRowCount(0);
+
+        addListenerToTable(defaultTableModel);
+        loadTable(defaultTableModel);
+
+    }
+
+    private void loadTable(DefaultTableModel defaultTableModel) {
+
+        String query = "SELECT * FROM `student` " +
+                "INNER JOIN `student_has_department_has_undergraduate_level` ON `student_has_department_has_undergraduate_level`.`student_user_id`=`student`.`user_id`  " +
+                "INNER JOIN `department_has_undergraduate_level` ON `student_has_department_has_undergraduate_level`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                "INNER JOIN `exam` ON `exam`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                "WHERE `exam`.`id`=?";
+
+        ResultSet resultSet = DBConnection.search(query, examModel.getId());
+        if (resultSet != null) {
+
+            int num = 1;
+            try {
+
+                while (resultSet.next()) {
+
+                    String regNumber = resultSet.getString("user_id");
+                    String name = resultSet.getString("username");
+                    String marks = "";
+
+                    String marksQuery = "SELECT * FROM `marks` WHERE `exam_exam_id`=?";
+                    ResultSet marksResultset = DBConnection.search(marksQuery, examModel.getId());
+                    if (marksResultset != null) {
+
+                        while (marksResultset.next()) {
+                            marks = marksResultset.getString("marks");
+                        }
+                    }
+
+                    Vector<String> row = new Vector<>();
+                    row.add(String.valueOf(num++));
+                    row.add(regNumber);
+                    row.add(name);
+                    row.add(marks);
+
+                    defaultTableModel.addRow(row);
+
+                    // array list
+                    IndividualMarksModel individualMarksModel = new IndividualMarksModel();
+                    individualMarksModel.setStudentRegisterNumber(regNumber);
+                    individualMarksModel.setName(name);
+                    individualMarksModel.setMarks(marks);
+
+                    individualMarksModelArrayList.add(individualMarksModel);
+
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void addListenerToTable(DefaultTableModel defaultTableModel) {
+
+        defaultTableModel.addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+
+                if (e.getType() == TableModelEvent.UPDATE) {
+
+                    int row = e.getFirstRow();
+                    int column = e.getColumn();
+
+                    String studentId = String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 1));
+
+                    String newValue = (String) defaultTableModel.getValueAt(row, column);
+                    if (newValue == null || newValue.trim().isBlank()) {
+
+                        individualMarksChangedHashMap.remove(studentId);
+                        return;
+                    }
+                    individualMarksChangedHashMap.put(studentId, newValue);
+
+                }
+            }
+        });
+    }
+
+    private void setUpMarksFileTab() {
 
         jLabel2.setText(examModel.getId());
         jLabel8.setText(examModel.getDateTime());
@@ -366,7 +549,7 @@ public class MarksDialog extends JDialog {
         defaultTableModel.setRowCount(0);
 
         AtomicInteger i = new AtomicInteger(1);
-        examModel.getMarksModel().forEach(marksModel->{
+        examModel.getMarksModel().forEach(marksModel -> {
 
             JButton viewMarksButton = new JButton("View Marks");
             viewMarksButton.addActionListener(e -> {
@@ -393,69 +576,15 @@ public class MarksDialog extends JDialog {
     private void deleteFile(String id) {
 
         String query = "DELETE FROM `marks_document` WHERE `id` =?";
-        DBConnection.iud(query,id);
+        DBConnection.iud(query, id);
 
         // load table
         marksUpdateCallBack.onUpdateMarks(true);
-        setUpBg();
+        setUpMarksFileTab();
     }
 
     private void previewFile(String url) {
-        PDFPreviewDialog pdfPreviewDialog = new PDFPreviewDialog(MarksDialog.this,url);
+        PDFPreviewDialog pdfPreviewDialog = new PDFPreviewDialog(MarksDialog.this, url);
         pdfPreviewDialog.setVisible(true);
-    }
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        // choose file
-
-        HashMap<String, String> pdfFile1 = FileSelect.getPDFFile();
-        if(pdfFile1.get("pdf").equals("1")){
-            pdfFile = pdfFile1;
-
-            jButton2.setEnabled(true);
-            jButton3.setEnabled(true);
-
-        }
-        jLabel11.setText(pdfFile.get("filename"));
-
-    }
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-        // clear
-        setUpBg();
-    }
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
-        // upload
-
-        HashMap<String, String> uploadMap = FileUpload.upload(pdfFile,FileUpload.PDF_FILE);
-
-        if(uploadMap.get("status").equals(FileUpload.SUCCESS)){
-            // success
-            // add to db
-            // update table
-
-            String query = "INSERT INTO `marks_document`(`url`,`file_name`,`exam_exam_id`) VALUES(?,?,?)";
-            DBConnection.iud(query,uploadMap.get("url"),pdfFile.get("filename"),examModel.getId());
-
-            JOptionPane.showMessageDialog(this,"Marks File added successfully","Success",JOptionPane.INFORMATION_MESSAGE);
-            setUpBg();
-
-            marksUpdateCallBack.onUpdateMarks(true);
-
-        }else{
-            // failed
-            JOptionPane.showMessageDialog(this,"Marks File adding failed","Failed",JOptionPane.ERROR_MESSAGE);
-
-        }
-    }
-
-    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {
-        // TODO tab changed:
-
-    }
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO upload individual marks:
     }
 }
