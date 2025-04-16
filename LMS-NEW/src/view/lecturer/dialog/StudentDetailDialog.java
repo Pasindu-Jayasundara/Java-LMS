@@ -6,6 +6,7 @@ import view.lecturer.panels.StudentPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -343,11 +344,11 @@ public class StudentDetailDialog extends JDialog {
 
                 },
                 new String [] {
-                        "#", "Subject", "Marks", "Grade"
+                        "#", "Subject", "Exam Id", "Marks", "Grade"
                 }
         ) {
             boolean[] canEdit = new boolean [] {
-                    false, false, false, false
+                    false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -470,7 +471,134 @@ public class StudentDetailDialog extends JDialog {
     }
 
     private void setUpAcademicPerformance() {
+
+        jLabel19.setText(studentFullDetailModel.getDepartment());
+        jLabel21.setText(studentFullDetailModel.getLevel());
+        jLabel23.setText(studentFullDetailModel.getSemester());
+        jLabel25.setText(cgpa());
+        jLabel27.setText(sgpa());
+
+        loadAcademicPerformanceTable();
+    }
+
+    private String sgpa() {
         // todo
+        return "00";
+    }
+
+    private String cgpa() {
+        // todo
+        return "00";
+    }
+
+    private void loadAcademicPerformanceTable() {
+
+        String query = "SELECT * FROM `course` " +
+                "INNER JOIN `department_has_undergraduate_level` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                "INNER JOIN `undergraduate_level` ON `department_has_undergraduate_level`.`undergraduate_level_level_id`=`undergraduate_level`.`level_id` " +
+                "INNER JOIN `semester` ON `semester`.`semester_id`=`department_has_undergraduate_level`.`semester_semester_id` " +
+                "INNER JOIN `student_has_department_has_undergraduate_level` ON `student_has_department_has_undergraduate_level`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                "INNER JOIN `student` ON `student`.`user_id`=`student_has_department_has_undergraduate_level`.`student_user_id` " +
+                "WHERE `student`.`user_id`=?";
+
+        ResultSet resultSet = DBConnection.search(query, studentFullDetailModel.getId());
+        if(resultSet!=null) {
+
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable2.getModel();
+            defaultTableModel.setRowCount(0);
+
+            try{
+
+                while(resultSet.next()){
+
+                    String courseId = resultSet.getString("course_id");
+
+                    Vector<Object> row = new Vector<>();
+                    row.add(courseId);
+                    row.add(resultSet.getString("course"));
+
+                    String q2 = "SELECT * FROM `marks` " +
+                            "INNER JOIN `exam` ON `marks`.`exam_exam_id`=`exam`.`exam_id` " +
+                            "INNER JOIN `student` ON `student`.`user_id`=`marks`.`student_user_id` " +
+                            "INNER JOIN `department_has_undergraduate_level` ON `department_has_undergraduate_level`.`id`=`exam`.`department_has_undergraduate_level_id` " +
+                            "INNER JOIN `course` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                            "WHERE `student`.`user_id`=? AND `course`.`course_id`=?";
+                    ResultSet rs = DBConnection.search(q2, studentFullDetailModel.getId(), courseId);
+
+                    JTable jTable = new JTable();
+                    DefaultTableModel tableModel = new DefaultTableModel();
+                    jTable.setModel(tableModel);
+                    jTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+                    jTable.addColumn(new TableColumn());
+
+                    ArrayList<String> mal = new ArrayList<>();
+                    if(rs!=null) {
+
+                        while (rs.next()){
+                            Vector<String> r = new Vector<>();
+                            r.add(rs.getString("exam.exam_id"));
+
+                            tableModel.addRow(r);
+
+                            mal.add(rs.getString("marks.marks"));
+                        }
+                    }
+                    row.add(jTable);
+
+                    JTable jTable2 = new JTable();
+                    DefaultTableModel tableModel2 = new DefaultTableModel();
+                    jTable2.setModel(tableModel2);
+                    jTable2.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+                    jTable2.addColumn(new TableColumn());
+
+                    mal.forEach(mark->{
+                        Vector<String> r = new Vector<>();
+                        r.add(mark);
+
+                        tableModel2.addRow(r);
+                    });
+                    row.add(jTable2);
+
+                    JTable jTable3 = new JTable();
+                    DefaultTableModel tableModel3 = new DefaultTableModel();
+                    jTable3.setModel(tableModel3);
+                    jTable3.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+                    jTable3.addColumn(new TableColumn());
+
+                    mal.forEach(mark->{
+                        Vector<String> r = new Vector<>();
+                        r.add(gradeMark(Double.parseDouble(mark)));
+
+                        tableModel3.addRow(r);
+                    });
+                    row.add(jTable3);
+
+                    defaultTableModel.addRow(row);
+                }
+
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private String gradeMark(double mark) {
+
+        if(mark >= 75){
+            return "A";
+        }
+        if(mark <75 && mark >= 50){
+            return "B";
+        }
+        if(mark <50 && mark >= 40){
+            return "C";
+        }
+        if(mark <40 && mark >= 30){
+            return "D";
+        }
+        return "F";
+
     }
 
     private void setUpEligibility() {
@@ -556,6 +684,7 @@ public class StudentDetailDialog extends JDialog {
                             break;
                         }
                     }
+
                 }
 
             }catch (SQLException e){
