@@ -35,8 +35,12 @@ public class ExamPanel extends JPanel {
     private void loadExams() {
 
         String query = "SELECT * FROM `exam` " +
-                "INNER JOIN `course` ON `exam`.`course_course_id`=`course`.`course_id` " +
-                "INNER JOIN `lecturer` ON `lecturer`.`user_id`=`course`.`lecturer_user_id` " +
+                "INNER JOIN `exam_type` ON `exam`.`exam_type_type_id`=`exam_type`.`type_id` " +
+                "INNER JOIN `marks` ON `marks`.`exam_exam_id`=`exam`.`exam_id` " +
+//                "INNER JOIN `marks_document` ON `marks_document`.`exam_exam_id`=`exam`.`exam_id` " +
+                "INNER JOIN `department_has_undergraduate_level` ON `department_has_undergraduate_level`.`id`=`exam`.`department_has_undergraduate_level_id` " +
+                "INNER JOIN `course` ON `department_has_undergraduate_level`.`id`=`course`.`department_has_undergraduate_level_id` " +
+                "INNER JOIN `lecturer` ON `course`.`lecturer_user_id`=`lecturer`.`user_id` " +
                 "WHERE `lecturer`.`user_id`=?";
 
         ResultSet resultSet = DBConnection.search(query, LecturerDashboard.loginLecturerModel.getId());
@@ -55,8 +59,9 @@ public class ExamPanel extends JPanel {
                     String dateTime = resultSet.getString("exam.date_time");
                     String venue = resultSet.getString("exam.venue");
                     String desc = resultSet.getString("exam.description");
+                    String examType = resultSet.getString("exam_type.type");
 
-                    String q2 = "SELECT * FROM `marks` WHERE `exam_exam_id`=?";
+                    String q2 = "SELECT * FROM `marks_document` WHERE `exam_exam_id`=?";
                     ResultSet rs = DBConnection.search(q2, examId);
 
                     Vector<MarksModel> marksModelVector = new Vector<>();
@@ -82,6 +87,7 @@ public class ExamPanel extends JPanel {
                     examModel.setVenue(venue);
                     examModel.setDescription(desc);
                     examModel.setCourseCode(courseCode);
+                    examModel.setExamType(examType);
                     examModel.setMarksModel(marksModelVector);
 
                     JButton updateMarksBtn = new JButton("Update Marks");
@@ -95,6 +101,7 @@ public class ExamPanel extends JPanel {
                     row.add(dateTime);
                     row.add(venue);
                     row.add(desc);
+                    row.add(examType);
                     row.add(updateMarksBtn);
 
                     defaultTableModel.addRow(row);
@@ -141,11 +148,11 @@ public class ExamPanel extends JPanel {
 
                 },
                 new String [] {
-                        "#", "Subject", "Date & Time", "Venue", "Description", ""
+                        "#", "Subject", "Date & Time", "Venue", "Description", "Type", ""
                 }
         ) {
             boolean[] canEdit = new boolean [] {
-                    false, false, false, false, false, false
+                    false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -218,6 +225,7 @@ public class ExamPanel extends JPanel {
         row.add(examModel.getDateTime());
         row.add(examModel.getVenue());
         row.add(examModel.getDescription());
+        row.add(examModel.getExamType());
         row.add(updateMarksBtn);
 
         defaultTableModel.addRow(row);

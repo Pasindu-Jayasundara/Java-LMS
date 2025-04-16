@@ -54,11 +54,11 @@ public class ExamPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "#", "Subject", "Date & Time", "Venue", "Description", ""
+                "#", "Subject", "Date & Time", "Venue", "Description", "Type", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

@@ -11,19 +11,29 @@ public class ExamModel implements Serializable {
     private String description;
     private String courseName;
     private String courseCode;
+    private String examType;
     private Vector<MarksModel> marksModel;
 
     public ExamModel() {
     }
 
-    public ExamModel(String id, String dateTime, String venue, String description, String courseName, String courseCode, Vector<MarksModel> marksModel) {
+    public ExamModel(String id, String dateTime, String venue, String description, String courseName, String courseCode, String examType, Vector<MarksModel> marksModel) {
         this.id = id;
         this.dateTime = dateTime;
         this.venue = venue;
         this.description = description;
         this.courseName = courseName;
         this.courseCode = courseCode;
+        this.examType = examType;
         this.marksModel = marksModel;
+    }
+
+    public String getExamType() {
+        return examType;
+    }
+
+    public void setExamType(String examType) {
+        this.examType = examType;
     }
 
     public String getId() {
