@@ -2,29 +2,30 @@ package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class StudentFullDetailModel extends StudentModel implements Serializable {
 
     private String level;
     private String department;
     private String semester;
-    private ArrayList<String> subjectList;
+    private HashMap<String,String> subjectList;
 
     public StudentFullDetailModel() {
     }
 
-    public StudentFullDetailModel(String level, String department, String semester, ArrayList<String> subjectList) {
+    public StudentFullDetailModel(String level, String department, String semester, HashMap<String,String> subjectList) {
         this.level = level;
         this.department = department;
         this.semester = semester;
         this.subjectList = subjectList;
     }
 
-    public ArrayList<String> getSubjectList() {
+    public HashMap<String,String> getSubjectList() {
         return subjectList;
     }
 
-    public void setSubjectList(ArrayList<String> subjectList) {
+    public void setSubjectList(HashMap<String,String> subjectList) {
         this.subjectList = subjectList;
     }
 

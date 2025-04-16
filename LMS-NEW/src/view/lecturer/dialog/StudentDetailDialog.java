@@ -1,10 +1,13 @@
 package view.lecturer.dialog;
 
+import controller.DBConnection;
 import model.StudentFullDetailModel;
 import view.lecturer.panels.StudentPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -341,11 +344,11 @@ public class StudentDetailDialog extends JDialog {
 
                 },
                 new String [] {
-                        "#", "Subject", "Marks"
+                        "#", "Subject", "Marks", "Grade"
                 }
         ) {
             boolean[] canEdit = new boolean [] {
-                    false, false, false
+                    false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -478,14 +481,114 @@ public class StudentDetailDialog extends JDialog {
         defaultTableModel.setRowCount(0);
 
         AtomicInteger i = new AtomicInteger(1);
-        studentFullDetailModel.getSubjectList().forEach(subject -> {
+        studentFullDetailModel.getSubjectList().forEach((courseCode,subject) -> {
 
-            Vector<String> row = new Vector<String>();
+            Vector<String> row = new Vector<>();
             row.add(String.valueOf(i.getAndIncrement()));
             row.add(subject);
-            row.add();
+            row.add(completeEligibility(courseCode));
+
+            defaultTableModel.addRow(row);
 
         });
+    }
+
+    private Double caEligibility(String courseCode) {
+
+        String query = "SELECT * FROM `exam` " +
+                "INNER JOIN `exam_type` ON `exam`.`exam_type_type_id`=`exam_type`.`type_id` " +
+                "INNER JOIN `department_has_undergraduate_level` ON `exam`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                "INNER JOIN `course` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                "WHERE `course`.`course_code`=? AND `exam_type`.`type_id`!=?";
+
+        int quizCount = 0;
+        int assessmentCount = 0;
+        int mid = 0;
+
+        ResultSet resultSet = DBConnection.search(query, courseCode, "4");//4 => final
+        if(resultSet !=null) {
+
+            while(resultSet.next()){
+
+                String examType = resultSet.getString("exam_type.type_id");
+                switch (examType){
+                    case "1":{ // quiz
+                        quizCount++;
+                        break;
+                    }
+                    case "2":{ // assessment
+                        assessmentCount++;
+                        break;
+                    }
+                    case "3":{
+                        mid++;
+                    }
+                }
+            }
+        }
+
+    }
+
+    private Double attendanceEligibility(String courseCode){
+
+        String attendanceQuery = "SELECT * FROM `attendance` " +
+                "INNER JOIN `timetable` ON `attendance`.`timetable_timetable_id`=`timetable`.`timetable_id` " +
+                "INNER JOIN `course` ON `course`.`course_id`=`timetable`.`course_course_id` " +
+                "INNER JOIN `attendance_status` ON `attendance`.`attendance_status_id`=`attendance_status`.`id` " +
+                "WHERE `course`.`course_code`=? AND `attendance`.`student_user_id`=?";
+
+        String medicalQuery = "SELECT * FROM `medical_record` " +
+                "WHERE `student_user_id`=? AND `status_status_id`=?";
+
+        int attendanceCount = 0;
+        double fullAttendanceCount = 0;
+
+        ResultSet resultSet = DBConnection.search(attendanceQuery, courseCode, studentFullDetailModel.getId(), "Attended");
+        if(resultSet != null){
+
+            try{
+
+                while(resultSet.next()){
+
+                    String attendanceStatusId = resultSet.getString("attendance_status_id");
+                    if(attendanceStatusId.equals("1")){// attended
+
+                        attendanceCount++;
+                    }else{
+
+                        ResultSet medicalRS = DBConnection.search(medicalQuery,studentFullDetailModel.getId(),"2");
+                        if(medicalRS != null){
+
+                            while(resultSet.next()){
+
+                                attendanceCount++;
+                            }
+                        }
+                    }
+
+                    if(fullAttendanceCount == 0){
+                        fullAttendanceCount = resultSet.getDouble("course_hours");
+                    }
+                }
+
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+
+        }
+
+        return (attendanceCount / fullAttendanceCount)*100;
+
+    }
+
+    private String completeEligibility(String courseCode){
+
+        double completeEligibility = attendanceEligibility(courseCode) + caEligibility(courseCode);
+        if(completeEligibility >= 50){
+            return "Eligible";
+        }
+        return "Not-Eligible";
+
     }
 
     private void setUpStudentProfile() {
@@ -500,7 +603,7 @@ public class StudentDetailDialog extends JDialog {
         jLabel12.setText(studentFullDetailModel.getSemester());
 
         DefaultListModel<String> model = (DefaultListModel<String>) jList1.getModel();
-        model.addAll(studentFullDetailModel.getSubjectList());
+        model.addAll(studentFullDetailModel.getSubjectList().values());
 
     }
 

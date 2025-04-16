@@ -263,7 +263,7 @@ public class StudentPanel extends JPanel{
                     String department = resultSet.getString("department");
 
                     // hashmap
-                    ArrayList<String> subjectList = new ArrayList<>();
+                    HashMap<String,String> subjectMap = new HashMap<>();
 
                     String q2 = "SELECT * FROM `course` " +
                             "INNER JOIN `department_has_undergraduate_level` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`course_course_id` " +
@@ -272,7 +272,7 @@ public class StudentPanel extends JPanel{
                     ResultSet rs = DBConnection.search(q2, level);
                     if(rs != null){
                         while(rs.next()){
-                            subjectList.add(rs.getString("course"));
+                            subjectMap.put(rs.getString("course_code"),rs.getString("course"));
                         }
                     }
 
@@ -286,7 +286,7 @@ public class StudentPanel extends JPanel{
                     studentFullDetailModel.setLevel(level);
                     studentFullDetailModel.setSemester(semester);
                     studentFullDetailModel.setDepartment(department);
-                    studentFullDetailModel.setSubjectList(subjectList);
+                    studentFullDetailModel.setSubjectList(subjectMap);
 
                     // table
                     addRowToTable(studentFullDetailModel,defaultTableModel);

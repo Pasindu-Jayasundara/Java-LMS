@@ -549,10 +549,11 @@
                     <Component class="javax.swing.JTable" name="jTable2">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="3" rowCount="0">
+                          <Table columnCount="4" rowCount="0">
                             <Column editable="false" title="#" type="java.lang.Object"/>
                             <Column editable="false" title="Subject" type="java.lang.Object"/>
                             <Column editable="false" title="Marks" type="java.lang.Object"/>
+                            <Column editable="false" title="Grade" type="java.lang.Object"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -563,6 +564,11 @@
                               <Renderer/>
                             </Column>
                             <Column maxWidth="-1" minWidth="-1" prefWidth="300" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                               <Title/>
                               <Editor/>
                               <Renderer/>
