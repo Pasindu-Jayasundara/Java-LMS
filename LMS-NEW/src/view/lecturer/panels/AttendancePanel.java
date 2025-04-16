@@ -1,6 +1,16 @@
 package view.lecturer.panels;
 
+import controller.DBConnection;
+import view.lecturer.dialog.PDFPreviewDialog;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
 
 public class AttendancePanel extends JPanel{
     private JPanel panel1;
@@ -14,6 +24,7 @@ public class AttendancePanel extends JPanel{
 
     private void createUIComponents() {
         initComponents();
+        loadAttendanceTable("");
     }
 
     private void initComponents() {
@@ -28,15 +39,25 @@ public class AttendancePanel extends JPanel{
         jLabel1.setText("Search Student:");
 
         jButton1.setText("Search");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Reset");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 new Object [][] {
 
                 },
                 new String [] {
-                        "#", "TG Number", "Subject", "Attendance Count", "Medicals"
+                        "#", "Student Id", "Subject", "Attendance Count", "Medicals"
                 }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -84,4 +105,122 @@ public class AttendancePanel extends JPanel{
                                 .addContainerGap(21, Short.MAX_VALUE))
         );
     }// </editor-fold>
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        // search btn:
+
+        String text = jTextField1.getText();
+        if(text.isBlank()){
+
+            JOptionPane.showMessageDialog(this,"Please Enter Student ID OR Username","Missing Info",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        loadAttendanceTable(text);
+    }
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        // reset btn
+
+        jTextField1.setText("");
+        loadAttendanceTable("");
+    }
+
+    private void loadAttendanceTable(String searchText) {
+
+        String query = "SELECT * FROM `student` " +
+                "INNER JOIN `student_has_department_has_undergraduate_level` ON `student`.`user_id`=`student_has_department_has_undergraduate_level`.`student_user_id` " +
+                "INNER JOIN `department_has_undergraduate_level` ON `student_has_department_has_undergraduate_level`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                "INNER JOIN `course` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                "WHERE `user_id` LIKE %?% OR `username` LIKE %?%";
+
+        ResultSet resultSet = DBConnection.search(query, searchText, searchText);
+        if(resultSet != null){
+
+            DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+            dtm.setRowCount(0);
+
+            int index = 0;
+
+            try{
+
+                while(resultSet.next()){
+
+                    String userId = resultSet.getString("user_id");
+                    String courseId = resultSet.getString("course_id");
+                    String dhulId = resultSet.getString("department_has_undergraduate_level.id");
+                    String shdhslID = resultSet.getString("student_has_department_has_undergraduate_level.id");
+
+                    Vector<Object> row = new Vector<>();
+                    row.add(String.valueOf(++index));
+                    row.add(userId);
+                    row.add(resultSet.getString("course"));
+
+                    String q2 = "SELECT COUNT(`attendance`.`id`) AS `attendance_count` FROM `attendance` " +
+                            "INNER JOIN `timetable` ON `attendance`.`timetable_timetable_id`=`timetable`.`timetable_id` " +
+                            "INNER JOIN `course` ON `course`.`course_id`=`timetable`.`course_course_id` " +
+                            "INNER JOIN `department_has_undergraduate_level` ON `department_has_undergraduate_level`.`id`=`course`.`department_has_undergraduate_level_id` " +
+                            "WHERE `student_user_id`=? AND `course`.`course_id`=? AND `department_has_undergraduate_level`.`id`=?";
+
+                    ResultSet rs = DBConnection.search(q2, userId, courseId, dhulId);
+                    if(rs != null){
+
+                        while(rs.next()){
+                            row.add(rs.getString("attendance_count"));
+                        }
+                    }
+                    row.add(resultSet.getString("course"));
+
+                    String q3 = "SELECT * FROM `medical_record` " +
+                            "INNER JOIN `student` ON `student`.`user_id`=`medical_record`.`student_user_id` " +
+                            "INNER JOIN `student_has_department_has_undergraduate_level` ON `student`.`user_id`=`student_has_department_has_undergraduate_level`.`student_user_id` " +
+                            "WHERE `student`.`user_id`=? AND `student_has_department_has_undergraduate_level`.`id`=?";
+
+                    ResultSet rs2 = DBConnection.search(q3, userId, shdhslID);
+
+                    JTable jTable = new JTable();
+                    DefaultTableModel defaultTableModel = new DefaultTableModel();
+                    jTable.setModel(defaultTableModel);
+                    jTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+                    jTable.addColumn(new TableColumn());
+
+                    if(rs2 != null){
+
+                        while (rs2.next()){
+
+                            JButton button = new JButton(rs2.getString("record_id"));
+                            button.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+
+                                    try {
+                                        openMedical(rs2.getString("url"));
+                                    } catch (SQLException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                }
+                            });
+
+                            Vector<JButton> row2 = new Vector<>();
+                            row2.add(button);
+
+                            defaultTableModel.addRow(row2);
+                        }
+                    }
+                    row.add(jTable);
+
+                    dtm.addRow(row);
+                }
+
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void openMedical(String url) {
+
+        PDFPreviewDialog pdfPreviewDialog = new PDFPreviewDialog(AttendancePanel.this,url);
+        pdfPreviewDialog.setVisible(true);
+    }
 }
