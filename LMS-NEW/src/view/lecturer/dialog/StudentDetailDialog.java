@@ -8,8 +8,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Objects;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class StudentDetailDialog extends JDialog {
@@ -475,7 +474,6 @@ public class StudentDetailDialog extends JDialog {
     }
 
     private void setUpEligibility() {
-        // todo
 
         DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
         defaultTableModel.setRowCount(0);
@@ -499,33 +497,92 @@ public class StudentDetailDialog extends JDialog {
                 "INNER JOIN `exam_type` ON `exam`.`exam_type_type_id`=`exam_type`.`type_id` " +
                 "INNER JOIN `department_has_undergraduate_level` ON `exam`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
                 "INNER JOIN `course` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                "INNER JOIN `marks` ON `exam`.`exam_id`=`marks`.`exam_exam_id` " +
                 "WHERE `course`.`course_code`=? AND `exam_type`.`type_id`!=?";
 
-        int quizCount = 0;
-        int assessmentCount = 0;
-        int mid = 0;
+        int caUseQuizCount = 0,caUseAssessmentCount = 0;// currentQuizCount = 0,currentAssessmentCount = 0,currentMidCount = 0,totalQuiz = 0,totalAssessment = 0,
+        double quizMarksPercentage = 0.0, assessmentMarksPercentage = 0.0, midMarksPercentage = 0.0, midMarks = 0.0;
+
+        ArrayList<Double> quizMarksArrayList = new ArrayList<>();
+        ArrayList<Double> assessmentMarksArrayList = new ArrayList<>();
+
+        boolean isFirstRound = true;
 
         ResultSet resultSet = DBConnection.search(query, courseCode, "4");//4 => final
         if(resultSet !=null) {
 
-            while(resultSet.next()){
+            try{
 
-                String examType = resultSet.getString("exam_type.type_id");
-                switch (examType){
-                    case "1":{ // quiz
-                        quizCount++;
-                        break;
+                while(resultSet.next()){
+
+                    if(isFirstRound){
+                        quizMarksPercentage = resultSet.getDouble("quiz_marks_percentage");
+                        assessmentMarksPercentage = resultSet.getDouble("assessment_marks_percentage");
+                        midMarksPercentage = resultSet.getDouble("mid_marks_percentage");
+
+                        caUseQuizCount = resultSet.getInt("ca_use_quiz_count");
+                        caUseAssessmentCount = resultSet.getInt("ca_use_assessment_count");
+
+//                    totalQuiz = resultSet.getInt("total_quiz");
+//                    totalAssessment = resultSet.getInt("total_assessment");
+
+                        isFirstRound = false;
                     }
-                    case "2":{ // assessment
-                        assessmentCount++;
-                        break;
-                    }
-                    case "3":{
-                        mid++;
+
+                    String examType = resultSet.getString("exam_type.type_id");
+                    switch (examType){
+                        case "1":{ // quiz
+
+//                        currentQuizCount++;
+                            quizMarksArrayList.add(resultSet.getDouble("marks.marks"));
+
+                            break;
+                        }
+                        case "2":{ // assessment
+
+//                        currentAssessmentCount++;
+                            assessmentMarksArrayList.add(resultSet.getDouble("marks.marks"));
+
+                            break;
+                        }
+                        case "3":{ //mid
+
+//                        currentMidCount++;
+                            midMarks = resultSet.getDouble("marks.marks");
+
+                            break;
+                        }
+                        default:{
+                            break;
+                        }
                     }
                 }
+
+            }catch (SQLException e){
+                e.printStackTrace();
             }
+
+            quizMarksArrayList.sort(Collections.reverseOrder());
+            assessmentMarksArrayList.sort(Collections.reverseOrder());
+
+            caUseQuizCount = Math.min(caUseQuizCount, quizMarksArrayList.size());
+            caUseAssessmentCount = Math.min(caUseAssessmentCount, assessmentMarksArrayList.size());
+
+            List<Double> topMarksQuiz = quizMarksArrayList.subList(0, caUseQuizCount);
+            List<Double> topMarksAssessment = assessmentMarksArrayList.subList(0, caUseAssessmentCount);
+
+            // Calculate averages
+            double quizAvg = topMarksQuiz.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+            double assessmentAvg = topMarksAssessment.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+
+            // Calculate final CA marks
+            return (quizAvg * quizMarksPercentage / 100.0) +
+                    (assessmentAvg * assessmentMarksPercentage / 100.0) +
+                    (midMarks * midMarksPercentage / 100.0);
+
         }
+
+        return 0.0;
 
     }
 
