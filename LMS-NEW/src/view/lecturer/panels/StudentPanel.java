@@ -26,7 +26,7 @@ public class StudentPanel extends JPanel{
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
 
-    private HashMap<String, StudentFullDetailModel> studentModelHashMap = new HashMap<>();
+    private final HashMap<String, StudentFullDetailModel> studentModelHashMap = new HashMap<>();
 
     private void createUIComponents() {
         initComponents();
@@ -68,7 +68,7 @@ public class StudentPanel extends JPanel{
                         "TG Number", "Name", "Year", "Contact", ""
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 
@@ -195,7 +195,6 @@ public class StudentPanel extends JPanel{
 
                 addRowToTable(studentFullDetailModel,defaultTableModel);
 
-                return;
             }
 
         });

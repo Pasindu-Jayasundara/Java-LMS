@@ -28,7 +28,7 @@ public class Login extends JDialog {
 
     private final String type;
 
-    private LoginSuccessCallback loginSuccessCallback;
+    private final LoginSuccessCallback loginSuccessCallback;
 
     public Login(java.awt.Frame parent, String type, LoginSuccessCallback loginSuccessCallback) {
         super(parent, true);

@@ -4,6 +4,7 @@ import model.LecturerModel;
 import view.common.Welcome;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class LecturerDashboard extends JFrame {
 
@@ -36,7 +37,13 @@ public class LecturerDashboard extends JFrame {
 
     private void createUIComponents() {
         initComponents();
+
+        this.setSize(1040,Toolkit.getDefaultToolkit().getScreenSize().height-50);
+
+        this.setLocationRelativeTo(null);
+
         changeUI("course");
+
     }
 
     private void initComponents() {
@@ -54,8 +61,14 @@ public class LecturerDashboard extends JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
         profilePanel1 = new view.lecturer.panels.ProfilePanel();
+        noticePanel1 = new view.lecturer.panels.NoticePanel();
+        attendancePanel1 = new view.lecturer.panels.AttendancePanel();
+        studentPanel1 = new view.lecturer.panels.StudentPanel();
+        examPanel1 = new view.lecturer.panels.ExamPanel();
+        coursePanel1 = new view.lecturer.panels.CoursePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jSplitPane2.setDividerLocation(150);
         jSplitPane2.setDividerSize(3);
@@ -160,6 +173,11 @@ public class LecturerDashboard extends JFrame {
 
         jPanel3.setLayout(new java.awt.CardLayout());
         jPanel3.add(profilePanel1, "card2");
+        jPanel3.add(noticePanel1, "card3");
+        jPanel3.add(attendancePanel1, "card4");
+        jPanel3.add(studentPanel1, "card5");
+        jPanel3.add(examPanel1, "card6");
+        jPanel3.add(coursePanel1, "card7");
 
         jScrollPane1.setViewportView(jPanel3);
 
@@ -170,17 +188,18 @@ public class LecturerDashboard extends JFrame {
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(jSplitPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 963, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 963, Short.MAX_VALUE)
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(jSplitPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
+                                .addGap(0, 0, 0))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -243,6 +262,9 @@ public class LecturerDashboard extends JFrame {
 
                 jButton1.setSelected(true);
 
+                this.setSize(1040,Toolkit.getDefaultToolkit().getScreenSize().height-50);
+
+
                 break;
             }
             case "exam":{
@@ -265,6 +287,8 @@ public class LecturerDashboard extends JFrame {
                 jButton7.setSelected(false);
 
                 jButton2.setSelected(true);
+
+                this.setSize(1113,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 
                 break;
             }
@@ -289,6 +313,8 @@ public class LecturerDashboard extends JFrame {
 
                 jButton7.setSelected(true);
 
+                this.setSize(1113,Toolkit.getDefaultToolkit().getScreenSize().height-50);
+
                 break;
             }
             case "student":{
@@ -310,6 +336,8 @@ public class LecturerDashboard extends JFrame {
                 jButton7.setSelected(false);
 
                 jButton3.setSelected(true);
+
+                this.setSize(1114,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 
                 break;
             }
@@ -333,6 +361,8 @@ public class LecturerDashboard extends JFrame {
 
                 jButton4.setSelected(true);
 
+                this.setSize(1114,Toolkit.getDefaultToolkit().getScreenSize().height-50);
+
                 break;
             }
             case "setting":{
@@ -354,6 +384,8 @@ public class LecturerDashboard extends JFrame {
                 jButton7.setSelected(false);
 
                 jButton6.setSelected(true);
+
+                this.setSize(1040,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 
                 break;
             }
