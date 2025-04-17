@@ -40,8 +40,8 @@ public class CourseDetailDialog extends JDialog {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
 
-    private CourseModel courseModel;
-    private HashMap<String, CourseMaterialModel> courseMaterialModelHashMap = new HashMap<>();
+    private final CourseModel courseModel;
+    private final HashMap<String, CourseMaterialModel> courseMaterialModelHashMap = new HashMap<>();
 
     public CourseDetailDialog(CoursePanel parent, CourseModel courseModel) {
         setLocationRelativeTo(parent);
@@ -122,7 +122,7 @@ public class CourseDetailDialog extends JDialog {
                         "#", "Day", "From", "To"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false
             };
 
@@ -144,7 +144,7 @@ public class CourseDetailDialog extends JDialog {
                         "#", "Type", "Name", " ", " "
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 

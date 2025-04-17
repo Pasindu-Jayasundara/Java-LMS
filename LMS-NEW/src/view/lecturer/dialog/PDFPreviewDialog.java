@@ -13,7 +13,7 @@ public class PDFPreviewDialog extends JDialog {
     private JPanel contentPane;
     private javax.swing.JPanel jPanel1;
 
-    private String filePath;
+    private final String filePath;
 
     public PDFPreviewDialog(Dialog dialog, String filePath) {
         setModal(true);

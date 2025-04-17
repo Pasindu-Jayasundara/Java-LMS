@@ -51,12 +51,12 @@ public class MarksDialog extends JDialog {
     private javax.swing.JTable jTable2;
     private javax.swing.JTextArea jTextArea1;
 
-    private ExamModel examModel;
+    private final ExamModel examModel;
     private HashMap<String, String> pdfFile;
-    private MarksUpdateCallBack marksUpdateCallBack;
+    private final MarksUpdateCallBack marksUpdateCallBack;
 
-    private static HashMap<String, String> individualMarksChangedHashMap = new HashMap<>();
-    private static ArrayList<IndividualMarksModel> individualMarksModelArrayList = new ArrayList<>();
+    private static final HashMap<String, String> individualMarksChangedHashMap = new HashMap<>();
+    private static final ArrayList<IndividualMarksModel> individualMarksModelArrayList = new ArrayList<>();
 
     public MarksDialog(ExamPanel examPanel, ExamModel examModel, MarksUpdateCallBack marksUpdateCallBack) {
 
@@ -171,7 +171,7 @@ public class MarksDialog extends JDialog {
                         "#", "File Name", "", ""
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
+            final boolean[] canEdit = new boolean[]{
                     false, false, true, true
             };
 
@@ -226,7 +226,7 @@ public class MarksDialog extends JDialog {
                         "#", "Reg Number", "Name", "Marks"
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
+            final boolean[] canEdit = new boolean[]{
                     false, false, false, true
             };
 
@@ -430,7 +430,6 @@ public class MarksDialog extends JDialog {
 
                 if(individualMarksModel.getStudentRegisterNumber().equals(studentId)){
                     isFound.set(true);
-                    return;
                 }
             });
 

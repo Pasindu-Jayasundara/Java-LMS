@@ -25,7 +25,7 @@ public class ExamPanel extends JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
 
-    private HashMap<String, ExamModel> examModelHashMap = new HashMap<>();
+    private final HashMap<String, ExamModel> examModelHashMap = new HashMap<>();
 
     private void createUIComponents() {
         initComponents();
@@ -151,7 +151,7 @@ public class ExamPanel extends JPanel {
                         "#", "Subject", "Date & Time", "Venue", "Description", "Type", ""
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false, false, false, false
             };
 

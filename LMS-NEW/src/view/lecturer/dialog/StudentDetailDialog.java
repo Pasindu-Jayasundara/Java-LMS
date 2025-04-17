@@ -56,7 +56,7 @@ public class StudentDetailDialog extends JDialog {
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
 
-    private StudentFullDetailModel studentFullDetailModel;
+    private final StudentFullDetailModel studentFullDetailModel;
 
     public StudentDetailDialog(StudentPanel studentPanel, StudentFullDetailModel studentFullDetailModel) {
         setModal(true);
@@ -287,7 +287,7 @@ public class StudentDetailDialog extends JDialog {
                         "#", "Subject", "Eligibility for Final Exam"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false
             };
 
@@ -347,7 +347,7 @@ public class StudentDetailDialog extends JDialog {
                         "#", "Subject", "Exam Id", "Marks", "Grade"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 

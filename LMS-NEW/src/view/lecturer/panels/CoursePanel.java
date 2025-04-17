@@ -107,7 +107,7 @@ public class CoursePanel extends JPanel {
     public static HashMap<String, SemesterModel> semesterHashMap = new HashMap<>();
     public static HashMap<String, UndergraduateLevelModel> levelHashMap = new HashMap<>();
 
-    private HashMap<String,String> lecturerHashMap = new HashMap<>();
+    private static HashMap<String,String> lecturerHashMap = new HashMap<>();
 
     private HashMap<String, String> selectedPdfFile;
     private CourseModel courseModel;
@@ -209,7 +209,7 @@ public class CoursePanel extends JPanel {
                         "#", "Code", "Name", "Credit", "Hourse"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 
@@ -319,7 +319,7 @@ public class CoursePanel extends JPanel {
                         "#", "Day", "From", "To"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false
             };
 
@@ -619,7 +619,7 @@ public class CoursePanel extends JPanel {
                         "#", "File Name", "Uploaded At", "", ""
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 
@@ -837,7 +837,6 @@ public class CoursePanel extends JPanel {
 
                 if(lecturerName.equals(lecturer)){
                     lecturerId.set(lecturerIds);
-                    return;
                 }
             });
 
@@ -879,9 +878,9 @@ public class CoursePanel extends JPanel {
                             assessmentMarksPercentage,midExamMarksPercentage,finalTheoryExamMarksPercentage,finalPracticalExamMarksPercentage);
 
                     // course hashmap
-                    String departmentId = ((DepartmentModel) departmentHashMap.get(department)).getId();
-                    String semesterId = ((SemesterModel) semesterHashMap.get(semester)).getId();
-                    String undergraduateLevelId = ((UndergraduateLevelModel) levelHashMap.get(level)).getId();
+                    String departmentId = departmentHashMap.get(department).getId();
+                    String semesterId = semesterHashMap.get(semester).getId();
+                    String undergraduateLevelId = levelHashMap.get(level).getId();
 
                     addToCourseHashMap(departmentId, department, semesterId, semester, undergraduateLevelId, level, dhulID, newCourseCode, String.valueOf(courseId), newCourseName, credit, hours);
 
@@ -992,8 +991,11 @@ public class CoursePanel extends JPanel {
 
                 while(resultSet.next()){
 
-                    v.add(resultSet.getString("username"));
-                    lecturerHashMap.put(resultSet.getString("username"),resultSet.getString("user_id"));
+                    String username = resultSet.getString("username");
+                    String userId = resultSet.getString("user_id");
+
+                    v.add(username);
+                    lecturerHashMap.put(username,userId);
                 }
             }catch (SQLException e){
                 e.printStackTrace();
@@ -1121,7 +1123,6 @@ public class CoursePanel extends JPanel {
 
                 }
 
-                return;
             }
         });
 
@@ -1349,9 +1350,10 @@ public class CoursePanel extends JPanel {
 
     private void loadCoursesFormDB(String enteredCourseCode) {
 
-        String query = "SELECT * FROM `course` WHERE `lecturer_user_id`=? AND `course_code` LIKE '%?%' ";
+        String code = "%"+enteredCourseCode+"%";
+        String query = "SELECT * FROM `course` WHERE `lecturer_user_id`=? AND `course_code` LIKE ? ";
 
-        ResultSet resultSet = DBConnection.search(query, LecturerDashboard.loginLecturerModel.getId(), enteredCourseCode);
+        ResultSet resultSet = DBConnection.search(query, LecturerDashboard.loginLecturerModel.getId(), code);
         if (resultSet == null) {
             JOptionPane.showMessageDialog(this, "Course Code Not Found", "Missing Info", JOptionPane.INFORMATION_MESSAGE);
             return;

@@ -60,7 +60,7 @@ public class AttendancePanel extends JPanel{
                         "#", "Student Id", "Subject", "Attendance Count", "Medicals"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 
@@ -127,13 +127,15 @@ public class AttendancePanel extends JPanel{
 
     private void loadAttendanceTable(String searchText) {
 
+        String stext = "%"+searchText+"%";
+
         String query = "SELECT * FROM `student` " +
                 "INNER JOIN `student_has_department_has_undergraduate_level` ON `student`.`user_id`=`student_has_department_has_undergraduate_level`.`student_user_id` " +
                 "INNER JOIN `department_has_undergraduate_level` ON `student_has_department_has_undergraduate_level`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
                 "INNER JOIN `course` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
-                "WHERE `user_id` LIKE %?% OR `username` LIKE %?%";
+                "WHERE `user_id` LIKE ? OR `username` LIKE ?";
 
-        ResultSet resultSet = DBConnection.search(query, searchText, searchText);
+        ResultSet resultSet = DBConnection.search(query, stext, stext);
         if(resultSet != null){
 
             DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();

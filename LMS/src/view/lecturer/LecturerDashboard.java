@@ -29,6 +29,11 @@ public class LecturerDashboard extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
         profilePanel1 = new view.lecturer.panel.ProfilePanel();
+        noticePanel1 = new view.lecturer.panel.NoticePanel();
+        attendancePanel1 = new view.lecturer.panel.AttendancePanel();
+        studentPanel1 = new view.lecturer.panel.StudentPanel();
+        examPanel1 = new view.lecturer.panel.ExamPanel();
+        coursePanel1 = new view.lecturer.panel.CoursePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -135,6 +140,11 @@ public class LecturerDashboard extends javax.swing.JFrame {
 
         jPanel3.setLayout(new java.awt.CardLayout());
         jPanel3.add(profilePanel1, "card2");
+        jPanel3.add(noticePanel1, "card3");
+        jPanel3.add(attendancePanel1, "card4");
+        jPanel3.add(studentPanel1, "card5");
+        jPanel3.add(examPanel1, "card6");
+        jPanel3.add(coursePanel1, "card7");
 
         jScrollPane1.setViewportView(jPanel3);
 
@@ -187,6 +197,9 @@ public class LecturerDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private view.lecturer.panel.AttendancePanel attendancePanel1;
+    private view.lecturer.panel.CoursePanel coursePanel1;
+    private view.lecturer.panel.ExamPanel examPanel1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -199,6 +212,8 @@ public class LecturerDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane2;
+    private view.lecturer.panel.NoticePanel noticePanel1;
     private view.lecturer.panel.ProfilePanel profilePanel1;
+    private view.lecturer.panel.StudentPanel studentPanel1;
     // End of variables declaration//GEN-END:variables
 }

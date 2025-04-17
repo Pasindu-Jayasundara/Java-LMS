@@ -54,6 +54,11 @@ public class LecturerDashboard extends JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
         profilePanel1 = new view.lecturer.panels.ProfilePanel();
+        noticePanel1 = new view.lecturer.panels.NoticePanel();
+        attendancePanel1 = new view.lecturer.panels.AttendancePanel();
+        studentPanel1 = new view.lecturer.panels.StudentPanel();
+        examPanel1 = new view.lecturer.panels.ExamPanel();
+        coursePanel1 = new view.lecturer.panels.CoursePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -160,6 +165,11 @@ public class LecturerDashboard extends JFrame {
 
         jPanel3.setLayout(new java.awt.CardLayout());
         jPanel3.add(profilePanel1, "card2");
+        jPanel3.add(noticePanel1, "card3");
+        jPanel3.add(attendancePanel1, "card4");
+        jPanel3.add(studentPanel1, "card5");
+        jPanel3.add(examPanel1, "card6");
+        jPanel3.add(coursePanel1, "card7");
 
         jScrollPane1.setViewportView(jPanel3);
 
