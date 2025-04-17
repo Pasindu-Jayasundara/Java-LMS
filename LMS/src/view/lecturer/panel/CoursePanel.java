@@ -112,7 +112,7 @@ public class CoursePanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "#", "Code", "Name", "Credit", "Hourse"
+                "#", "Code", "Name", "Credit", "Days"
             }
         ) {
             boolean[] canEdit = new boolean [] {

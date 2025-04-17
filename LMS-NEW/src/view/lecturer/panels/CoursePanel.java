@@ -208,7 +208,7 @@ public class CoursePanel extends JPanel {
 
                 },
                 new String [] {
-                        "#", "Code", "Name", "Credit", "Hourse"
+                        "#", "Code", "Name", "Credit", "Days"
                 }
         ) {
             boolean[] canEdit = new boolean [] {
