@@ -11,6 +11,7 @@ import view.lecturer.dialog.PDFPreviewDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -114,6 +115,7 @@ public class CoursePanel extends JPanel {
 
     private void createUIComponents() {
         initComponents();
+
         loadCourses("");
         loadLecturers();
     }
@@ -209,7 +211,7 @@ public class CoursePanel extends JPanel {
                         "#", "Code", "Name", "Credit", "Hourse"
                 }
         ) {
-            final boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 
@@ -240,17 +242,17 @@ public class CoursePanel extends JPanel {
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(17, 17, 17)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addComponent(jLabel1)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButton1)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jButton2)))
-                                .addContainerGap(24, Short.MAX_VALUE))
+                                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(347, 347, 347)
+                                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(24, 24, 24))
         );
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -319,7 +321,7 @@ public class CoursePanel extends JPanel {
                         "#", "Day", "From", "To"
                 }
         ) {
-            final boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean [] {
                     false, false, false, false
             };
 
@@ -619,7 +621,7 @@ public class CoursePanel extends JPanel {
                         "#", "File Name", "Uploaded At", "", ""
                 }
         ) {
-            final boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 
@@ -710,7 +712,7 @@ public class CoursePanel extends JPanel {
                                 .addGap(0, 257, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Add Course Meterials ", jPanel3);
+        jTabbedPane1.addTab("Add Course Materials ", jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -720,7 +722,7 @@ public class CoursePanel extends JPanel {
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTabbedPane1)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>
 
