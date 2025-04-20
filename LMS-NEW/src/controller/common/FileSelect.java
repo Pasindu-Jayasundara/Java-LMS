@@ -1,4 +1,4 @@
-package controller;
+package controller.common;
 
 import java.awt.*;
 import java.io.File;

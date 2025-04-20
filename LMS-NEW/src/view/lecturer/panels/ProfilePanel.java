@@ -1,6 +1,6 @@
 package view.lecturer.panels;
 
-import controller.DBConnection;
+import controller.common.DBConnection;
 import view.lecturer.LecturerDashboard;
 
 import javax.swing.*;

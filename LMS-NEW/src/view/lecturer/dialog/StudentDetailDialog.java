@@ -1,6 +1,6 @@
 package view.lecturer.dialog;
 
-import controller.DBConnection;
+import controller.common.DBConnection;
 import model.StudentFullDetailModel;
 import view.lecturer.panels.StudentPanel;
 

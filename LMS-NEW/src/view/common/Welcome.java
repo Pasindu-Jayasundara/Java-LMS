@@ -1,6 +1,6 @@
 package view.common;
 
-import controller.callback.LoginSuccessCallback;
+import controller.callback.common.LoginSuccessCallback;
 
 import javax.swing.*;
 

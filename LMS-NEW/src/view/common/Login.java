@@ -1,8 +1,8 @@
 package view.common;
 
-import controller.DBConnection;
-import controller.Validation;
-import controller.callback.LoginSuccessCallback;
+import controller.common.DBConnection;
+import controller.common.Validation;
+import controller.callback.common.LoginSuccessCallback;
 import model.*;
 import view.admin.AdminDashboard;
 import view.lecturer.LecturerDashboard;

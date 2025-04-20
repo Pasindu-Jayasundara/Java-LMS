@@ -1,7 +1,7 @@
 package view.lecturer.panels;
 
-import controller.DBConnection;
-import controller.callback.MarksUpdateCallBack;
+import controller.common.DBConnection;
+import controller.callback.lecturer.MarksUpdateCallBack;
 import model.ExamModel;
 import model.MarksModel;
 import view.lecturer.LecturerDashboard;
@@ -11,7 +11,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 

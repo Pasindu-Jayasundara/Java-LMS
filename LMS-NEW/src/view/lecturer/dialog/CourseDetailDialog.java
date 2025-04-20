@@ -1,6 +1,6 @@
 package view.lecturer.dialog;
 
-import controller.DBConnection;
+import controller.common.DBConnection;
 import model.CourseMaterialModel;
 import model.CourseModel;
 import view.lecturer.panels.CoursePanel;
@@ -40,7 +40,7 @@ public class CourseDetailDialog extends JDialog {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
 
-    private final CourseModel courseModel;
+    private CourseModel courseModel;
     private final HashMap<String, CourseMaterialModel> courseMaterialModelHashMap = new HashMap<>();
 
     public CourseDetailDialog(CoursePanel parent, CourseModel courseModel) {
@@ -48,11 +48,12 @@ public class CourseDetailDialog extends JDialog {
         setModal(true);
 
         this.courseModel = courseModel;
+
+        loadData();
     }
 
     private void createUIComponents() {
         initComponents();
-        loadData();
     }
 
     private void initComponents() {
@@ -408,10 +409,11 @@ public class CourseDetailDialog extends JDialog {
             defaultTableModel.setRowCount(0);
 
             try {
-
+                int i = 1;
                 while (resultSet.next()) {
 
                     Vector<String> row = new Vector<>();
+                    row.add(String.valueOf(i++));
                     row.add(resultSet.getString("day"));
                     row.add(resultSet.getString("from"));
                     row.add(resultSet.getString("to"));
