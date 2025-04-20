@@ -45,6 +45,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabel29" min="-2" max="-2" attributes="0"/>
                           <Component id="jScrollPane1" alignment="0" min="-2" pref="826" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -72,7 +73,9 @@
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" pref="471" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabel29" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="221" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -158,6 +161,17 @@
             </Component>
             <Component class="javax.swing.JTextField" name="jTextField1">
             </Component>
+            <Component class="javax.swing.JLabel" name="jLabel29">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="12" style="2"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="99" green="0" red="0" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Double click on course to view more course details"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel2">
@@ -191,12 +205,12 @@
                                                   <Component id="jComboBox4" min="-2" pref="179" max="-2" attributes="0"/>
                                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                                   <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="jFormattedTextField1" min="-2" pref="171" max="-2" attributes="0"/>
+                                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                  <Component id="jButton5" min="-2" pref="165" max="-2" attributes="0"/>
                                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                                   <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="jFormattedTextField2" min="-2" pref="171" max="-2" attributes="0"/>
+                                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                  <Component id="jButton10" min="-2" pref="165" max="-2" attributes="0"/>
                                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                                   <Component id="jButton3" min="-2" max="-2" attributes="0"/>
                                               </Group>
@@ -348,10 +362,10 @@
                                   <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jComboBox4" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jFormattedTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jFormattedTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButton5" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButton10" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jScrollPane2" min="-2" pref="173" max="-2" attributes="0"/>
@@ -545,14 +559,10 @@
                 <Property name="text" type="java.lang.String" value="From:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JFormattedTextField" name="jFormattedTextField1">
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To:"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JFormattedTextField" name="jFormattedTextField2">
             </Component>
             <Component class="javax.swing.JButton" name="jButton3">
               <Properties>
@@ -731,6 +741,22 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTextField14">
+            </Component>
+            <Component class="javax.swing.JButton" name="jButton5">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Select Time"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton5ActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButton10">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Select Time"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton10ActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

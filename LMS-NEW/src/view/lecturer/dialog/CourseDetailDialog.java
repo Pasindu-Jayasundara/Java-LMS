@@ -40,7 +40,7 @@ public class CourseDetailDialog extends JDialog {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
 
-    private final CourseModel courseModel;
+    private CourseModel courseModel;
     private final HashMap<String, CourseMaterialModel> courseMaterialModelHashMap = new HashMap<>();
 
     public CourseDetailDialog(CoursePanel parent, CourseModel courseModel) {
@@ -48,11 +48,12 @@ public class CourseDetailDialog extends JDialog {
         setModal(true);
 
         this.courseModel = courseModel;
+
+        loadData();
     }
 
     private void createUIComponents() {
         initComponents();
-        loadData();
     }
 
     private void initComponents() {

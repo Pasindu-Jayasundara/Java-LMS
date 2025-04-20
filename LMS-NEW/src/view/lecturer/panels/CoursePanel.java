@@ -4,14 +4,15 @@ import controller.DBConnection;
 import controller.FileSelect;
 import controller.FileUpload;
 import controller.Validation;
+import controller.callback.TimeSelectCallback;
 import model.*;
 import view.lecturer.dialog.CourseDetailDialog;
 import view.lecturer.LecturerDashboard;
 import view.lecturer.dialog.PDFPreviewDialog;
+import view.lecturer.dialog.TimePickerDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -27,10 +28,13 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CoursePanel extends JPanel {
 
     private JPanel panel1;
+
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
@@ -42,8 +46,6 @@ public class CoursePanel extends JPanel {
     private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JComboBox<String> jComboBox7;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JFormattedTextField jFormattedTextField2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -98,7 +100,7 @@ public class CoursePanel extends JPanel {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
-
+    private javax.swing.JLabel jLabel29;
 
     private int timetableRowCount;
     private boolean isFirstTimeTableRow;
@@ -108,10 +110,13 @@ public class CoursePanel extends JPanel {
     public static HashMap<String, SemesterModel> semesterHashMap = new HashMap<>();
     public static HashMap<String, UndergraduateLevelModel> levelHashMap = new HashMap<>();
 
-    private static HashMap<String,String> lecturerHashMap = new HashMap<>();
+    private static HashMap<String, String> lecturerHashMap = new HashMap<>();
 
     private HashMap<String, String> selectedPdfFile;
     private CourseModel courseModel;
+
+    private String fromTime;
+    private String toTime;
 
     private void createUIComponents() {
         initComponents();
@@ -126,6 +131,7 @@ public class CoursePanel extends JPanel {
 
     private void initComponents() {
 
+        jLabel29 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -155,9 +161,7 @@ public class CoursePanel extends JPanel {
         jLabel11 = new javax.swing.JLabel();
         jComboBox4 = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
         jLabel13 = new javax.swing.JLabel();
-        jFormattedTextField2 = new javax.swing.JFormattedTextField();
         jButton3 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
@@ -184,6 +188,8 @@ public class CoursePanel extends JPanel {
         jTextField13 = new javax.swing.JTextField();
         jLabel28 = new javax.swing.JLabel();
         jTextField14 = new javax.swing.JTextField();
+        jButton5 = new javax.swing.JButton();
+        jButton10 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jComboBox5 = new javax.swing.JComboBox<>();
@@ -208,19 +214,19 @@ public class CoursePanel extends JPanel {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "#", "Code", "Name", "Credit", "Days"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -240,6 +246,10 @@ public class CoursePanel extends JPanel {
             }
         });
 
+        jLabel29.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        jLabel29.setForeground(new java.awt.Color(0, 0, 153));
+        jLabel29.setText("Double click on course to view more course details");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -247,6 +257,7 @@ public class CoursePanel extends JPanel {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(17, 17, 17)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel29)
                                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addComponent(jLabel1)
@@ -269,7 +280,9 @@ public class CoursePanel extends JPanel {
                                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel29)
+                                .addContainerGap(221, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("My Courses", jPanel1);
@@ -284,17 +297,17 @@ public class CoursePanel extends JPanel {
 
         jLabel6.setText("Department:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         jComboBox1.setPreferredSize(new java.awt.Dimension(64, 22));
 
         jLabel7.setText("Level:");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         jComboBox2.setPreferredSize(new java.awt.Dimension(64, 22));
 
         jLabel8.setText("Semester:");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Timetable");
@@ -304,7 +317,7 @@ public class CoursePanel extends JPanel {
 
         jLabel11.setText("Day of the Week:");
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         jLabel12.setText("From:");
 
@@ -318,19 +331,19 @@ public class CoursePanel extends JPanel {
         });
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "#", "Day", "From", "To"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -359,7 +372,7 @@ public class CoursePanel extends JPanel {
 
         jLabel18.setText("Lecturer:");
 
-        jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel19.setText("Exam Details");
@@ -381,6 +394,20 @@ public class CoursePanel extends JPanel {
         jLabel27.setText("Final Theory Exam Percentage:");
 
         jLabel28.setText("Final Practical Exam Percentage:");
+
+        jButton5.setText("Select Time");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton10.setText("Select Time");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -405,12 +432,12 @@ public class CoursePanel extends JPanel {
                                                                                         .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                                         .addGap(18, 18, 18)
                                                                                         .addComponent(jLabel12)
-                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                                         .addGap(18, 18, 18)
                                                                                         .addComponent(jLabel13)
-                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                        .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                                         .addGap(18, 18, 18)
                                                                                         .addComponent(jButton3))
                                                                                 .addComponent(jScrollPane2))
@@ -534,10 +561,10 @@ public class CoursePanel extends JPanel {
                                                         .addComponent(jLabel11)
                                                         .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(jLabel12)
-                                                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(jLabel13)
-                                                        .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jButton3))
+                                                        .addComponent(jButton3)
+                                                        .addComponent(jButton5)
+                                                        .addComponent(jButton10))
                                                 .addGap(18, 18, 18)
                                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -587,7 +614,7 @@ public class CoursePanel extends JPanel {
 
         jLabel15.setText("Select Course:");
 
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Course" }));
+        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Select Course"}));
         jComboBox5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox5ActionPerformed(evt);
@@ -596,7 +623,7 @@ public class CoursePanel extends JPanel {
 
         jLabel16.setText("Meterial Type:");
 
-        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PDF" }));
+        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"PDF"}));
 
         jLabel17.setForeground(new java.awt.Color(153, 153, 153));
         jLabel17.setText("Selected File Name ....");
@@ -618,19 +645,19 @@ public class CoursePanel extends JPanel {
         });
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "#", "File Name", "Uploaded At", "", ""
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jScrollPane4.setViewportView(jTable3);
@@ -756,23 +783,21 @@ public class CoursePanel extends JPanel {
         }
 
         String selectedDay = String.valueOf(jComboBox4.getSelectedItem());
-        String from = jFormattedTextField1.getText();
-        String to = jFormattedTextField2.getText();
 
-        if (!Validation.isValidTime(from)) {
+        if (!Validation.isValidTime(fromTime)) {
             JOptionPane.showMessageDialog(this, "Please enter a valid Time From", "Invalid Time", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
-        if (!Validation.isValidTime(to)) {
+        if (!Validation.isValidTime(toTime)) {
             JOptionPane.showMessageDialog(this, "Please enter a valid Time To", "Invalid Time", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         try {
-            Date fromTime = sdf.parse(from);
-            Date toTime = sdf.parse(to);
+            Date fromTime = sdf.parse(this.fromTime);
+            Date toTime = sdf.parse(this.toTime);
 
             boolean before = fromTime.before(toTime);
             if (!before) {
@@ -789,12 +814,44 @@ public class CoursePanel extends JPanel {
         Vector<String> row = new Vector<>();
         row.add(String.valueOf(timetableRowCount));
         row.add(selectedDay);
-        row.add(from);
-        row.add(to);
+        row.add(fromTime);
+        row.add(toTime);
 
         DefaultTableModel defaultTableModel = (DefaultTableModel) jTable2.getModel();
         defaultTableModel.addRow(row);
 
+        fromTime = null;
+        toTime = null;
+
+        jButton5.setText("Select Time");
+        jButton10.setText("Select Time");
+
+    }
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
+        // from time
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(CoursePanel.this, new TimeSelectCallback() {
+            @Override
+            public void onTimeSelect(String selectedTime) {
+                jButton5.setText(selectedTime);
+                fromTime = selectedTime;
+            }
+        });
+        timePickerDialog.setVisible(true);
+    }
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {
+        // to time
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(CoursePanel.this, new TimeSelectCallback() {
+            @Override
+            public void onTimeSelect(String selectedTime) {
+                jButton10.setText(selectedTime);
+                toTime = selectedTime;
+            }
+        });
+        timePickerDialog.setVisible(true);
     }
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {
@@ -841,7 +898,7 @@ public class CoursePanel extends JPanel {
 
             lecturerHashMap.forEach((lecturerName, lecturerIds) -> {
 
-                if(lecturerName.equals(lecturer)){
+                if (lecturerName.equals(lecturer)) {
                     lecturerId.set(lecturerIds);
                 }
             });
@@ -863,11 +920,10 @@ public class CoursePanel extends JPanel {
                     String dhulID = "";
 
                     if (row == 0) {
-
-                        String q2 = "INSERT INTO `department_has_undergraduate_level`(`department_department_id`,`undergraduate_level_level_id`,`semester_semester_id`,`status_status_id) " +
+                        String q2 = "INSERT INTO `department_has_undergraduate_level`(`department_department_id`,`undergraduate_level_level_id`,`semester_semester_id`,`status_status_id`) " +
                                 "VALUES(?,?,?,?)";
 
-                        Integer insertedId = DBConnection.iud(q2, departmentHashMap.get(department), levelHashMap.get(level), semesterHashMap.get(semester), '1');
+                        Integer insertedId = DBConnection.iud(q2, departmentHashMap.get(department).getId(), levelHashMap.get(level).getId(), semesterHashMap.get(semester).getId(), 1);
                         dhulID = String.valueOf(insertedId);
 
                     } else {
@@ -879,9 +935,10 @@ public class CoursePanel extends JPanel {
                             "`course`(`course`,`credit`,`course_code`,`course_hours`,`department_has_undergraduate_level_id`,`lecturer_user_id`,`total_quiz`,`total_assessment`,`ca_use_quiz_count`," +
                             "`ca_use_assessment_count`,`quiz_marks_percentage`,`assessment_marks_percentage`,`mid_marks_percentage`,`final_theory_marks_percentage`,`final_practical_marks_percentage`) " +
                             "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                    Integer courseId = DBConnection.iud(query, newCourseName, credit, newCourseCode, dhulID,
-                            lecturerId,totalQuiz,totalAssessment,quizForCa,assessmentForCa,quizMarksPercentage,
-                            assessmentMarksPercentage,midExamMarksPercentage,finalTheoryExamMarksPercentage,finalPracticalExamMarksPercentage);
+
+                    Integer courseId = DBConnection.iud(query, newCourseName, credit, newCourseCode, hours, dhulID,
+                            lecturerId.get(), totalQuiz, totalAssessment, quizForCa, assessmentForCa, quizMarksPercentage,
+                            assessmentMarksPercentage, midExamMarksPercentage, finalTheoryExamMarksPercentage, finalPracticalExamMarksPercentage);
 
                     // course hashmap
                     String departmentId = departmentHashMap.get(department).getId();
@@ -890,10 +947,15 @@ public class CoursePanel extends JPanel {
 
                     addToCourseHashMap(departmentId, department, semesterId, semester, undergraduateLevelId, level, dhulID, newCourseCode, String.valueOf(courseId), newCourseName, credit, hours);
 
+                    // add to timetable
+                    addToTimeTable(courseId);
+
                     clearFields();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                System.out.println("null result set");
             }
 
         }
@@ -905,13 +967,15 @@ public class CoursePanel extends JPanel {
 
         if (evt.getClickCount() == 2) {
 
-            String courseCode = String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 2));
+            String courseCode = String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 1));
             if (courseHashMap.containsKey(courseCode)) {
 
-                CourseModel courseModel = courseHashMap.get(courseCode);
+                CourseModel cm = courseHashMap.get(courseCode);
 
-                CourseDetailDialog courseDetailDialog = new CourseDetailDialog(this, courseModel);
+                CourseDetailDialog courseDetailDialog = new CourseDetailDialog(this, cm);
                 courseDetailDialog.setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(this,"Course Details not Found","Missing Course Details",JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
@@ -928,10 +992,10 @@ public class CoursePanel extends JPanel {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
         // upload:
 
-        if(selectedPdfFile != null) {
+        if (selectedPdfFile != null) {
 
-            HashMap<String, String> uploaded = FileUpload.upload(selectedPdfFile,FileUpload.PDF_FILE);
-            if(uploaded.get("status").equals(FileUpload.SUCCESS)){
+            HashMap<String, String> uploaded = FileUpload.upload(selectedPdfFile, FileUpload.PDF_FILE);
+            if (uploaded.get("status").equals(FileUpload.SUCCESS)) {
 
                 String query = "INSERT INTO `material`(`datetime`,`url`,`course_course_id`,`type_type_id`,`name`) " +
                         "VALUES(?,?,?,?,?)";
@@ -947,10 +1011,10 @@ public class CoursePanel extends JPanel {
 
                 loadCourseMaterials();
 
-                JOptionPane.showMessageDialog(this,"File Upload Success","Success",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "File Upload Success", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-            }else{
-                JOptionPane.showMessageDialog(this,"File Upload Failed","Failed",JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "File Upload Failed", "Failed", JOptionPane.ERROR_MESSAGE);
             }
 
         }
@@ -986,6 +1050,21 @@ public class CoursePanel extends JPanel {
         loadCourseNameList();
     }
 
+    private void addToTimeTable(Integer courseId) {
+
+        String query = "INSERT INTO `timetable`(`day`,`from`,`to`,`course_course_id`) " +
+                "VALUES(?,?,?,?)";
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) jTable2.getModel();
+        int rowCount = defaultTableModel.getRowCount();
+        for (int i = 1; i <= rowCount; i++) {
+
+            DBConnection.iud(query, defaultTableModel.getValueAt(i,1), defaultTableModel.getValueAt(i,2), defaultTableModel.getValueAt(i,3), courseId);
+
+        }
+
+    }
+
     private void clearFields() {
 
         jTextField2.setText("");
@@ -1007,9 +1086,15 @@ public class CoursePanel extends JPanel {
         jTextField13.setText("");
         jTextField14.setText("");
 
+        jButton5.setText("select Time");
+        jButton10.setText("select Time");
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) jTable2.getModel();
+        defaultTableModel.setRowCount(0);
+
     }
 
-    private void loadDayOfTheWeek(){
+    private void loadDayOfTheWeek() {
 
         jComboBox4.removeAllItems();
 
@@ -1028,25 +1113,25 @@ public class CoursePanel extends JPanel {
         }
     }
 
-    private void loadSemesters(){
+    private void loadSemesters() {
 
         String query = "SELECT * FROM `semester`";
         ResultSet resultSet = DBConnection.search(query);
 
-        if(resultSet != null){
+        if (resultSet != null) {
 
             Vector<String> v = new Vector<>();
-            try{
+            try {
 
-                while(resultSet.next()){
+                while (resultSet.next()) {
 
                     String semester = resultSet.getString("semester");
                     String semesterId = resultSet.getString("semester_id");
 
                     v.add(semester);
-                    semesterHashMap.put(semester,new SemesterModel(semesterId,semester));
+                    semesterHashMap.put(semester, new SemesterModel(semesterId, semester));
                 }
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
@@ -1057,25 +1142,25 @@ public class CoursePanel extends JPanel {
 
     }
 
-    private void loadLevel(){
+    private void loadLevel() {
 
         String query = "SELECT * FROM `undergraduate_level`";
         ResultSet resultSet = DBConnection.search(query);
 
-        if(resultSet != null){
+        if (resultSet != null) {
 
             Vector<String> v = new Vector<>();
-            try{
+            try {
 
-                while(resultSet.next()){
+                while (resultSet.next()) {
 
                     String level = resultSet.getString("level");
                     String levelId = resultSet.getString("level_id");
 
                     v.add(level);
-                    levelHashMap.put(level,new UndergraduateLevelModel(levelId,level));
+                    levelHashMap.put(level, new UndergraduateLevelModel(levelId, level));
                 }
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
@@ -1086,25 +1171,25 @@ public class CoursePanel extends JPanel {
 
     }
 
-    private void loadDepartments(){
+    private void loadDepartments() {
 
         String query = "SELECT * FROM `department`";
         ResultSet resultSet = DBConnection.search(query);
 
-        if(resultSet != null){
+        if (resultSet != null) {
 
             Vector<String> v = new Vector<>();
-            try{
+            try {
 
-                while(resultSet.next()){
+                while (resultSet.next()) {
 
                     String department = resultSet.getString("name");
                     String departmentId = resultSet.getString("department_id");
 
                     v.add(department);
-                    departmentHashMap.put(department,new DepartmentModel(departmentId,department));
+                    departmentHashMap.put(department, new DepartmentModel(departmentId, department));
                 }
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
@@ -1120,20 +1205,21 @@ public class CoursePanel extends JPanel {
         String query = "SELECT * FROM `lecturer` WHERE `status_status_id`=?";
         ResultSet resultSet = DBConnection.search(query, "1");
 
-        if(resultSet != null){
+        if (resultSet != null) {
 
             Vector<String> v = new Vector<>();
-            try{
+            v.add("Select Lecturer ...");
+            try {
 
-                while(resultSet.next()){
+                while (resultSet.next()) {
 
                     String username = resultSet.getString("username");
                     String userId = resultSet.getString("user_id");
 
                     v.add(username);
-                    lecturerHashMap.put(username,userId);
+                    lecturerHashMap.put(username, userId);
                 }
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
@@ -1159,12 +1245,12 @@ public class CoursePanel extends JPanel {
 
                 loadCourseMaterials();
 
-                JOptionPane.showMessageDialog(this,"File Deleted","Success",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "File Deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this,"Failed to delete the file: " + name,"Failed",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Failed to delete the file: " + name, "Failed", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this,"File Not Found","File Not Found",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "File Not Found", "File Not Found", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -1172,7 +1258,7 @@ public class CoursePanel extends JPanel {
     private void loadPreview(String url) {
         // preview material:
 
-        PDFPreviewDialog pdfPreviewDialog = new PDFPreviewDialog(CoursePanel.this,url);
+        PDFPreviewDialog pdfPreviewDialog = new PDFPreviewDialog(CoursePanel.this, url);
         pdfPreviewDialog.setVisible(true);
 
     }
@@ -1245,7 +1331,7 @@ public class CoursePanel extends JPanel {
                             deleteBtn.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    removeMaterial(materialId, url,name);
+                                    removeMaterial(materialId, url, name);
                                 }
                             });
                             materialList.add(deleteBtn);
@@ -1281,6 +1367,8 @@ public class CoursePanel extends JPanel {
         String midExamMarksPercentage = jTextField12.getText();
         String finalTheoryExamMarksPercentage = jTextField13.getText();
         String finalPracticalExamMarksPercentage = jTextField14.getText();
+
+        int rowCount = jTable2.getRowCount();
 
         if (newCourseCode.isBlank()) {
             JOptionPane.showMessageDialog(this, "Course Code Cannot be Empty", "Missing Data", JOptionPane.ERROR_MESSAGE);
@@ -1434,6 +1522,11 @@ public class CoursePanel extends JPanel {
             return false;
         }
 
+        if (rowCount == 0) {
+            JOptionPane.showMessageDialog(this, "Please Add the Timetable", "Need Timetbale", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         return true;
 
     }
@@ -1486,8 +1579,13 @@ public class CoursePanel extends JPanel {
 
     private void loadCoursesFormDB(String enteredCourseCode) {
 
-        String code = "%"+enteredCourseCode+"%";
-        String query = "SELECT * FROM `course` WHERE `lecturer_user_id`=? AND `course_code` LIKE ? ";
+        String code = "%" + enteredCourseCode + "%";
+        String query = "SELECT * FROM `course` " +
+                "INNER JOIN `department_has_undergraduate_level` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                "INNER JOIN `department` ON `department`.`department_id`=`department_has_undergraduate_level`.`department_department_id` " +
+                "INNER JOIN `semester` ON `semester`.`semester_id`=`department_has_undergraduate_level`.`semester_semester_id` " +
+                "INNER JOIN `undergraduate_level` ON `undergraduate_level`.`level_id`=`department_has_undergraduate_level`.`undergraduate_level_level_id` " +
+                "WHERE `lecturer_user_id`=? AND `course_code` LIKE ? ORDER BY `course`.`course_id` ASC";
 
         ResultSet resultSet = DBConnection.search(query, LecturerDashboard.loginLecturerModel.getId(), code);
         if (resultSet == null) {
@@ -1507,16 +1605,16 @@ public class CoursePanel extends JPanel {
                 String credit = resultSet.getString("credit");
                 String courseHours = resultSet.getString("course_hours");
 
-                String departmentId = resultSet.getString("semester_id");
-                String department = resultSet.getString("semester");
+                String departmentId = resultSet.getString("department_id");
+                String department = resultSet.getString("name");
 
                 String semesterId = resultSet.getString("semester_id");
                 String semester = resultSet.getString("semester");
 
-                String undergraduateLevelId = resultSet.getString("semester_id");
-                String undergraduateLevel = resultSet.getString("semester");
+                String undergraduateLevelId = resultSet.getString("level_id");
+                String undergraduateLevel = resultSet.getString("level");
 
-                String dhulId = resultSet.getString("semester_id");
+                String dhulId = resultSet.getString("id");
 
 
                 // load table
