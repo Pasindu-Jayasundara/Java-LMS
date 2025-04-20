@@ -30,9 +30,11 @@ CREATE TABLE IF NOT EXISTS `admin` (
   PRIMARY KEY (`user_id`),
   KEY `fk_admin_status1_idx` (`status_status_id`),
   CONSTRAINT `fk_admin_status1` FOREIGN KEY (`status_status_id`) REFERENCES `status` (`status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table java_lms.admin: ~0 rows (approximately)
+-- Dumping data for table java_lms.admin: ~1 rows (approximately)
+INSERT INTO `admin` (`user_id`, `username`, `password`, `email`, `contact_number`, `status_status_id`) VALUES
+	(1, 'admin', '12456789', 'a@gmail.com', '0740211671', 1);
 
 -- Dumping structure for table java_lms.attendance
 CREATE TABLE IF NOT EXISTS `attendance` (
@@ -87,18 +89,27 @@ CREATE TABLE IF NOT EXISTS `course` (
   KEY `fk_course_lecturer1_idx` (`lecturer_user_id`),
   CONSTRAINT `fk_course_department_has_undergraduate_level1` FOREIGN KEY (`department_has_undergraduate_level_id`) REFERENCES `department_has_undergraduate_level` (`id`),
   CONSTRAINT `fk_course_lecturer1` FOREIGN KEY (`lecturer_user_id`) REFERENCES `lecturer` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table java_lms.course: ~0 rows (approximately)
+INSERT INTO `course` (`course_id`, `course`, `credit`, `department_has_undergraduate_level_id`, `course_code`, `course_hours`, `lecturer_user_id`, `total_quiz`, `total_assessment`, `ca_use_quiz_count`, `ca_use_assessment_count`, `quiz_marks_percentage`, `assessment_marks_percentage`, `mid_marks_percentage`, `final_theory_marks_percentage`, `final_practical_marks_percentage`) VALUES
+	(1, 'Course 1', 12, 3, '11245', 10, 1, 4, 4, 3, 2, 5, 5, 20, 50, 0),
+	(2, 'Course 2', 5, 4, '1124', 10, 1, 4, 4, 3, 2, 5, 5, 20, 50, 0),
+	(3, 'Course 3', 128, 5, '1111', 8, 1, 6, 4, 6, 2, 5, 5, 20, 50, 0),
+	(4, 'Cou4 ', 12, 6, '114565', 40, 1, 4, 4, 4, 2, 5, 5, 20, 50, 0);
 
 -- Dumping structure for table java_lms.department
 CREATE TABLE IF NOT EXISTS `department` (
   `department_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`department_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table java_lms.department: ~0 rows (approximately)
+INSERT INTO `department` (`department_id`, `name`) VALUES
+	(1, 'ICT'),
+	(2, 'ET'),
+	(3, 'BST');
 
 -- Dumping structure for table java_lms.department_has_undergraduate_level
 CREATE TABLE IF NOT EXISTS `department_has_undergraduate_level` (
@@ -116,9 +127,16 @@ CREATE TABLE IF NOT EXISTS `department_has_undergraduate_level` (
   CONSTRAINT `fk_department_has_undergraduate_level_semester1` FOREIGN KEY (`semester_semester_id`) REFERENCES `semester` (`semester_id`),
   CONSTRAINT `fk_department_has_undergraduate_level_status1` FOREIGN KEY (`status_status_id`) REFERENCES `status` (`status_id`),
   CONSTRAINT `fk_department_has_undergraduate_level_undergraduate_level1` FOREIGN KEY (`undergraduate_level_level_id`) REFERENCES `undergraduate_level` (`level_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table java_lms.department_has_undergraduate_level: ~0 rows (approximately)
+INSERT INTO `department_has_undergraduate_level` (`department_department_id`, `undergraduate_level_level_id`, `id`, `semester_semester_id`, `status_status_id`) VALUES
+	(1, 1, 1, 1, 1),
+	(1, 1, 2, 1, 1),
+	(1, 1, 3, 1, 1),
+	(1, 1, 4, 1, 1),
+	(1, 1, 5, 1, 1),
+	(1, 1, 6, 1, 1);
 
 -- Dumping structure for table java_lms.exam
 CREATE TABLE IF NOT EXISTS `exam` (
@@ -144,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `exam_type` (
   PRIMARY KEY (`type_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table java_lms.exam_type: ~0 rows (approximately)
+-- Dumping data for table java_lms.exam_type: ~4 rows (approximately)
 INSERT INTO `exam_type` (`type_id`, `exam_type`) VALUES
 	(1, 'Quiz'),
 	(2, 'Assessment'),
@@ -164,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `lecturer` (
   CONSTRAINT `fk_lecturer_status1` FOREIGN KEY (`status_status_id`) REFERENCES `status` (`status_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table java_lms.lecturer: ~1 rows (approximately)
+-- Dumping data for table java_lms.lecturer: ~0 rows (approximately)
 INSERT INTO `lecturer` (`user_id`, `username`, `password`, `email`, `contact_number`, `status_status_id`) VALUES
 	(1, 'Pasindu', 'Pasindu328@', 'p@gmail.com', '0740211671', 1);
 
@@ -210,7 +228,7 @@ CREATE TABLE IF NOT EXISTS `material` (
   KEY `fk_material_type1_idx` (`type_type_id`),
   CONSTRAINT `fk_material_course1` FOREIGN KEY (`course_course_id`) REFERENCES `course` (`course_id`),
   CONSTRAINT `fk_material_type1` FOREIGN KEY (`type_type_id`) REFERENCES `type` (`type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table java_lms.material: ~0 rows (approximately)
 
@@ -244,18 +262,25 @@ CREATE TABLE IF NOT EXISTS `notice` (
   KEY `fk_notice_admin1_idx` (`admin_user_id`),
   CONSTRAINT `fk_notice_admin1` FOREIGN KEY (`admin_user_id`) REFERENCES `admin` (`user_id`),
   CONSTRAINT `fk_notice_status1` FOREIGN KEY (`status_status_id`) REFERENCES `status` (`status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table java_lms.notice: ~0 rows (approximately)
+-- Dumping data for table java_lms.notice: ~3 rows (approximately)
+INSERT INTO `notice` (`notice_id`, `post_date`, `content`, `title`, `status_status_id`, `admin_user_id`) VALUES
+	(1, '2025-04-20 21:59:39', 'Testing notice content', 'Conent Title', 1, 1),
+	(2, '2025-04-20 21:59:40', 'Testing notice content', 'Conent Title', 1, 1),
+	(3, '2025-04-20 21:59:43', 'Testing notice content', 'Conent Title', 1, 1);
 
 -- Dumping structure for table java_lms.semester
 CREATE TABLE IF NOT EXISTS `semester` (
   `semester_id` int NOT NULL AUTO_INCREMENT,
   `semester` int DEFAULT NULL,
   PRIMARY KEY (`semester_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table java_lms.semester: ~0 rows (approximately)
+INSERT INTO `semester` (`semester_id`, `semester`) VALUES
+	(1, 1),
+	(2, 2);
 
 -- Dumping structure for table java_lms.status
 CREATE TABLE IF NOT EXISTS `status` (
@@ -264,7 +289,7 @@ CREATE TABLE IF NOT EXISTS `status` (
   PRIMARY KEY (`status_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table java_lms.status: ~2 rows (approximately)
+-- Dumping data for table java_lms.status: ~4 rows (approximately)
 INSERT INTO `status` (`status_id`, `status`) VALUES
 	(1, 'Active'),
 	(2, 'Medical Accepted'),
@@ -330,9 +355,11 @@ CREATE TABLE IF NOT EXISTS `timetable` (
   PRIMARY KEY (`timetable_id`),
   KEY `fk_timetable_course1_idx` (`course_course_id`),
   CONSTRAINT `fk_timetable_course1` FOREIGN KEY (`course_course_id`) REFERENCES `course` (`course_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table java_lms.timetable: ~0 rows (approximately)
+INSERT INTO `timetable` (`timetable_id`, `day`, `from`, `to`, `course_course_id`) VALUES
+	(1, 'Monday', '08:00:00', '12:30:00', 4);
 
 -- Dumping structure for table java_lms.type
 CREATE TABLE IF NOT EXISTS `type` (
@@ -350,9 +377,14 @@ CREATE TABLE IF NOT EXISTS `undergraduate_level` (
   `level_id` int NOT NULL AUTO_INCREMENT,
   `level` int DEFAULT NULL,
   PRIMARY KEY (`level_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table java_lms.undergraduate_level: ~0 rows (approximately)
+INSERT INTO `undergraduate_level` (`level_id`, `level`) VALUES
+	(1, 1),
+	(2, 2),
+	(3, 3),
+	(4, 4);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
