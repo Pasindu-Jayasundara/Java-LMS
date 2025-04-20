@@ -204,36 +204,26 @@ public class LecturerDashboard extends JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         // course
-
-        coursePanel1 = new view.lecturer.panels.CoursePanel();
         changeUI("course");
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         // exam
-
-        examPanel1 = new view.lecturer.panels.ExamPanel();
         changeUI("exam");
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
         // student
-
-        studentPanel1 = new view.lecturer.panels.StudentPanel();
         changeUI("student");
     }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
         // attendance
-
-        attendancePanel1 = new view.lecturer.panels.AttendancePanel();
         changeUI("attendance");
     }
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
         // notice
-
-        noticePanel1 = new view.lecturer.panels.NoticePanel();
         changeUI("notice");
     }
 
@@ -245,8 +235,6 @@ public class LecturerDashboard extends JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
         // settings
-
-        profilePanel1 = new view.lecturer.panels.ProfilePanel();
         changeUI("setting");
     }
 

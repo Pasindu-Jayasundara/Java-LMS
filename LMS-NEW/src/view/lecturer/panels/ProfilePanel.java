@@ -1,6 +1,7 @@
 package view.lecturer.panels;
 
 import controller.common.DBConnection;
+import controller.common.Validation;
 import view.lecturer.LecturerDashboard;
 
 import javax.swing.*;
@@ -99,8 +100,18 @@ public class ProfilePanel extends JPanel{
             return;
         }
 
+        if(!Validation.isValidEmail(email)){
+            JOptionPane.showMessageDialog(this,"Please enter valid Email Address","Incorrect Email",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         if(contact.isBlank()){
             JOptionPane.showMessageDialog(this,"Please Fill The Contact Number","Missing Contact Number",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if(!Validation.isValidMobile(contact)){
+            JOptionPane.showMessageDialog(this,"Please enter valid Mobile Number","Incorrect Mobile Number",JOptionPane.WARNING_MESSAGE);
             return;
         }
 
