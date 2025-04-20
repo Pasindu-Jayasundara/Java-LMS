@@ -118,6 +118,10 @@ public class CoursePanel extends JPanel {
 
         loadCourses("");
         loadLecturers();
+        loadDepartments();
+        loadLevel();
+        loadSemesters();
+        loadDayOfTheWeek();
     }
 
     private void initComponents() {
@@ -886,6 +890,7 @@ public class CoursePanel extends JPanel {
 
                     addToCourseHashMap(departmentId, department, semesterId, semester, undergraduateLevelId, level, dhulID, newCourseCode, String.valueOf(courseId), newCourseName, credit, hours);
 
+                    clearFields();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -979,6 +984,135 @@ public class CoursePanel extends JPanel {
         // add material panel focus gained:
 
         loadCourseNameList();
+    }
+
+    private void clearFields() {
+
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+
+        jComboBox1.setSelectedIndex(0);
+        jComboBox2.setSelectedIndex(0);
+        jComboBox3.setSelectedIndex(0);
+        jComboBox7.setSelectedIndex(0);
+        jTextField6.setText("");
+        jTextField8.setText("");
+        jTextField7.setText("");
+        jTextField9.setText("");
+        jTextField10.setText("");
+        jTextField11.setText("");
+        jTextField12.setText("");
+        jTextField13.setText("");
+        jTextField14.setText("");
+
+    }
+
+    private void loadDayOfTheWeek(){
+
+        jComboBox4.removeAllItems();
+
+        String[] daysOfWeek = {
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday"
+        };
+
+        for (String day : daysOfWeek) {
+            jComboBox4.addItem(day);
+        }
+    }
+
+    private void loadSemesters(){
+
+        String query = "SELECT * FROM `semester`";
+        ResultSet resultSet = DBConnection.search(query);
+
+        if(resultSet != null){
+
+            Vector<String> v = new Vector<>();
+            try{
+
+                while(resultSet.next()){
+
+                    String semester = resultSet.getString("semester");
+                    String semesterId = resultSet.getString("semester_id");
+
+                    v.add(semester);
+                    semesterHashMap.put(semester,new SemesterModel(semesterId,semester));
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+
+            DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<>(v);
+            jComboBox3.setModel(defaultComboBoxModel);
+
+        }
+
+    }
+
+    private void loadLevel(){
+
+        String query = "SELECT * FROM `undergraduate_level`";
+        ResultSet resultSet = DBConnection.search(query);
+
+        if(resultSet != null){
+
+            Vector<String> v = new Vector<>();
+            try{
+
+                while(resultSet.next()){
+
+                    String level = resultSet.getString("level");
+                    String levelId = resultSet.getString("level_id");
+
+                    v.add(level);
+                    levelHashMap.put(level,new UndergraduateLevelModel(levelId,level));
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+
+            DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<>(v);
+            jComboBox2.setModel(defaultComboBoxModel);
+
+        }
+
+    }
+
+    private void loadDepartments(){
+
+        String query = "SELECT * FROM `department`";
+        ResultSet resultSet = DBConnection.search(query);
+
+        if(resultSet != null){
+
+            Vector<String> v = new Vector<>();
+            try{
+
+                while(resultSet.next()){
+
+                    String department = resultSet.getString("name");
+                    String departmentId = resultSet.getString("department_id");
+
+                    v.add(department);
+                    departmentHashMap.put(department,new DepartmentModel(departmentId,department));
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+
+            DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<>(v);
+            jComboBox1.setModel(defaultComboBoxModel);
+
+        }
+
     }
 
     private void loadLecturers() {
