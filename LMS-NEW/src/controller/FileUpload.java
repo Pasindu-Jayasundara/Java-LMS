@@ -10,10 +10,13 @@ import java.util.Objects;
 
 public class FileUpload {
 
+    // todo table button not shows just the btn object
+    // todo find url get updated to the db but file do not get uploaded
+
     private static final HashMap<String, String> map = new HashMap<>();
 
     public static final Integer PROFILE_IMAGE = 1;
-    public static final Integer PDF_FILE = 1;
+    public static final Integer PDF_FILE = 2;
     public static final String SUCCESS = "1";
     public static final String FAILED = "1";
 

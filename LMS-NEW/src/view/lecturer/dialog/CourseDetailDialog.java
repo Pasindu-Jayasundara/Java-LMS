@@ -409,10 +409,11 @@ public class CourseDetailDialog extends JDialog {
             defaultTableModel.setRowCount(0);
 
             try {
-
+                int i = 1;
                 while (resultSet.next()) {
 
                     Vector<String> row = new Vector<>();
+                    row.add(String.valueOf(i++));
                     row.add(resultSet.getString("day"));
                     row.add(resultSet.getString("from"));
                     row.add(resultSet.getString("to"));
