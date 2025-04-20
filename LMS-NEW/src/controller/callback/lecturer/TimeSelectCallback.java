@@ -1,4 +1,4 @@
-package controller.callback;
+package controller.callback.lecturer;
 
 public abstract class TimeSelectCallback {
 

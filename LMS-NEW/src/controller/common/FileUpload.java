@@ -1,4 +1,4 @@
-package controller;
+package controller.common;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,22 +11,22 @@ import java.util.Objects;
 public class FileUpload {
 
     // todo table button not shows just the btn object
-    // todo find url get updated to the db but file do not get uploaded
 
     private static final HashMap<String, String> map = new HashMap<>();
 
     public static final Integer PROFILE_IMAGE = 1;
     public static final Integer PDF_FILE = 2;
-    public static final String SUCCESS = "1";
-    public static final String FAILED = "1";
+    public static final String SUCCESS = "3";
+    public static final String FAILED = "4";
 
     public static HashMap<String,String> upload(HashMap<String,String> uploadedFileMap,Integer destination) {
 
+        String basePath = System.getProperty("user.dir");
         String destinationDirectory = null;
         if(Objects.equals(destination, PROFILE_IMAGE)) {
-            destinationDirectory = "/resources/profileImages/";
+            destinationDirectory = basePath + "/resources/profileImages/";
         }else if(Objects.equals(destination, PDF_FILE)) {
-            destinationDirectory = "/resources/pdfFiles/";
+            destinationDirectory = basePath + "/resources/pdfFiles/";
         }
 
         // Specify the destination directory for the image
@@ -35,7 +35,7 @@ public class FileUpload {
             destDir.mkdirs();
         }
 
-        String destinationPath = destinationDirectory + uploadedFileMap.get("filename");// Construct the destination file path
+        String destinationPath = destinationDirectory +System.currentTimeMillis()+ uploadedFileMap.get("filename");// Construct the destination file path
 
         // Copy the selected file to the destination directory
         try {
@@ -44,7 +44,7 @@ public class FileUpload {
             Files.copy(sourcePath, destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
 
             map.put("status", FileUpload.SUCCESS); // success
-            map.put("url", destinationPath);
+            map.put("url", destinationPath.replace(basePath,""));
 
             return map;
 

@@ -1,9 +1,9 @@
 package view.lecturer.dialog;
 
-import controller.DBConnection;
-import controller.FileSelect;
-import controller.FileUpload;
-import controller.callback.MarksUpdateCallBack;
+import controller.common.DBConnection;
+import controller.common.FileSelect;
+import controller.common.FileUpload;
+import controller.callback.lecturer.MarksUpdateCallBack;
 import model.ExamModel;
 import model.IndividualMarksModel;
 import view.lecturer.panels.ExamPanel;

@@ -1,6 +1,6 @@
 package view.lecturer.dialog;
 
-import controller.callback.TimeSelectCallback;
+import controller.callback.lecturer.TimeSelectCallback;
 import raven.datetime.event.TimeSelectionEvent;
 import raven.datetime.event.TimeSelectionListener;
 import view.lecturer.panels.CoursePanel;

@@ -556,11 +556,11 @@ public class CoursePanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "#", "File Name", "Uploaded At", "", ""
+                "#", "File Name", "Uploaded At", "", "", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -571,6 +571,9 @@ public class CoursePanel extends javax.swing.JPanel {
         if (jTable3.getColumnModel().getColumnCount() > 0) {
             jTable3.getColumnModel().getColumn(0).setPreferredWidth(5);
             jTable3.getColumnModel().getColumn(1).setPreferredWidth(200);
+            jTable3.getColumnModel().getColumn(3).setMinWidth(0);
+            jTable3.getColumnModel().getColumn(3).setPreferredWidth(0);
+            jTable3.getColumnModel().getColumn(3).setMaxWidth(0);
         }
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);

@@ -1,6 +1,6 @@
 package view.lecturer.dialog;
 
-import controller.DBConnection;
+import controller.common.DBConnection;
 import model.CourseMaterialModel;
 import model.CourseModel;
 import view.lecturer.panels.CoursePanel;

@@ -1,21 +1,20 @@
 package view.lecturer.panels;
 
-import controller.DBConnection;
-import controller.FileSelect;
-import controller.FileUpload;
-import controller.Validation;
-import controller.callback.TimeSelectCallback;
+import controller.callback.lecturer.MaterialTableLoadCallback;
+import controller.callback.lecturer.TimeSelectCallback;
+import controller.common.DBConnection;
+import controller.common.FileSelect;
+import controller.common.FileUpload;
+import controller.common.Validation;
+import controller.lecturer.ButtonEditor;
+import controller.lecturer.ButtonRenderer;
 import model.*;
 import view.lecturer.dialog.CourseDetailDialog;
 import view.lecturer.LecturerDashboard;
-import view.lecturer.dialog.PDFPreviewDialog;
 import view.lecturer.dialog.TimePickerDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -656,11 +655,11 @@ public class CoursePanel extends JPanel {
 
                 },
                 new String [] {
-                        "#", "File Name", "Uploaded At", "", ""
+                        "#", "File Name", "Uploaded At","", "", ""
                 }
         ) {
             boolean[] canEdit = new boolean [] {
-                    false, false, false, false, false
+                    false, false, false,false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1263,39 +1262,6 @@ public class CoursePanel extends JPanel {
 
     }
 
-    private void removeMaterial(String materialId, String url, String name) {
-        // remove material:
-
-        File fileToDelete = new File(url);
-
-        if (fileToDelete.exists()) {
-
-            boolean deleted = fileToDelete.delete();
-            if (deleted) {
-
-                String query = "DELETE FROM `material` WHERE `material_id`=?";
-                DBConnection.iud(query, materialId);
-
-                loadCourseMaterials();
-
-                JOptionPane.showMessageDialog(this, "File Deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "Failed to delete the file: " + name, "Failed", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "File Not Found", "File Not Found", JOptionPane.ERROR_MESSAGE);
-        }
-
-    }
-
-    private void loadPreview(String url) {
-        // preview material:
-
-        PDFPreviewDialog pdfPreviewDialog = new PDFPreviewDialog(CoursePanel.this, url);
-        pdfPreviewDialog.setVisible(true);
-
-    }
-
     private void loadCourseNameList() {
 
         Vector<String> vector = new Vector<>();
@@ -1342,34 +1308,40 @@ public class CoursePanel extends JPanel {
                         while (resultSet.next()) {
 
                             String materialId = resultSet.getString("material_id");
-                            String url = resultSet.getString("url");
                             String name = resultSet.getString("name");
+                            String url = resultSet.getString("url");
 
                             Vector<Object> materialList = new Vector<>();
                             materialList.add(materialId);
                             materialList.add(name);
                             materialList.add(resultSet.getString("datetime"));
 
-                            JButton previewBtn = new JButton("Preview");
-                            previewBtn.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    loadPreview(url);
-                                }
-                            });
-                            materialList.add(previewBtn);
-
-                            JButton deleteBtn = new JButton("Remove");
-                            deleteBtn.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    removeMaterial(materialId, url, name);
-                                }
-                            });
-                            materialList.add(deleteBtn);
+                            materialList.add(url);
+                            materialList.add("Preview");
+                            materialList.add("Remove");
 
                             defaultTableModel.addRow(materialList);
                         }
+
+                        // Set custom renderers/editors for button columns (Preview = 3, Remove = 4)
+                        jTable3.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+                        jTable3.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CoursePanel.this, new MaterialTableLoadCallback() {
+                            @Override
+                            public void onTableLoadCallback() {
+                                loadCourseMaterials();
+                            }
+                        }));
+                        jTable3.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
+                        jTable3.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CoursePanel.this, new MaterialTableLoadCallback() {
+                            @Override
+                            public void onTableLoadCallback() {
+                                loadCourseMaterials();
+                            }
+                        }));
+
+                        jTable3.getColumnModel().getColumn(3).setMinWidth(0);
+                        jTable3.getColumnModel().getColumn(3).setMaxWidth(0);
+                        jTable3.getColumnModel().getColumn(3).setWidth(0);
 
                     } catch (SQLException e) {
                         e.printStackTrace();

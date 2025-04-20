@@ -1,6 +1,6 @@
 package view.lecturer.panels;
 
-import controller.DBConnection;
+import controller.common.DBConnection;
 import model.StudentFullDetailModel;
 import view.lecturer.dialog.StudentDetailDialog;
 
@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
