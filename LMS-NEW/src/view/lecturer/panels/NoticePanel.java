@@ -1,7 +1,7 @@
 package view.lecturer.panels;
 
 import controller.common.DBConnection;
-import controller.lecturer.NoticeListRenderer;
+import controller.lecturer.noticePanel.NoticeListRenderer;
 import model.CustomNoticeListModel;
 import model.NoticeListItemModel;
 

@@ -111,7 +111,8 @@ public class LecturerDashboard extends JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("UOR Lecturer");
 
-        jButton6.setText("...");
+        jButton6.setText("");
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/designImages/profileSetting.png"))); // NOI18N
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);

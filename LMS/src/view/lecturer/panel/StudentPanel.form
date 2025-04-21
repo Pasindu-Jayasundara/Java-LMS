@@ -47,9 +47,9 @@
                   <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jScrollPane1" min="-2" pref="418" max="-2" attributes="0"/>
-              <EmptySpace pref="19" max="32767" attributes="0"/>
+              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+              <Component id="jScrollPane1" pref="418" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -63,11 +63,12 @@
     <Component class="javax.swing.JComboBox" name="jComboBox1">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="By Id"/>
-            <StringItem index="1" value="By Name"/>
-            <StringItem index="2" value="By Year"/>
-            <StringItem index="3" value="By Level"/>
+          <StringArray count="5">
+            <StringItem index="0" value="Select search option"/>
+            <StringItem index="1" value="By Id"/>
+            <StringItem index="2" value="By Name"/>
+            <StringItem index="3" value="By Year"/>
+            <StringItem index="4" value="By Level"/>
           </StringArray>
         </Property>
       </Properties>
@@ -108,7 +109,7 @@
                 <Column editable="false" title="Name" type="java.lang.Object"/>
                 <Column editable="false" title="Year" type="java.lang.Object"/>
                 <Column editable="false" title="Contact" type="java.lang.Object"/>
-                <Column editable="false" title="" type="java.lang.Object"/>
+                <Column editable="true" title="" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
