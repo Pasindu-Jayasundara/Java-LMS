@@ -63,11 +63,12 @@ public class StudentDetailDialog extends JDialog {
         setLocationRelativeTo(studentPanel);
 
         this.studentFullDetailModel = studentFullDetailModel;
+        setUpStudentProfile();
+
     }
 
     private void createUIComponents() {
         initComponents();
-        setUpStudentProfile();
     }
 
     private void initComponents() {
@@ -459,7 +460,9 @@ public class StudentDetailDialog extends JDialog {
         int selectedTabIndex = jTabbedPane1.getSelectedIndex();
         switch (selectedTabIndex) {
             case 0:
-                setUpStudentProfile();
+                if(this.studentFullDetailModel !=null){
+                    setUpStudentProfile();
+                }
                 break;
             case 1:
                 setUpEligibility();
@@ -729,7 +732,7 @@ public class StudentDetailDialog extends JDialog {
         int attendanceCount = 0;
         double fullAttendanceCount = 0;
 
-        ResultSet resultSet = DBConnection.search(attendanceQuery, courseCode, studentFullDetailModel.getId(), "Attended");
+        ResultSet resultSet = DBConnection.search(attendanceQuery, courseCode, studentFullDetailModel.getId());
         if(resultSet != null){
 
             try{
@@ -779,7 +782,14 @@ public class StudentDetailDialog extends JDialog {
 
     private void setUpStudentProfile() {
 
-        jImagePanel1.setImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(studentFullDetailModel.getProfilePicture()))));
+        String path = "";
+        if(studentFullDetailModel.getProfilePicture() == null){
+            path = "/resources/designImages/profileIco.png";
+        }else{
+            path = studentFullDetailModel.getProfilePicture();
+        }
+
+        jImagePanel1.setImageIcon(new ImageIcon(getClass().getResource(path)));
         jLabel6.setText(studentFullDetailModel.getUsername());
         jLabel5.setText(studentFullDetailModel.getEmail());
         jLabel4.setText(studentFullDetailModel.getContactNumber());
@@ -788,8 +798,9 @@ public class StudentDetailDialog extends JDialog {
         jLabel11.setText(studentFullDetailModel.getLevel());
         jLabel12.setText(studentFullDetailModel.getSemester());
 
-        DefaultListModel<String> model = (DefaultListModel<String>) jList1.getModel();
+        DefaultListModel<String> model = new DefaultListModel<>();
         model.addAll(studentFullDetailModel.getSubjectList().values());
+        jList1.setModel(model);
 
     }
 

@@ -1,4 +1,4 @@
-package controller.lecturer;
+package controller.lecturer.coursePanel;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -13,17 +13,6 @@ public class ButtonRenderer extends JButton implements TableCellRenderer {
                                                    boolean isSelected, boolean hasFocus,
                                                    int row, int column) {
         setText((value == null) ? "" : value.toString());
-
-//        if ("Preview".equalsIgnoreCase(getText())) {
-//            setBackground(Color.GREEN);
-//            setForeground(Color.WHITE);
-//        } else if ("Remove".equalsIgnoreCase(getText())) {
-//            setBackground(Color.RED);
-//            setForeground(Color.WHITE);
-//        } else {
-//            setBackground(UIManager.getColor("Button.background"));
-//            setForeground(Color.BLACK);
-//        }
 
         return this;
     }

@@ -1,4 +1,4 @@
-package controller.lecturer;
+package controller.lecturer.noticePanel;
 
 import model.NoticeListItemModel;
 import view.lecturer.panels.NoticeItem;

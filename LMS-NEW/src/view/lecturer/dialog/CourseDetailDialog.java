@@ -1,6 +1,9 @@
 package view.lecturer.dialog;
 
+import controller.callback.lecturer.MaterialTableLoadCallback;
 import controller.common.DBConnection;
+import controller.lecturer.coursePanel.ButtonEditor;
+import controller.lecturer.coursePanel.ButtonRenderer;
 import model.CourseMaterialModel;
 import model.CourseModel;
 import view.lecturer.panels.CoursePanel;
@@ -83,21 +86,27 @@ public class CourseDetailDialog extends JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setText("Course:");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("jLabel2");
 
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setText("Department:");
 
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setText("Level:");
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("Semester:");
 
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel6.setText("Code:");
 
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel7.setText("Credit:");
 
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel8.setText("Hours:");
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -123,7 +132,7 @@ public class CourseDetailDialog extends JDialog {
                         "#", "Day", "From", "To"
                 }
         ) {
-            final boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean [] {
                     false, false, false, false
             };
 
@@ -142,11 +151,11 @@ public class CourseDetailDialog extends JDialog {
 
                 },
                 new String [] {
-                        "#", "Type", "Name", " ", " "
+                        "#", "Name", "Type", " ", " ", ""
                 }
         ) {
-            final boolean[] canEdit = new boolean [] {
-                    false, false, false, false, false
+            boolean[] canEdit = new boolean [] {
+                    false, false, false, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -155,6 +164,11 @@ public class CourseDetailDialog extends JDialog {
         });
         jTable3.setEnabled(false);
         jScrollPane3.setViewportView(jTable3);
+        if (jTable3.getColumnModel().getColumnCount() > 0) {
+            jTable3.getColumnModel().getColumn(3).setMinWidth(0);
+            jTable3.getColumnModel().getColumn(3).setPreferredWidth(0);
+            jTable3.getColumnModel().getColumn(3).setMaxWidth(0);
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -162,45 +176,43 @@ public class CourseDetailDialog extends JDialog {
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(14, 14, 14)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jSeparator1)
+                                        .addComponent(jLabel16)
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
                                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel1)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel3)
+                                                        .addComponent(jLabel1))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(jLabel6)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(jLabel7)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGap(18, 18, 18)
                                                                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addGap(31, 31, 31)
                                                                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addContainerGap(145, Short.MAX_VALUE))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
-                                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel3)
+                                                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(jLabel4)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(jLabel5))
-                                                        .addComponent(jSeparator1)
-                                                        .addComponent(jLabel16)
-                                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE))
-                                                .addGap(0, 0, Short.MAX_VALUE))))
+                                                                .addComponent(jLabel5)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGap(0, 21, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,7 +227,7 @@ public class CourseDetailDialog extends JDialog {
                                         .addComponent(jLabel15)
                                         .addComponent(jLabel14)
                                         .addComponent(jLabel13))
-                                .addGap(28, 28, 28)
+                                .addGap(19, 19, 19)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel3)
                                         .addComponent(jLabel12)
@@ -223,12 +235,12 @@ public class CourseDetailDialog extends JDialog {
                                         .addComponent(jLabel11)
                                         .addComponent(jLabel5)
                                         .addComponent(jLabel10))
-                                .addGap(25, 25, 25)
+                                .addGap(19, 19, 19)
                                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(22, 22, 22)
                                 .addComponent(jLabel16)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -281,40 +293,42 @@ public class CourseDetailDialog extends JDialog {
 
                 while (resultSet.next()) {
 
-                    JButton previewBtn = new JButton("Preview");
-                    previewBtn.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            try {
-                                previewPDFMaterial(resultSet.getString("material_id"));
-                            } catch (SQLException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                    });
+//                    JButton previewBtn = new JButton("Preview");
+//                    previewBtn.addActionListener(new ActionListener() {
+//                        @Override
+//                        public void actionPerformed(ActionEvent e) {
+//                            try {
+//                                previewPDFMaterial(resultSet.getString("material_id"));
+//                            } catch (SQLException ex) {
+//                                ex.printStackTrace();
+//                            }
+//                        }
+//                    });
 
-                    JButton deleteBtn = new JButton("Delete");
-                    deleteBtn.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            try {
-                                deleteMaterial(resultSet.getString("material_id"), resultSet.getString("name"));
-                            } catch (SQLException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                    });
+//                    JButton deleteBtn = new JButton("Delete");
+//                    deleteBtn.addActionListener(new ActionListener() {
+//                        @Override
+//                        public void actionPerformed(ActionEvent e) {
+//                            try {
+//                                deleteMaterial(resultSet.getString("material_id"), resultSet.getString("name"));
+//                            } catch (SQLException ex) {
+//                                ex.printStackTrace();
+//                            }
+//                        }
+//                    });
 
                     String materialId = resultSet.getString("material_id");
                     String type = resultSet.getString("type.type");
                     String name = resultSet.getString("name");
+                    String url = resultSet.getString("url");
 
                     Vector<Object> row = new Vector<>();
                     row.add(materialId);
-                    row.add(type);
                     row.add(name);
-                    row.add(previewBtn);
-                    row.add(deleteBtn);
+                    row.add(type);
+                    row.add(url);
+                    row.add("Preview");
+                    row.add("Delete");
 
                     defaultTableModel.addRow(row);
 
@@ -327,6 +341,25 @@ public class CourseDetailDialog extends JDialog {
                     courseMaterialModelHashMap.put(materialId, courseMaterialModel);
 
                 }
+
+                jTable3.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+                jTable3.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CourseDetailDialog.this, new MaterialTableLoadCallback() {
+                    @Override
+                    public void onTableLoadCallback() {
+                        loadMaterialList(courseId);
+                    }
+                }));
+                jTable3.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
+                jTable3.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CourseDetailDialog.this, new MaterialTableLoadCallback() {
+                    @Override
+                    public void onTableLoadCallback() {
+                        loadMaterialList(courseId);
+                    }
+                }));
+
+                jTable3.getColumnModel().getColumn(3).setMinWidth(0);
+                jTable3.getColumnModel().getColumn(3).setMaxWidth(0);
+                jTable3.getColumnModel().getColumn(3).setWidth(0);
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -361,33 +394,53 @@ public class CourseDetailDialog extends JDialog {
             defaultTableModel.setRowCount(0);
 
             courseMaterialModelHashMap.forEach((key, model) -> {
-
-                JButton previewBtn = new JButton("Preview");
-                previewBtn.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        previewPDFMaterial(model.getId());
-                    }
-                });
-
-                JButton deleteBtn = new JButton("Delete");
-                deleteBtn.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        deleteMaterial(model.getId(), model.getName());
-                    }
-                });
+//
+//                JButton previewBtn = new JButton("Preview");
+//                previewBtn.addActionListener(new ActionListener() {
+//                    @Override
+//                    public void actionPerformed(ActionEvent e) {
+//                        previewPDFMaterial(model.getId());
+//                    }
+//                });
+//
+//                JButton deleteBtn = new JButton("Delete");
+//                deleteBtn.addActionListener(new ActionListener() {
+//                    @Override
+//                    public void actionPerformed(ActionEvent e) {
+//                        deleteMaterial(model.getId(), model.getName());
+//                    }
+//                });
 
                 Vector<Object> row = new Vector<>();
                 row.add(model.getId());
-                row.add(model.getType());
                 row.add(model.getName());
-                row.add(previewBtn);
-                row.add(deleteBtn);
+                row.add(model.getType());
+                row.add(model.getUrl());
+                row.add("Preview");
+                row.add("Delete");
 
                 defaultTableModel.addRow(row);
 
             });
+
+            jTable3.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+            jTable3.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CourseDetailDialog.this, new MaterialTableLoadCallback() {
+                @Override
+                public void onTableLoadCallback() {
+                    loadMaterialList(courseModel.getCourseId());
+                }
+            }));
+            jTable3.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
+            jTable3.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CourseDetailDialog.this, new MaterialTableLoadCallback() {
+                @Override
+                public void onTableLoadCallback() {
+                    loadMaterialList(courseModel.getCourseId());
+                }
+            }));
+
+            jTable3.getColumnModel().getColumn(3).setMinWidth(0);
+            jTable3.getColumnModel().getColumn(3).setMaxWidth(0);
+            jTable3.getColumnModel().getColumn(3).setWidth(0);
         }
 
     }

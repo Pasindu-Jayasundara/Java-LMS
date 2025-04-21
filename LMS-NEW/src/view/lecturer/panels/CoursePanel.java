@@ -6,8 +6,8 @@ import controller.common.DBConnection;
 import controller.common.FileSelect;
 import controller.common.FileUpload;
 import controller.common.Validation;
-import controller.lecturer.ButtonEditor;
-import controller.lecturer.ButtonRenderer;
+import controller.lecturer.coursePanel.ButtonEditor;
+import controller.lecturer.coursePanel.ButtonRenderer;
 import model.*;
 import view.lecturer.dialog.CourseDetailDialog;
 import view.lecturer.LecturerDashboard;
@@ -121,12 +121,6 @@ public class CoursePanel extends JPanel {
         initComponents();
 
         loadCourses("");
-//        loadLecturers();
-//        loadDepartments();
-//        loadLevel();
-//        loadSemesters();
-//        loadDayOfTheWeek();
-//        loadCourseNameList();
     }
 
     private void initComponents() {
@@ -1023,6 +1017,11 @@ public class CoursePanel extends JPanel {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
         // upload:
+
+        if(jComboBox5.getSelectedIndex() == 0){
+            JOptionPane.showMessageDialog(this,"Please select the course !","Need a Course",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         if (selectedPdfFile != null) {
 

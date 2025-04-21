@@ -7,14 +7,24 @@ public class CourseMaterialModel implements Serializable {
     private String id;
     private String name;
     private String type;
+    private String url;
 
     public CourseMaterialModel() {
     }
 
-    public CourseMaterialModel(String id, String name, String type) {
+    public CourseMaterialModel(String id, String name, String type, String url) {
         this.id = id;
         this.name = name;
         this.type = type;
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getId() {

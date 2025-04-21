@@ -1,6 +1,11 @@
 package view.lecturer.panels;
 
+import controller.callback.lecturer.MaterialTableLoadCallback;
+import controller.callback.lecturer.MoreInfoCallback;
 import controller.common.DBConnection;
+import controller.lecturer.coursePanel.ButtonEditor;
+import controller.lecturer.coursePanel.ButtonRenderer;
+import controller.lecturer.studentPanel.MoreInfoButtonEditor;
 import model.StudentFullDetailModel;
 import view.lecturer.dialog.StudentDetailDialog;
 
@@ -27,6 +32,14 @@ public class StudentPanel extends JPanel{
 
     private final HashMap<String, StudentFullDetailModel> studentModelHashMap = new HashMap<>();
 
+    public StudentPanel() {
+        if(!studentModelHashMap.isEmpty()){
+            loadFromHashMap("");
+        }else{
+            loadFromDB("");
+        }
+    }
+
     private void createUIComponents() {
         initComponents();
     }
@@ -43,7 +56,7 @@ public class StudentPanel extends JPanel{
 
         jLabel1.setText("Search Student:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "By Id", "By Name", "By Year", "By Level" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select search option", "By Id", "By Name", "By Year", "By Level" }));
 
         jButton1.setText("Search");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -67,8 +80,8 @@ public class StudentPanel extends JPanel{
                         "TG Number", "Name", "Year", "Contact", ""
                 }
         ) {
-            final boolean[] canEdit = new boolean [] {
-                    false, false, false, false, false
+            boolean[] canEdit = new boolean [] {
+                    false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -111,13 +124,18 @@ public class StudentPanel extends JPanel{
                                         .addComponent(jButton1)
                                         .addComponent(jButton2))
                                 .addGap(18, 18, 18)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(19, Short.MAX_VALUE))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
+                                .addGap(19, 19, 19))
         );
     }// </editor-fold>
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         // search:
+
+        if(jComboBox1.getSelectedIndex() == 0){
+            JOptionPane.showMessageDialog(this, "Please Select Search Option","Missing Search Option",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         String enteredValue = jTextField1.getText();
         if(enteredValue.isBlank()){
@@ -200,6 +218,13 @@ public class StudentPanel extends JPanel{
 
         if(!isFound.get()){
             JOptionPane.showMessageDialog(this, "No Student Found", "Could not find", JOptionPane.WARNING_MESSAGE);
+
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            studentModelHashMap.forEach((key, studentFullDetailModel) -> {
+                addRowToTable(studentFullDetailModel,defaultTableModel);
+            });
         }
 
     }
@@ -231,6 +256,8 @@ public class StudentPanel extends JPanel{
                 break;
             }
             default:{
+
+                query+="WHERE `student`.`user_id`!=?";
                 break;
             }
         }
@@ -258,13 +285,13 @@ public class StudentPanel extends JPanel{
                     String enrolledDate = resultSet.getString("enrollment_date");
                     String profilePicture = resultSet.getString("profile_picture");
                     String semester = resultSet.getString("semester");
-                    String department = resultSet.getString("department");
+                    String department = resultSet.getString("name");
 
                     // hashmap
                     HashMap<String,String> subjectMap = new HashMap<>();
 
                     String q2 = "SELECT * FROM `course` " +
-                            "INNER JOIN `department_has_undergraduate_level` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`course_course_id` " +
+                            "INNER JOIN `department_has_undergraduate_level` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
                             "INNER JOIN `undergraduate_level` ON `undergraduate_level`.`level_id`=`department_has_undergraduate_level`.`undergraduate_level_level_id` " +
                             "WHERE `level`<=?";
                     ResultSet rs = DBConnection.search(q2, level);
@@ -302,23 +329,21 @@ public class StudentPanel extends JPanel{
 
     private void addRowToTable(StudentFullDetailModel studentFullDetailModel, DefaultTableModel defaultTableModel){
 
-        JButton moreInfoBtn = new JButton("More Info");
-        moreInfoBtn.addActionListener(new ActionListener() {
+        jTable1.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+        jTable1.getColumnModel().getColumn(4).setCellEditor(new MoreInfoButtonEditor(new JCheckBox(), new MoreInfoCallback() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-
+            public void onMoreInfoCallback() {
                 StudentDetailDialog studentDetailDialog = new StudentDetailDialog(StudentPanel.this,studentFullDetailModel);
                 studentDetailDialog.setVisible(true);
-
             }
-        });
+        }));
 
         Vector<Object> row = new Vector<>();
         row.add(studentFullDetailModel.getId());
         row.add(studentFullDetailModel.getUsername());
         row.add(studentFullDetailModel.getLevel());
         row.add(studentFullDetailModel.getContactNumber());
-        row.add(moreInfoBtn);
+        row.add("More Info");
 
         defaultTableModel.addRow(row);
     }
