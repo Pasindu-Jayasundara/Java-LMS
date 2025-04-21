@@ -1,9 +1,7 @@
 package view.lecturer.panels;
 
-import controller.callback.lecturer.MaterialTableLoadCallback;
 import controller.callback.lecturer.MoreInfoCallback;
 import controller.common.DBConnection;
-import controller.lecturer.coursePanel.ButtonEditor;
 import controller.lecturer.coursePanel.ButtonRenderer;
 import controller.lecturer.studentPanel.MoreInfoButtonEditor;
 import model.StudentFullDetailModel;
@@ -11,8 +9,6 @@ import view.lecturer.dialog.StudentDetailDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -56,7 +52,7 @@ public class StudentPanel extends JPanel{
 
         jLabel1.setText("Search Student:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select search option", "By Id", "By Name", "By Year", "By Level" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select search option", "By Id", "By Name", "By Level" }));
 
         jButton1.setText("Search");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -164,6 +160,9 @@ public class StudentPanel extends JPanel{
                 addRowToTable(studentFullDetailModel,defaultTableModel);
             });
 
+            jComboBox1.setSelectedIndex(0);
+            jTextField1.setText("");
+
         }
 
     }
@@ -200,15 +199,18 @@ public class StudentPanel extends JPanel{
         studentModelHashMap.forEach((key, studentFullDetailModel) -> {
 
             if(
-                    (finalSearchFrom.equals("id") && studentFullDetailModel.getId() == Integer.parseInt(enteredValue)) ||
-                    (finalSearchFrom.equals("name") && studentFullDetailModel.getUsername().equals(enteredValue)) ||
+                    (finalSearchFrom.equals("id") && String.valueOf(studentFullDetailModel.getId()).toLowerCase().contains(enteredValue.toLowerCase())) ||
+                    (finalSearchFrom.equals("name") && studentFullDetailModel.getUsername().toLowerCase().contains(enteredValue.toLowerCase())) ||
                     (finalSearchFrom.equals("year") && studentFullDetailModel.getLevel().equals(enteredValue))
             ){
 
-                isFound.set(true);
-
                 DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
-                defaultTableModel.setRowCount(0);
+
+                if(!isFound.get()){
+
+                    isFound.set(true);
+                    defaultTableModel.setRowCount(0);
+                }
 
                 addRowToTable(studentFullDetailModel,defaultTableModel);
 

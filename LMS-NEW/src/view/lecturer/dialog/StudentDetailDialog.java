@@ -485,13 +485,21 @@ public class StudentDetailDialog extends JDialog {
     }
 
     private String sgpa() {
-        // todo
-        return "00";
+        return "0.00";
     }
 
     private String cgpa() {
-        // todo
-        return "00";
+        return "0.00";
+    }
+
+    private double getGradePoint(double mark) {
+        if (mark >= 85) return 4.0;
+        else if (mark >= 75) return 3.7;
+        else if (mark >= 65) return 3.3;
+        else if (mark >= 55) return 3.0;
+        else if (mark >= 45) return 2.7;
+        else if (mark >= 35) return 2.3;
+        else return 0.0;
     }
 
     private void loadAcademicPerformanceTable() {

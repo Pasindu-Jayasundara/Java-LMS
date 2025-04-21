@@ -144,7 +144,7 @@ public class CourseDetailDialog extends JDialog {
         jScrollPane2.setViewportView(jTable2);
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel16.setText("Course Meterials");
+        jLabel16.setText("Course Materials");
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
                 new Object [][] {
@@ -155,14 +155,13 @@ public class CourseDetailDialog extends JDialog {
                 }
         ) {
             boolean[] canEdit = new boolean [] {
-                    false, false, false, true, true, true
+                    false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTable3.setEnabled(false);
         jScrollPane3.setViewportView(jTable3);
         if (jTable3.getColumnModel().getColumnCount() > 0) {
             jTable3.getColumnModel().getColumn(3).setMinWidth(0);
@@ -208,9 +207,9 @@ public class CourseDetailDialog extends JDialog {
                                                                 .addComponent(jLabel4)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(jLabel5)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(jLabel5)
+                                                                .addGap(12, 12, 12)
                                                                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                                 .addGap(0, 21, Short.MAX_VALUE))
         );
@@ -293,30 +292,6 @@ public class CourseDetailDialog extends JDialog {
 
                 while (resultSet.next()) {
 
-//                    JButton previewBtn = new JButton("Preview");
-//                    previewBtn.addActionListener(new ActionListener() {
-//                        @Override
-//                        public void actionPerformed(ActionEvent e) {
-//                            try {
-//                                previewPDFMaterial(resultSet.getString("material_id"));
-//                            } catch (SQLException ex) {
-//                                ex.printStackTrace();
-//                            }
-//                        }
-//                    });
-
-//                    JButton deleteBtn = new JButton("Delete");
-//                    deleteBtn.addActionListener(new ActionListener() {
-//                        @Override
-//                        public void actionPerformed(ActionEvent e) {
-//                            try {
-//                                deleteMaterial(resultSet.getString("material_id"), resultSet.getString("name"));
-//                            } catch (SQLException ex) {
-//                                ex.printStackTrace();
-//                            }
-//                        }
-//                    });
-
                     String materialId = resultSet.getString("material_id");
                     String type = resultSet.getString("type.type");
                     String name = resultSet.getString("name");
@@ -337,20 +312,21 @@ public class CourseDetailDialog extends JDialog {
                     courseMaterialModel.setId(materialId);
                     courseMaterialModel.setName(name);
                     courseMaterialModel.setType(type);
+                    courseMaterialModel.setUrl(url);
 
                     courseMaterialModelHashMap.put(materialId, courseMaterialModel);
 
                 }
 
                 jTable3.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-                jTable3.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CourseDetailDialog.this, new MaterialTableLoadCallback() {
+                jTable3.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), CourseDetailDialog.this, new MaterialTableLoadCallback() {
                     @Override
                     public void onTableLoadCallback() {
                         loadMaterialList(courseId);
                     }
                 }));
                 jTable3.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
-                jTable3.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CourseDetailDialog.this, new MaterialTableLoadCallback() {
+                jTable3.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), CourseDetailDialog.this, new MaterialTableLoadCallback() {
                     @Override
                     public void onTableLoadCallback() {
                         loadMaterialList(courseId);
@@ -363,92 +339,9 @@ public class CourseDetailDialog extends JDialog {
 
             } catch (SQLException e) {
                 e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
         }
-
-    }
-
-    private void deleteMaterial(String materialId, String name) {
-
-        int confirmDialog = JOptionPane.showConfirmDialog(this, "Are You Sure, You Want to Delete Material: " + name + "?");
-        if (confirmDialog == JOptionPane.YES_OPTION) {
-
-            String query = "DELETE FROM `material` WHERE `material_id`=?";
-            DBConnection.iud(query, materialId);
-
-            updateCourseMaterialTable(materialId);
-
-        }
-
-    }
-
-    private void updateCourseMaterialTable(String materialId) {
-
-        if (courseMaterialModelHashMap.containsKey(materialId)) {
-            courseMaterialModelHashMap.remove(materialId);
-
-            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable3.getModel();
-            defaultTableModel.setRowCount(0);
-
-            courseMaterialModelHashMap.forEach((key, model) -> {
-//
-//                JButton previewBtn = new JButton("Preview");
-//                previewBtn.addActionListener(new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        previewPDFMaterial(model.getId());
-//                    }
-//                });
-//
-//                JButton deleteBtn = new JButton("Delete");
-//                deleteBtn.addActionListener(new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        deleteMaterial(model.getId(), model.getName());
-//                    }
-//                });
-
-                Vector<Object> row = new Vector<>();
-                row.add(model.getId());
-                row.add(model.getName());
-                row.add(model.getType());
-                row.add(model.getUrl());
-                row.add("Preview");
-                row.add("Delete");
-
-                defaultTableModel.addRow(row);
-
-            });
-
-            jTable3.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-            jTable3.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CourseDetailDialog.this, new MaterialTableLoadCallback() {
-                @Override
-                public void onTableLoadCallback() {
-                    loadMaterialList(courseModel.getCourseId());
-                }
-            }));
-            jTable3.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
-            jTable3.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CourseDetailDialog.this, new MaterialTableLoadCallback() {
-                @Override
-                public void onTableLoadCallback() {
-                    loadMaterialList(courseModel.getCourseId());
-                }
-            }));
-
-            jTable3.getColumnModel().getColumn(3).setMinWidth(0);
-            jTable3.getColumnModel().getColumn(3).setMaxWidth(0);
-            jTable3.getColumnModel().getColumn(3).setWidth(0);
-        }
-
-    }
-
-    private void previewPDFMaterial(String filePath) {
-
-        PDFPreviewDialog previewDialog = new PDFPreviewDialog(CourseDetailDialog.this, filePath);
-        previewDialog.setVisible(true);
 
     }
 

@@ -36,7 +36,7 @@ public class StudentPanel extends javax.swing.JPanel {
 
         jLabel1.setText("Search Student:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select search option", "By Id", "By Name", "By Year", "By Level" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select search option", "By Id", "By Name", "By Level" }));
 
         jButton1.setText("Search");
         jButton1.addActionListener(new java.awt.event.ActionListener() {

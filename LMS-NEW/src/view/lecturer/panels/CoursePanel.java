@@ -214,19 +214,19 @@ public class CoursePanel extends JPanel {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "#", "Code", "Name", "Credit", "Days"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -297,17 +297,17 @@ public class CoursePanel extends JPanel {
 
         jLabel6.setText("Department:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         jComboBox1.setPreferredSize(new java.awt.Dimension(64, 22));
 
         jLabel7.setText("Level:");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         jComboBox2.setPreferredSize(new java.awt.Dimension(64, 22));
 
         jLabel8.setText("Semester:");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Timetable");
@@ -317,7 +317,7 @@ public class CoursePanel extends JPanel {
 
         jLabel11.setText("Day of the Week:");
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         jLabel12.setText("From:");
 
@@ -331,19 +331,19 @@ public class CoursePanel extends JPanel {
         });
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
+                new String[]{
                         "#", "Day", "From", "To"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                     false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -372,7 +372,7 @@ public class CoursePanel extends JPanel {
 
         jLabel18.setText("Lecturer:");
 
-        jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel19.setText("Exam Details");
@@ -614,7 +614,7 @@ public class CoursePanel extends JPanel {
 
         jLabel15.setText("Select Course:");
 
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Course" }));
+        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Select Course"}));
         jComboBox5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox5ActionPerformed(evt);
@@ -623,7 +623,7 @@ public class CoursePanel extends JPanel {
 
         jLabel16.setText("Meterial Type:");
 
-        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PDF" }));
+        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"PDF"}));
 
         jLabel17.setForeground(new java.awt.Color(153, 153, 153));
         jLabel17.setText("Selected File Name ....");
@@ -645,19 +645,19 @@ public class CoursePanel extends JPanel {
         });
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [][] {
+                new Object[][]{
 
                 },
-                new String [] {
-                        "#", "File Name", "Uploaded At","", "", ""
+                new String[]{
+                        "#", "File Name", "Uploaded At", "", "", ""
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
-                    false, false, false,false, true, true
+            boolean[] canEdit = new boolean[]{
+                    false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jScrollPane4.setViewportView(jTable3);
@@ -974,8 +974,8 @@ public class CoursePanel extends JPanel {
 
                 CourseDetailDialog courseDetailDialog = new CourseDetailDialog(this, cm);
                 courseDetailDialog.setVisible(true);
-            }else{
-                JOptionPane.showMessageDialog(this,"Course Details not Found","Missing Course Details",JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Course Details not Found", "Missing Course Details", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
@@ -1018,8 +1018,8 @@ public class CoursePanel extends JPanel {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
         // upload:
 
-        if(jComboBox5.getSelectedIndex() == 0){
-            JOptionPane.showMessageDialog(this,"Please select the course !","Need a Course",JOptionPane.WARNING_MESSAGE);
+        if (jComboBox5.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Please select the course !", "Need a Course", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -1090,7 +1090,7 @@ public class CoursePanel extends JPanel {
         int rowCount = defaultTableModel.getRowCount();
         for (int i = 0; i < rowCount; i++) {
 
-            DBConnection.iud(query, defaultTableModel.getValueAt(i,1), defaultTableModel.getValueAt(i,2), defaultTableModel.getValueAt(i,3), courseId);
+            DBConnection.iud(query, defaultTableModel.getValueAt(i, 1), defaultTableModel.getValueAt(i, 2), defaultTableModel.getValueAt(i, 3), courseId);
 
         }
 
@@ -1324,14 +1324,14 @@ public class CoursePanel extends JPanel {
 
                         // Set custom renderers/editors for button columns (Preview = 3, Remove = 4)
                         jTable3.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-                        jTable3.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CoursePanel.this, new MaterialTableLoadCallback() {
+                        jTable3.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), CoursePanel.this, new MaterialTableLoadCallback() {
                             @Override
                             public void onTableLoadCallback() {
                                 loadCourseMaterials();
                             }
                         }));
                         jTable3.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
-                        jTable3.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), jTable3, CoursePanel.this, new MaterialTableLoadCallback() {
+                        jTable3.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), CoursePanel.this, new MaterialTableLoadCallback() {
                             @Override
                             public void onTableLoadCallback() {
                                 loadCourseMaterials();

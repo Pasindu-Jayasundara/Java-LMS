@@ -44,7 +44,7 @@ public class PDFPreviewDialog extends JDialog {
 
         setSize(900, 700);
         setLocationRelativeTo(parent);
-        setVisible(true);
+
     }
 
     private void setupUI() {
