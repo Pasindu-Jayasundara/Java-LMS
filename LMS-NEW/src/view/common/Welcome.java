@@ -1,5 +1,6 @@
 package view.common;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import controller.callback.common.LoginSuccessCallback;
 
 import javax.swing.*;
@@ -16,6 +17,7 @@ public class Welcome extends JFrame {
     private javax.swing.JPanel jPanel3;
 
     private void createUIComponents() {
+        FlatLightLaf.setup();
         initComponents();
     }
 

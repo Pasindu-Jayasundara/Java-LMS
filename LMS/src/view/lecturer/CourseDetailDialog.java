@@ -110,7 +110,7 @@ public class CourseDetailDialog extends javax.swing.JDialog {
         jScrollPane2.setViewportView(jTable2);
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel16.setText("Course Meterials");
+        jLabel16.setText("Course Materials");
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -128,7 +128,6 @@ public class CourseDetailDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        jTable3.setEnabled(false);
         jScrollPane3.setViewportView(jTable3);
         if (jTable3.getColumnModel().getColumnCount() > 0) {
             jTable3.getColumnModel().getColumn(3).setMinWidth(0);
@@ -174,9 +173,9 @@ public class CourseDetailDialog extends javax.swing.JDialog {
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel5)
+                                .addGap(12, 12, 12)
                                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(0, 21, Short.MAX_VALUE))
         );

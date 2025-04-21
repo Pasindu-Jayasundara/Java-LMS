@@ -17,19 +17,16 @@ public class ButtonEditor extends DefaultCellEditor {
     private JButton button;
     private Object coursePanel;
     private MaterialTableLoadCallback materialTableLoadCallback;
-    private JTable table;
     private String basePath = System.getProperty("user.dir");
 
-    public ButtonEditor(JCheckBox checkBox, JTable table, CoursePanel coursePanel, MaterialTableLoadCallback materialTableLoadCallback) {
+    public ButtonEditor(JCheckBox checkBox, CoursePanel coursePanel, MaterialTableLoadCallback materialTableLoadCallback) {
         super(checkBox);
-        this.table = table;
         this.coursePanel = coursePanel;
         this.materialTableLoadCallback = materialTableLoadCallback;
     }
 
-    public ButtonEditor(JCheckBox checkBox, JTable table, CourseDetailDialog courseDetailDialog, MaterialTableLoadCallback materialTableLoadCallback) {
+    public ButtonEditor(JCheckBox checkBox, CourseDetailDialog courseDetailDialog, MaterialTableLoadCallback materialTableLoadCallback) {
         super(checkBox);
-        this.table = table;
         this.coursePanel = courseDetailDialog;
         this.materialTableLoadCallback = materialTableLoadCallback;
     }
@@ -64,18 +61,24 @@ public class ButtonEditor extends DefaultCellEditor {
         button.setOpaque(true);
         button.setText((value == null) ? "" : value.toString());
 
-        button.addActionListener(e -> {
-            String materialId = table.getValueAt(row, 0).toString(); // material_id
-            String name = table.getValueAt(row, 1).toString();       // name
-            String url = basePath + table.getValueAt(row, 3).toString().replace("/", "\\"); // file path
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-            if (column == 4) {
-                loadPreview(url);
-            } else if (column == 5) {
-                removeMaterial(materialId, url, name);
+                String materialId = table.getValueAt(row, 0).toString(); // material_id
+                String name = table.getValueAt(row, 1).toString();       // name
+                String url = basePath + table.getValueAt(row, 3).toString().replace("/", "\\"); // file path
+
+                if (column == 4) {
+                    loadPreview(url);
+                } else if (column == 5) {
+                    removeMaterial(materialId, url, name);
+                }
+
+                if(table.getRowCount() > 0){
+                    fireEditingStopped();
+                }
             }
-
-            fireEditingStopped();
         });
 
         return button;

@@ -1,7 +1,6 @@
 package model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class StudentFullDetailModel extends StudentModel implements Serializable {

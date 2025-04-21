@@ -1,9 +1,13 @@
 package view.common;
 
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import controller.common.DBConnection;
 import controller.common.Validation;
 import controller.callback.common.LoginSuccessCallback;
 import model.*;
+import model.AdminModel;
+import model.LecturerModel;
+import model.StudentModel;
 import view.admin.AdminDashboard;
 import view.lecturer.LecturerDashboard;
 import view.student.StudentDashboard;
@@ -45,6 +49,7 @@ public class Login extends JDialog {
     }
 
     private void createUIComponents() {
+        FlatMacLightLaf.setup();
         initComponents();
     }
 
