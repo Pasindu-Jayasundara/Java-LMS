@@ -1,17 +1,23 @@
 package view.lecturer.dialog;
 
+import controller.callback.lecturer.MaterialTableLoadCallback;
 import controller.common.DBConnection;
 import controller.common.FileSelect;
 import controller.common.FileUpload;
 import controller.callback.lecturer.MarksUpdateCallBack;
+import controller.lecturer.coursePanel.ButtonEditor;
+import controller.lecturer.coursePanel.ButtonRenderer;
 import model.ExamModel;
 import model.IndividualMarksModel;
+import model.MarksModel;
 import view.lecturer.panels.ExamPanel;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,9 +34,11 @@ public class MarksDialog extends JDialog {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -51,7 +59,7 @@ public class MarksDialog extends JDialog {
     private javax.swing.JTable jTable2;
     private javax.swing.JTextArea jTextArea1;
 
-    private final ExamModel examModel;
+    private ExamModel examModel;
     private HashMap<String, String> pdfFile;
     private final MarksUpdateCallBack marksUpdateCallBack;
 
@@ -65,11 +73,19 @@ public class MarksDialog extends JDialog {
 
         this.examModel = examModel;
         this.marksUpdateCallBack = marksUpdateCallBack;
+
+        setUpMarksFileTab();
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                marksUpdateCallBack.onUpdateMarks(true);
+            }
+        });
     }
 
     private void createUIComponents() {
         initComponents();
-        setUpMarksFileTab();
     }
 
     private void initComponents() {
@@ -99,27 +115,34 @@ public class MarksDialog extends JDialog {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setText("Exam Id:");
 
         jLabel2.setText("jLabel2");
 
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setText("Course:");
 
         jLabel4.setText("jLabel2");
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("Course Code:");
 
         jLabel6.setText("jLabel2");
 
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel7.setText("Exam Date & Time:");
 
         jLabel8.setText("jLabel2");
 
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel9.setText("Description:");
 
         jScrollPane1.setEnabled(false);
@@ -168,11 +191,11 @@ public class MarksDialog extends JDialog {
 
                 },
                 new String[]{
-                        "#", "File Name", "", ""
+                        "#", "File Name", "", "", ""
                 }
         ) {
-            final boolean[] canEdit = new boolean[]{
-                    false, false, true, true
+            boolean[] canEdit = new boolean[]{
+                    false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -182,6 +205,9 @@ public class MarksDialog extends JDialog {
         jScrollPane3.setViewportView(jTable2);
         if (jTable2.getColumnModel().getColumnCount() > 0) {
             jTable2.getColumnModel().getColumn(0).setPreferredWidth(5);
+            jTable2.getColumnModel().getColumn(2).setMinWidth(0);
+            jTable2.getColumnModel().getColumn(2).setPreferredWidth(0);
+            jTable2.getColumnModel().getColumn(2).setMaxWidth(0);
         }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -212,7 +238,7 @@ public class MarksDialog extends JDialog {
                                         .addComponent(jButton3)
                                         .addComponent(jButton2))
                                 .addGap(18, 18, 18)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
@@ -226,7 +252,7 @@ public class MarksDialog extends JDialog {
                         "#", "Reg Number", "Name", "Marks"
                 }
         ) {
-            final boolean[] canEdit = new boolean[]{
+            boolean[] canEdit = new boolean[]{
                     false, false, false, true
             };
 
@@ -249,6 +275,14 @@ public class MarksDialog extends JDialog {
             }
         });
 
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel10.setText("Double click student maks cell to update marks");
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel14.setText("Press enter after updating each student marks");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -259,21 +293,31 @@ public class MarksDialog extends JDialog {
                                         .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 825, Short.MAX_VALUE)
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                                 .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(jButton4)))
+                                                .addComponent(jButton4))
+                                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel10)
+                                                        .addComponent(jLabel14))
+                                                .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addContainerGap(25, Short.MAX_VALUE)
+                                .addContainerGap(22, Short.MAX_VALUE)
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton4)
                                 .addContainerGap())
         );
 
         jTabbedPane1.addTab("Add Individual Marks", jPanel3);
 
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel12.setText("Exam Type:");
 
         jLabel13.setText("jLabel2");
@@ -339,8 +383,8 @@ public class MarksDialog extends JDialog {
                                 .addGap(20, 20, 20)
                                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -353,9 +397,7 @@ public class MarksDialog extends JDialog {
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 11, Short.MAX_VALUE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -392,12 +434,17 @@ public class MarksDialog extends JDialog {
             // update table
 
             String query = "INSERT INTO `marks_document`(`url`,`file_name`,`exam_exam_id`) VALUES(?,?,?)";
-            DBConnection.iud(query, uploadMap.get("url"), pdfFile.get("filename"), examModel.getId());
+            Integer iudId = DBConnection.iud(query, uploadMap.get("url"), pdfFile.get("filename"), examModel.getId());
 
             JOptionPane.showMessageDialog(this, "Marks File added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-            setUpMarksFileTab();
 
-            marksUpdateCallBack.onUpdateMarks(true);
+            MarksModel marksModel = new MarksModel();
+            marksModel.setFileName(pdfFile.get("filename"));
+            marksModel.setUrl(uploadMap.get("url"));
+            marksModel.setId(String.valueOf(iudId));
+
+            examModel.getMarksModel().add(marksModel);
+            setUpMarksFileTab();
 
         } else {
             // failed
@@ -410,11 +457,15 @@ public class MarksDialog extends JDialog {
         // tab changed:
 
         int selectedTabIndex = jTabbedPane1.getSelectedIndex();
-        if (selectedTabIndex == 0) {
-            setUpMarksFileTab();
-        } else if (selectedTabIndex == 1) {
-            setUpAddIndividualMarksTab();
+        if (examModel != null) {
+
+            if (selectedTabIndex == 0) {
+                setUpMarksFileTab();
+            } else if (selectedTabIndex == 1) {
+                setUpAddIndividualMarksTab();
+            }
         }
+
     }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -423,24 +474,45 @@ public class MarksDialog extends JDialog {
         String updateQuery = "UPDATE `marks` SET `marks`.`marks`=? WHERE `student_user_id`=? AND `exam_exam_id`=?";
         String insertQuery = "INSERT INTO `marks`(`student_user_id`,`exam_exam_id`,`marks`) VALUES(?,?,?)";
 
-        individualMarksChangedHashMap.forEach((studentId,marks)->{
+        if (!individualMarksChangedHashMap.isEmpty()) {
 
-            AtomicBoolean isFound = new AtomicBoolean(false);
-            individualMarksModelArrayList.forEach(individualMarksModel -> {
+            individualMarksChangedHashMap.forEach((studentId, marks) -> {
 
-                if(individualMarksModel.getStudentRegisterNumber().equals(studentId)){
-                    isFound.set(true);
-                }
+                AtomicInteger index = new AtomicInteger(-1);
+                individualMarksModelArrayList.forEach(individualMarksModel -> {
+
+                    index.getAndIncrement();
+                    if (individualMarksModel.getStudentRegisterNumber().equals(studentId)) {
+
+                        String marksQuery = "SELECT * FROM `marks` WHERE `student_user_id`=? AND `exam_exam_id`=?";
+                        ResultSet marksResultset = DBConnection.search(marksQuery, studentId,examModel.getId());
+                        if (marksResultset != null) {
+
+                            try {
+                                if (marksResultset.next()) {
+                                    DBConnection.iud(updateQuery, marks, studentId, examModel.getId());
+                                }else{
+                                    DBConnection.iud(insertQuery,studentId, examModel.getId(),marks);
+                                }
+                            }catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    }
+                });
+
+                individualMarksModelArrayList.get(index.get()).setMarks(marks);
+
             });
 
-            if(isFound.get()){
-                DBConnection.iud(updateQuery,marks,studentId,examModel.getId());
-            }else{
-                DBConnection.iud(insertQuery,marks,studentId,examModel.getId());
-            }
-        });
+        } else {
+            JOptionPane.showMessageDialog(this, "No Marks Changes", "Noting Updated", JOptionPane.INFORMATION_MESSAGE);
+        }
 
-        JOptionPane.showMessageDialog(this,"Marks Update Success","Done",JOptionPane.INFORMATION_MESSAGE);
+        individualMarksChangedHashMap.clear();
+        JOptionPane.showMessageDialog(this, "Marks Update Success", "Done", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void setUpAddIndividualMarksTab() {
@@ -459,7 +531,7 @@ public class MarksDialog extends JDialog {
                 "INNER JOIN `student_has_department_has_undergraduate_level` ON `student_has_department_has_undergraduate_level`.`student_user_id`=`student`.`user_id`  " +
                 "INNER JOIN `department_has_undergraduate_level` ON `student_has_department_has_undergraduate_level`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
                 "INNER JOIN `exam` ON `exam`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
-                "WHERE `exam`.`id`=?";
+                "WHERE `exam`.`exam_id`=?";
 
         ResultSet resultSet = DBConnection.search(query, examModel.getId());
         if (resultSet != null) {
@@ -547,43 +619,51 @@ public class MarksDialog extends JDialog {
         DefaultTableModel defaultTableModel = (DefaultTableModel) jTable2.getModel();
         defaultTableModel.setRowCount(0);
 
-        AtomicInteger i = new AtomicInteger(1);
+        loadTableRows(defaultTableModel);
+
+        jTable2.getColumnModel().getColumn(3).setCellRenderer(new ButtonRenderer());
+        jTable2.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor(new JCheckBox(), MarksDialog.this));
+
+        jTable2.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+        jTable2.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), MarksDialog.this, true, new MaterialTableLoadCallback() {
+            @Override
+            public void onTableLoadCallback(String materialId) {
+
+                examModel.getMarksModel().forEach(marksModel -> {
+
+                    if (marksModel.getId().equals(materialId)) {
+                        examModel.getMarksModel().remove(marksModel);
+
+                        defaultTableModel.setRowCount(0);
+                        loadTableRows(defaultTableModel);
+
+                        return;
+                    }
+                });
+
+            }
+        }));
+
+        jTable2.getColumnModel().getColumn(2).setMinWidth(0);
+        jTable2.getColumnModel().getColumn(2).setMaxWidth(0);
+        jTable2.getColumnModel().getColumn(2).setWidth(0);
+
+    }
+
+    private void loadTableRows(DefaultTableModel defaultTableModel) {
+
         examModel.getMarksModel().forEach(marksModel -> {
 
-            JButton viewMarksButton = new JButton("View Marks");
-            viewMarksButton.addActionListener(e -> {
-                previewFile(marksModel.getUrl());
-            });
-
-            JButton deleteFileButton = new JButton("Delete File");
-            deleteFileButton.addActionListener(e -> {
-                deleteFile(marksModel.getId());
-            });
-
             Vector<Object> row = new Vector<>();
-            row.add(i.getAndIncrement());
+            row.add(marksModel.getId());
             row.add(marksModel.getFileName());
-            row.add(viewMarksButton);
-            row.add(deleteFileButton);
+            row.add(marksModel.getUrl());
+            row.add("View File");
+            row.add("Delete File");
 
             defaultTableModel.addRow(row);
 
         });
-
     }
 
-    private void deleteFile(String id) {
-
-        String query = "DELETE FROM `marks_document` WHERE `id` =?";
-        DBConnection.iud(query, id);
-
-        // load table
-        marksUpdateCallBack.onUpdateMarks(true);
-        setUpMarksFileTab();
-    }
-
-    private void previewFile(String url) {
-        PDFPreviewDialog pdfPreviewDialog = new PDFPreviewDialog(MarksDialog.this, url);
-        pdfPreviewDialog.setVisible(true);
-    }
 }
