@@ -39,7 +39,7 @@ public class DBConnection {
 
             PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             setParameters(preparedStatement, params);
-            System.out.println(preparedStatement.toString());
+//            System.out.println(preparedStatement.toString());
             preparedStatement.executeUpdate();
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
