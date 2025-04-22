@@ -29,7 +29,6 @@ public class ExamPanel extends JPanel {
     private javax.swing.JTextField jTextField1;
 
     private final HashMap<String, ExamModel> examModelHashMap = new HashMap<>();
-    public static int selectedRow;
 
     public ExamPanel() {
         loadExams();
@@ -182,9 +181,8 @@ public class ExamPanel extends JPanel {
         jTable1.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
         jTable1.getColumnModel().getColumn(6).setCellEditor(new UpdateMarksButtonEditor(new JCheckBox(),jTable1, new UpdateExamMarksCallback(){
             @Override
-            public void onExamMarkUpdateBtnClick(String examId, int selectedRow) {
-                ExamPanel.selectedRow = selectedRow;
-                showMarksDialog(examModelHashMap.get(examId),selectedRow);
+            public void onExamMarkUpdateBtnClick(String examId) {
+                showMarksDialog(examModelHashMap.get(examId));
             }
         }));
     }
@@ -277,7 +275,7 @@ public class ExamPanel extends JPanel {
 
     }
 
-    private void showMarksDialog(ExamModel examModel, int selectedRow) {
+    private void showMarksDialog(ExamModel examModel) {
 
         MarksDialog marksDialog = new MarksDialog(ExamPanel.this,examModel,new MarksUpdateCallBack(){
             @Override

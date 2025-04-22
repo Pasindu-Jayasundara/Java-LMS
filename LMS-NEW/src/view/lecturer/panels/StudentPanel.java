@@ -160,11 +160,25 @@ public class StudentPanel extends JPanel{
                 addRowToTable(studentFullDetailModel,defaultTableModel);
             });
 
+            tableMoreInfoBtn();
+
             jComboBox1.setSelectedIndex(0);
             jTextField1.setText("");
 
         }
 
+    }
+
+    private void tableMoreInfoBtn() {
+
+        jTable1.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+        jTable1.getColumnModel().getColumn(4).setCellEditor(new MoreInfoButtonEditor(new JCheckBox(), new MoreInfoCallback() {
+            @Override
+            public void onMoreInfoCallback(String studentId) {
+                StudentDetailDialog studentDetailDialog = new StudentDetailDialog(StudentPanel.this,studentModelHashMap.get(studentId));
+                studentDetailDialog.setVisible(true);
+            }
+        }));
     }
 
     private void loadFromHashMap(String enteredValue) {
@@ -227,7 +241,9 @@ public class StudentPanel extends JPanel{
             studentModelHashMap.forEach((key, studentFullDetailModel) -> {
                 addRowToTable(studentFullDetailModel,defaultTableModel);
             });
+
         }
+        tableMoreInfoBtn();
 
     }
 
@@ -321,6 +337,7 @@ public class StudentPanel extends JPanel{
                     studentModelHashMap.put(userId, studentFullDetailModel);
 
                 }
+                tableMoreInfoBtn();
 
             }catch (SQLException e){
                 e.printStackTrace();
@@ -330,15 +347,6 @@ public class StudentPanel extends JPanel{
     }
 
     private void addRowToTable(StudentFullDetailModel studentFullDetailModel, DefaultTableModel defaultTableModel){
-
-        jTable1.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-        jTable1.getColumnModel().getColumn(4).setCellEditor(new MoreInfoButtonEditor(new JCheckBox(), new MoreInfoCallback() {
-            @Override
-            public void onMoreInfoCallback() {
-                StudentDetailDialog studentDetailDialog = new StudentDetailDialog(StudentPanel.this,studentFullDetailModel);
-                studentDetailDialog.setVisible(true);
-            }
-        }));
 
         Vector<Object> row = new Vector<>();
         row.add(studentFullDetailModel.getId());
