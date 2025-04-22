@@ -3,6 +3,7 @@ package controller.lecturer.coursePanel;
 import controller.common.DBConnection;
 import controller.callback.lecturer.MaterialTableLoadCallback;
 import view.lecturer.dialog.CourseDetailDialog;
+import view.lecturer.dialog.MarksDialog;
 import view.lecturer.dialog.PDFPreviewDialog;
 import view.lecturer.panels.CoursePanel;
 
@@ -19,6 +20,8 @@ public class ButtonEditor extends DefaultCellEditor {
     private MaterialTableLoadCallback materialTableLoadCallback;
     private String basePath = System.getProperty("user.dir");
 
+    public boolean deleteFromMarks;
+
     public ButtonEditor(JCheckBox checkBox, CoursePanel coursePanel, MaterialTableLoadCallback materialTableLoadCallback) {
         super(checkBox);
         this.coursePanel = coursePanel;
@@ -29,6 +32,18 @@ public class ButtonEditor extends DefaultCellEditor {
         super(checkBox);
         this.coursePanel = courseDetailDialog;
         this.materialTableLoadCallback = materialTableLoadCallback;
+    }
+
+    public ButtonEditor(JCheckBox checkBox, MarksDialog marksDialog) {
+        super(checkBox);
+        this.coursePanel = marksDialog;
+    }
+
+    public ButtonEditor(JCheckBox checkBox, MarksDialog marksDialog,boolean deleteFromMarks, MaterialTableLoadCallback materialTableLoadCallback) {
+        super(checkBox);
+        this.coursePanel = marksDialog;
+        this.materialTableLoadCallback = materialTableLoadCallback;
+        this.deleteFromMarks = deleteFromMarks;
     }
 
     public void loadPreview(String url) {
@@ -42,9 +57,20 @@ public class ButtonEditor extends DefaultCellEditor {
         if (fileToDelete.exists()) {
             boolean deleted = fileToDelete.delete();
             if (deleted) {
-                String query = "DELETE FROM `material` WHERE `material_id`=?";
+
+                String query = "";
+                if(deleteFromMarks){
+                    query = "DELETE FROM `marks_document` WHERE `id`=?";
+                }else{
+                    query = "DELETE FROM `material` WHERE `material_id`=?";
+                }
                 DBConnection.iud(query, materialId);
-                materialTableLoadCallback.onTableLoadCallback();
+
+                if(deleteFromMarks){
+                    materialTableLoadCallback.onTableLoadCallback(materialId);
+                }else{
+                    materialTableLoadCallback.onTableLoadCallback();
+                }
                 JOptionPane.showMessageDialog((Component) coursePanel, "File Deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog((Component) coursePanel, "Failed to delete the file: " + name, "Failed", JOptionPane.ERROR_MESSAGE);

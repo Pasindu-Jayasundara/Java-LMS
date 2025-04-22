@@ -1,5 +1,7 @@
 package controller.callback.lecturer;
 
 public abstract class MaterialTableLoadCallback {
-    public abstract void onTableLoadCallback();
+
+    public void onTableLoadCallback(){};
+    public void onTableLoadCallback(String materialId){};
 }

@@ -39,6 +39,7 @@ public class DBConnection {
 
             PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             setParameters(preparedStatement, params);
+//            System.out.println(preparedStatement.toString());
             preparedStatement.executeUpdate();
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -66,6 +67,7 @@ public class DBConnection {
 
             PreparedStatement preparedStatement = connection.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             setParameters(preparedStatement, params);
+//            System.out.println(preparedStatement.toString());
             return preparedStatement.executeQuery();
 
         } catch (SQLException e) {

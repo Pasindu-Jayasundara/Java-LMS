@@ -1,7 +1,10 @@
 package view.lecturer.dialog;
 
 import controller.common.DBConnection;
+import model.CourseModel;
+import model.SemesterModel;
 import model.StudentFullDetailModel;
+import model.UndergraduateLevelModel;
 import view.lecturer.panels.StudentPanel;
 
 import javax.swing.*;
@@ -15,6 +18,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class StudentDetailDialog extends JDialog {
     private JPanel contentPane;
 
+    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> jComboBox3;
     private main.JImagePanel jImagePanel1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -36,7 +43,10 @@ public class StudentDetailDialog extends JDialog {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -57,6 +67,9 @@ public class StudentDetailDialog extends JDialog {
     private javax.swing.JTable jTable2;
 
     private final StudentFullDetailModel studentFullDetailModel;
+    private final HashMap<String, String> undergraduateLevelHashMap = new HashMap<>();
+    private final HashMap<String, String> semesterHashMap = new HashMap<>();
+    private final HashMap<String, String> courseHashMap = new HashMap<>();
 
     public StudentDetailDialog(StudentPanel studentPanel, StudentFullDetailModel studentFullDetailModel) {
         setModal(true);
@@ -113,6 +126,13 @@ public class StudentDetailDialog extends JDialog {
         jTable2 = new javax.swing.JTable();
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox2 = new javax.swing.JComboBox<>();
+        jLabel30 = new javax.swing.JLabel();
+        jComboBox3 = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -227,7 +247,7 @@ public class StudentDetailDialog extends JDialog {
                                                                         .addGroup(jPanel2Layout.createSequentialGroup()
                                                                                 .addGap(38, 38, 38)
                                                                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                                .addGap(0, 10, Short.MAX_VALUE))
+                                                .addGap(0, 100, Short.MAX_VALUE))
                                         .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addContainerGap())
         );
@@ -288,7 +308,7 @@ public class StudentDetailDialog extends JDialog {
                         "#", "Subject", "Eligibility for Final Exam"
                 }
         ) {
-            final boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean [] {
                     false, false, false
             };
 
@@ -310,7 +330,7 @@ public class StudentDetailDialog extends JDialog {
                         .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(16, 16, 16)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 854, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(18, Short.MAX_VALUE))
+                                .addContainerGap(108, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -345,10 +365,10 @@ public class StudentDetailDialog extends JDialog {
 
                 },
                 new String [] {
-                        "#", "Subject", "Exam Id", "Marks", "Grade"
+                        "Exam ID", "Date Time", "Exam Type", "Marks", "Grade"
                 }
         ) {
-            final boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 
@@ -368,38 +388,88 @@ public class StudentDetailDialog extends JDialog {
         jLabel27.setForeground(new java.awt.Color(153, 0, 0));
         jLabel27.setText("00");
 
+        jLabel28.setText("Select Level:");
+
+        jLabel29.setText("Select Semester:");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox2ItemStateChanged(evt);
+            }
+        });
+
+        jLabel30.setText("Select Course:");
+
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox3ItemStateChanged(evt);
+            }
+        });
+
+        jButton1.setText("Reset");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
                 jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(20, 20, 20)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 846, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jScrollPane3)
                                         .addGroup(jPanel4Layout.createSequentialGroup()
-                                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addGroup(jPanel4Layout.createSequentialGroup()
-                                                                .addComponent(jLabel22)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                                                .addComponent(jLabel18)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addGap(18, 18, 18)
                                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addGroup(jPanel4Layout.createSequentialGroup()
-                                                                .addComponent(jLabel24)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                        .addGroup(jPanel4Layout.createSequentialGroup()
+                                                                                .addComponent(jLabel22)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                                                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                                                                .addComponent(jLabel18)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                                .addGap(18, 18, 18)
+                                                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addGroup(jPanel4Layout.createSequentialGroup()
+                                                                                .addComponent(jLabel24)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                        .addGroup(jPanel4Layout.createSequentialGroup()
+                                                                                .addComponent(jLabel26)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                                         .addGroup(jPanel4Layout.createSequentialGroup()
-                                                                .addComponent(jLabel26)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                                                .addComponent(jLabel28)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(jLabel29)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(jLabel30)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jButton1)))
                                 .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -412,19 +482,29 @@ public class StudentDetailDialog extends JDialog {
                                         .addComponent(jLabel24)
                                         .addComponent(jLabel25))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel20)
-                                        .addComponent(jLabel21)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                 .addComponent(jLabel26)
-                                                .addComponent(jLabel27)))
+                                                .addComponent(jLabel27))
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(jLabel20)
+                                                .addComponent(jLabel21)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel22)
                                         .addComponent(jLabel23))
-                                .addGap(32, 32, 32)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(111, Short.MAX_VALUE))
+                                .addGap(38, 38, 38)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel28)
+                                        .addComponent(jLabel29)
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel30)
+                                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jButton1))
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Academic Performance", jPanel4);
@@ -473,46 +553,214 @@ public class StudentDetailDialog extends JDialog {
         }
     }
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        // reset
+        jComboBox1.setSelectedIndex(0);
+        jComboBox2.setSelectedIndex(0);
+        jComboBox3.setSelectedIndex(0);
+
+        loadCourses();
+    }
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {
+        // level
+        loadCourses();
+
+    }
+
+    private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) {
+        // semester
+        loadCourses();
+
+    }
+
+    private void loadCourses() {
+
+        int levelId = Integer.parseInt(undergraduateLevelHashMap.get(jComboBox1.getSelectedItem()));
+        int semesterId = Integer.parseInt(semesterHashMap.get(jComboBox2.getSelectedItem()));
+
+        String courseQuery = "SELECT * FROM `course` " +
+                "INNER JOIN `department_has_undergraduate_level` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
+                "INNER JOIN `semester` ON `semester`.`semester_id`=`department_has_undergraduate_level`.`semester_semester_id` " +
+                "INNER JOIN `undergraduate_level` ON `undergraduate_level`.`level_id`=`department_has_undergraduate_level`.`undergraduate_level_level_id` " +
+                "INNER JOIN `department` ON `department`.`department_id`=`department_has_undergraduate_level`.`department_department_id` " +
+                "WHERE `name`=? AND `level_id`=? AND `semester_id`=?";
+        ResultSet resultSet = DBConnection.search(courseQuery, studentFullDetailModel.getDepartment(), levelId, semesterId);
+        if(resultSet != null){
+
+            Vector<String> row = new Vector<>();
+            jComboBox3.removeAllItems();
+
+            try {
+
+                while (resultSet.next()){
+
+                    String courseName = resultSet.getString("course");
+                    String courseId = resultSet.getString("course_id");
+
+                    row.add(courseName);
+
+                    courseHashMap.put(courseName,courseId);
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+            jComboBox3.setModel(new DefaultComboBoxModel<>(row));
+
+            loadAcademicPerformanceTable();
+
+        }
+
+    }
+
+    private void jComboBox3ItemStateChanged(java.awt.event.ItemEvent evt) {
+        // course
+        loadAcademicPerformanceTable();
+
+    }
+
     private void setUpAcademicPerformance() {
 
         jLabel19.setText(studentFullDetailModel.getDepartment());
         jLabel21.setText(studentFullDetailModel.getLevel());
         jLabel23.setText(studentFullDetailModel.getSemester());
-        jLabel25.setText(cgpa());
-        jLabel27.setText(sgpa());
+        jLabel25.setText(String.valueOf(cgpa(String.valueOf(studentFullDetailModel.getId()))));
+        jLabel27.setText(String.valueOf(sgpa(String.valueOf(studentFullDetailModel.getId()),Integer.parseInt(studentFullDetailModel.getSemester()))));
 
-        loadAcademicPerformanceTable();
+        loadLevelSemester();
+        loadCourses();
     }
 
-    private String sgpa() {
-        return "0.00";
+    private void loadLevelSemester() {
+
+        String levelQuery = "SELECT * FROM `undergraduate_level`";
+        ResultSet levelResultSet = DBConnection.search(levelQuery);
+        if (levelResultSet != null) {
+
+            Vector<String> v = new Vector<>();
+
+            try {
+
+                while(levelResultSet.next()){
+
+                    String level = levelResultSet.getString("level");
+                    String id = levelResultSet.getString("level_id");
+
+                    v.add(level);
+                    undergraduateLevelHashMap.put(level,id);
+
+                }
+
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+
+            jComboBox1.setModel(new DefaultComboBoxModel(v));
+
+        }
+
+        String semesterQuery = "SELECT * FROM `semester`";
+        ResultSet semesterResultSet = DBConnection.search(semesterQuery);
+        if (semesterResultSet != null) {
+
+            Vector<String> v = new Vector<>();
+
+            try {
+
+                while(semesterResultSet.next()){
+
+                    String semester = semesterResultSet.getString("semester");
+                    String id = semesterResultSet.getString("semester_id");
+
+                    v.add(semester);
+                    semesterHashMap.put(semester,id);
+
+                }
+
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+
+            jComboBox2.setModel(new DefaultComboBoxModel(v));
+
+        }
     }
 
-    private String cgpa() {
-        return "0.00";
+    public double sgpa(String studentId, int semesterId) {
+        double totalGradePoints = 0;
+        double totalCredits = 0;
+
+        try {
+            String query = "SELECT course.credit, marks.marks " +
+                    "FROM marks " +
+                    "INNER JOIN exam ON marks.exam_exam_id = exam.exam_id " +
+                    "INNER JOIN course ON exam.department_has_undergraduate_level_id = course.department_has_undergraduate_level_id " +
+                    "INNER JOIN department_has_undergraduate_level ON course.department_has_undergraduate_level_id = department_has_undergraduate_level.id " +
+                    "WHERE marks.student_user_id = ? AND department_has_undergraduate_level.semester_semester_id = ?";
+
+            ResultSet rs = DBConnection.search(query, studentId, semesterId);
+
+            while (rs != null && rs.next()) {
+                double credit = rs.getDouble("credit");
+                double marks = rs.getDouble("marks");
+                double gradePoint = getGradePoint(marks);
+
+                totalGradePoints += credit * gradePoint;
+                totalCredits += credit;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalCredits > 0 ? totalGradePoints / totalCredits : 0.0;
     }
 
-    private double getGradePoint(double mark) {
-        if (mark >= 85) return 4.0;
-        else if (mark >= 75) return 3.7;
-        else if (mark >= 65) return 3.3;
-        else if (mark >= 55) return 3.0;
-        else if (mark >= 45) return 2.7;
-        else if (mark >= 35) return 2.3;
+    public double cgpa(String studentId) {
+        double totalGradePoints = 0;
+        double totalCredits = 0;
+
+        try {
+            String query = "SELECT course.credit, marks.marks " +
+                    "FROM marks " +
+                    "INNER JOIN exam ON marks.exam_exam_id = exam.exam_id " +
+                    "INNER JOIN course ON exam.department_has_undergraduate_level_id = course.department_has_undergraduate_level_id " +
+                    "WHERE marks.student_user_id = ?";
+
+            ResultSet rs = DBConnection.search(query, studentId);
+
+            while (rs != null && rs.next()) {
+                double credit = rs.getDouble("credit");
+                double marks = rs.getDouble("marks");
+                double gradePoint = getGradePoint(marks);
+
+                totalGradePoints += credit * gradePoint;
+                totalCredits += credit;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalCredits > 0 ? totalGradePoints / totalCredits : 0.0;
+    }
+
+    private double getGradePoint(double marks) {
+        if (marks >= 85) return 4.0;
+        else if (marks >= 75) return 3.7;
+        else if (marks >= 65) return 3.3;
+        else if (marks >= 55) return 3.0;
+        else if (marks >= 45) return 2.7;
+        else if (marks >= 35) return 2.0;
         else return 0.0;
     }
 
     private void loadAcademicPerformanceTable() {
 
-        String query = "SELECT * FROM `course` " +
-                "INNER JOIN `department_has_undergraduate_level` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
-                "INNER JOIN `undergraduate_level` ON `department_has_undergraduate_level`.`undergraduate_level_level_id`=`undergraduate_level`.`level_id` " +
-                "INNER JOIN `semester` ON `semester`.`semester_id`=`department_has_undergraduate_level`.`semester_semester_id` " +
-                "INNER JOIN `student_has_department_has_undergraduate_level` ON `student_has_department_has_undergraduate_level`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
-                "INNER JOIN `student` ON `student`.`user_id`=`student_has_department_has_undergraduate_level`.`student_user_id` " +
-                "WHERE `student`.`user_id`=?";
+        String query = "SELECT * FROM `exam` " +
+                "INNER JOIN `marks` ON `exam`.`exam_id`=`marks`.`exam_exam_id` " +
+                "INNER JOIN `exam_type` ON `exam`.`exam_type_type_id`=`exam_type`.`type_id` " +
+                "WHERE `exam`.`course_course_id`=? AND `marks`.`student_user_id`=?";
 
-        ResultSet resultSet = DBConnection.search(query, studentFullDetailModel.getId());
+        ResultSet resultSet = DBConnection.search(query, courseHashMap.get(jComboBox3.getSelectedItem()),studentFullDetailModel.getId());
         if(resultSet!=null) {
 
             DefaultTableModel defaultTableModel = (DefaultTableModel) jTable2.getModel();
@@ -522,67 +770,12 @@ public class StudentDetailDialog extends JDialog {
 
                 while(resultSet.next()){
 
-                    String courseId = resultSet.getString("course_id");
-
-                    Vector<Object> row = new Vector<>();
-                    row.add(courseId);
-                    row.add(resultSet.getString("course"));
-
-                    String q2 = "SELECT * FROM `marks` " +
-                            "INNER JOIN `exam` ON `marks`.`exam_exam_id`=`exam`.`exam_id` " +
-                            "INNER JOIN `student` ON `student`.`user_id`=`marks`.`student_user_id` " +
-                            "INNER JOIN `department_has_undergraduate_level` ON `department_has_undergraduate_level`.`id`=`exam`.`department_has_undergraduate_level_id` " +
-                            "INNER JOIN `course` ON `course`.`department_has_undergraduate_level_id`=`department_has_undergraduate_level`.`id` " +
-                            "WHERE `student`.`user_id`=? AND `course`.`course_id`=?";
-                    ResultSet rs = DBConnection.search(q2, studentFullDetailModel.getId(), courseId);
-
-                    JTable jTable = new JTable();
-                    DefaultTableModel tableModel = new DefaultTableModel();
-                    jTable.setModel(tableModel);
-                    jTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-                    jTable.addColumn(new TableColumn());
-
-                    ArrayList<String> mal = new ArrayList<>();
-                    if(rs!=null) {
-
-                        while (rs.next()){
-                            Vector<String> r = new Vector<>();
-                            r.add(rs.getString("exam.exam_id"));
-
-                            tableModel.addRow(r);
-
-                            mal.add(rs.getString("marks.marks"));
-                        }
-                    }
-                    row.add(jTable);
-
-                    JTable jTable2 = new JTable();
-                    DefaultTableModel tableModel2 = new DefaultTableModel();
-                    jTable2.setModel(tableModel2);
-                    jTable2.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-                    jTable2.addColumn(new TableColumn());
-
-                    mal.forEach(mark->{
-                        Vector<String> r = new Vector<>();
-                        r.add(mark);
-
-                        tableModel2.addRow(r);
-                    });
-                    row.add(jTable2);
-
-                    JTable jTable3 = new JTable();
-                    DefaultTableModel tableModel3 = new DefaultTableModel();
-                    jTable3.setModel(tableModel3);
-                    jTable3.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-                    jTable3.addColumn(new TableColumn());
-
-                    mal.forEach(mark->{
-                        Vector<String> r = new Vector<>();
-                        r.add(gradeMark(Double.parseDouble(mark)));
-
-                        tableModel3.addRow(r);
-                    });
-                    row.add(jTable3);
+                    Vector<String> row = new Vector<>();
+                    row.add(resultSet.getString("exam_id"));
+                    row.add(resultSet.getString("date_time"));
+                    row.add(resultSet.getString("exam_type"));
+                    row.add(resultSet.getString("marks"));
+                    row.add(gradeMark(Double.parseDouble(resultSet.getString("marks"))));
 
                     defaultTableModel.addRow(row);
                 }

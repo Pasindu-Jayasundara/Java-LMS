@@ -1,7 +1,10 @@
 package view.lecturer.panels;
 
+import controller.callback.lecturer.UpdateExamMarksCallback;
 import controller.common.DBConnection;
 import controller.callback.lecturer.MarksUpdateCallBack;
+import controller.lecturer.coursePanel.ButtonRenderer;
+import controller.lecturer.exam.UpdateMarksButtonEditor;
 import model.ExamModel;
 import model.MarksModel;
 import view.lecturer.LecturerDashboard;
@@ -15,6 +18,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 public class ExamPanel extends JPanel {
+
     private JPanel panel1;
 
     private javax.swing.JButton jButton1;
@@ -26,95 +30,12 @@ public class ExamPanel extends JPanel {
 
     private final HashMap<String, ExamModel> examModelHashMap = new HashMap<>();
 
-    private void createUIComponents() {
-        initComponents();
+    public ExamPanel() {
         loadExams();
     }
 
-    private void loadExams() {
-
-        String query = "SELECT * FROM `exam` " +
-                "INNER JOIN `exam_type` ON `exam`.`exam_type_type_id`=`exam_type`.`type_id` " +
-                "INNER JOIN `marks` ON `marks`.`exam_exam_id`=`exam`.`exam_id` " +
-//                "INNER JOIN `marks_document` ON `marks_document`.`exam_exam_id`=`exam`.`exam_id` " +
-                "INNER JOIN `department_has_undergraduate_level` ON `department_has_undergraduate_level`.`id`=`exam`.`department_has_undergraduate_level_id` " +
-                "INNER JOIN `course` ON `department_has_undergraduate_level`.`id`=`course`.`department_has_undergraduate_level_id` " +
-                "INNER JOIN `lecturer` ON `course`.`lecturer_user_id`=`lecturer`.`user_id` " +
-                "WHERE `lecturer`.`user_id`=?";
-
-        ResultSet resultSet = DBConnection.search(query, LecturerDashboard.loginLecturerModel.getId());
-        if (resultSet != null) {
-
-            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
-            defaultTableModel.setRowCount(0);
-
-            try {
-
-                while (resultSet.next()) {
-
-                    String examId = resultSet.getString("exam.id");
-                    String courseName = resultSet.getString("course.course");
-                    String courseCode = resultSet.getString("course.course_code");
-                    String dateTime = resultSet.getString("exam.date_time");
-                    String venue = resultSet.getString("exam.venue");
-                    String desc = resultSet.getString("exam.description");
-                    String examType = resultSet.getString("exam_type.type");
-
-                    String q2 = "SELECT * FROM `marks_document` WHERE `exam_exam_id`=?";
-                    ResultSet rs = DBConnection.search(q2, examId);
-
-                    Vector<MarksModel> marksModelVector = new Vector<>();
-
-                    if(rs != null) {
-
-                        while (rs.next()) {
-
-                            MarksModel marksModel = new MarksModel();
-                            marksModel.setFileName(rs.getString("file_name"));
-                            marksModel.setUrl(rs.getString("url"));
-                            marksModel.setId(rs.getString("id"));
-
-                            marksModelVector.add(marksModel);
-                        }
-
-                    }
-
-                    ExamModel examModel = new ExamModel();
-                    examModel.setId(examId);
-                    examModel.setCourseName(courseName);
-                    examModel.setDateTime(dateTime);
-                    examModel.setVenue(venue);
-                    examModel.setDescription(desc);
-                    examModel.setCourseCode(courseCode);
-                    examModel.setExamType(examType);
-                    examModel.setMarksModel(marksModelVector);
-
-                    JButton updateMarksBtn = new JButton("Update Marks");
-                    updateMarksBtn.addActionListener(e -> {
-                        showMarksDialog(examModel);
-                    });
-
-                    Vector<Object> row = new Vector<>();
-                    row.add(examId);
-                    row.add(courseName);
-                    row.add(dateTime);
-                    row.add(venue);
-                    row.add(desc);
-                    row.add(examType);
-                    row.add(updateMarksBtn);
-
-                    defaultTableModel.addRow(row);
-
-                    examModelHashMap.put(examId, examModel);
-
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        }
-
+    private void createUIComponents() {
+        initComponents();
     }
 
     private void initComponents() {
@@ -150,14 +71,15 @@ public class ExamPanel extends JPanel {
                         "#", "Subject", "Date & Time", "Venue", "Description", "Type", ""
                 }
         ) {
-            final boolean[] canEdit = new boolean [] {
-                    false, false, false, false, false, false, false
+            boolean[] canEdit = new boolean [] {
+                    false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setPreferredWidth(10);
@@ -209,14 +131,16 @@ public class ExamPanel extends JPanel {
             loadTableRows(examModel,defaultTableModel);
 
         });
+
+        tableBtn();
     }
 
     private void loadTableRows(ExamModel examModel, DefaultTableModel defaultTableModel) {
 
-        JButton updateMarksBtn = new JButton("Update Marks");
-        updateMarksBtn.addActionListener(e -> {
-            showMarksDialog(examModel);
-        });
+//        JButton updateMarksBtn = new JButton("Update Marks");
+//        updateMarksBtn.addActionListener(e -> {
+//            showMarksDialog(examModel, selectedRow);
+//        });
 
         Vector<Object> row = new Vector<>();
         row.add(examModel.getId());
@@ -225,7 +149,7 @@ public class ExamPanel extends JPanel {
         row.add(examModel.getVenue());
         row.add(examModel.getDescription());
         row.add(examModel.getExamType());
-        row.add(updateMarksBtn);
+        row.add("Update Marks");
 
         defaultTableModel.addRow(row);
 
@@ -246,11 +170,108 @@ public class ExamPanel extends JPanel {
         examModelHashMap.forEach((examId, examModel) -> {
 
             if (examModel.getId().equals(searchText) || examModel.getCourseName().equals(searchText)) {
-
                 loadTableRows(examModel,defaultTableModel);
-
             }
         });
+
+        tableBtn();
+    }
+
+    private void tableBtn() {
+        jTable1.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
+        jTable1.getColumnModel().getColumn(6).setCellEditor(new UpdateMarksButtonEditor(new JCheckBox(),jTable1, new UpdateExamMarksCallback(){
+            @Override
+            public void onExamMarkUpdateBtnClick(String examId) {
+                showMarksDialog(examModelHashMap.get(examId));
+            }
+        }));
+    }
+
+    private void loadExams() {
+
+//                "INNER JOIN `marks_document` ON `marks_document`.`exam_exam_id`=`exam`.`exam_id` " +
+//                "INNER JOIN `marks` ON `marks`.`exam_exam_id`=`exam`.`exam_id` " +
+
+        String query = "SELECT * FROM `exam` " +
+                "INNER JOIN `exam_type` ON `exam`.`exam_type_type_id`=`exam_type`.`type_id` " +
+                "INNER JOIN `course` ON `exam`.`course_course_id`=`course`.`course_id` " +
+                "INNER JOIN `lecturer` ON `course`.`lecturer_user_id`=`lecturer`.`user_id` " +
+                "WHERE `lecturer`.`user_id`=?";
+
+        ResultSet resultSet = DBConnection.search(query, LecturerDashboard.loginLecturerModel.getId());
+        if (resultSet != null) {
+
+            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            defaultTableModel.setRowCount(0);
+
+            try {
+
+                while (resultSet.next()) {
+
+                    String examId = resultSet.getString("exam.exam_id");
+                    String courseName = resultSet.getString("course.course");
+                    String courseCode = resultSet.getString("course.course_code");
+                    String dateTime = resultSet.getString("exam.date_time");
+                    String venue = resultSet.getString("exam.venue");
+                    String desc = resultSet.getString("exam.description");
+                    String examType = resultSet.getString("exam_type.exam_type");
+
+                    String q2 = "SELECT * FROM `marks_document` WHERE `exam_exam_id`=?";
+                    ResultSet rs = DBConnection.search(q2, examId);
+
+                    Vector<MarksModel> marksModelVector = new Vector<>();
+
+                    if(rs != null) {
+
+                        while (rs.next()) {
+
+                            MarksModel marksModel = new MarksModel();
+                            marksModel.setFileName(rs.getString("file_name"));
+                            marksModel.setUrl(rs.getString("url"));
+                            marksModel.setId(rs.getString("id"));
+
+                            marksModelVector.add(marksModel);
+                        }
+
+                    }
+
+                    ExamModel examModel = new ExamModel();
+                    examModel.setId(examId);
+                    examModel.setCourseName(courseName);
+                    examModel.setDateTime(dateTime);
+                    examModel.setVenue(venue);
+                    examModel.setDescription(desc);
+                    examModel.setCourseCode(courseCode);
+                    examModel.setExamType(examType);
+                    examModel.setMarksModel(marksModelVector);
+
+//                    JButton updateMarksBtn = new JButton("Update Marks");
+//                    updateMarksBtn.addActionListener(e -> {
+//                        showMarksDialog(examModel);
+//                    });
+
+                    Vector<Object> row = new Vector<>();
+                    row.add(examId);
+                    row.add(courseName);
+                    row.add(dateTime);
+                    row.add(venue);
+                    row.add(desc);
+                    row.add(examType);
+                    row.add("Update Marks");
+
+                    defaultTableModel.addRow(row);
+
+                    examModelHashMap.put(examId, examModel);
+
+                }
+
+                tableBtn();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
 
     }
 
@@ -260,6 +281,7 @@ public class ExamPanel extends JPanel {
             @Override
             public void onUpdateMarks(boolean isUpdated) {
                 if(isUpdated){
+
                     examModelHashMap.clear();
                     loadExams();
                 }

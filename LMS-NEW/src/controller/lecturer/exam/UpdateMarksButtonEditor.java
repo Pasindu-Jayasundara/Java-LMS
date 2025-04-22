@@ -1,20 +1,21 @@
-package controller.lecturer.studentPanel;
+package controller.lecturer.exam;
 
 import controller.callback.lecturer.MoreInfoCallback;
+import controller.callback.lecturer.UpdateExamMarksCallback;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MoreInfoButtonEditor extends DefaultCellEditor{
+public class UpdateMarksButtonEditor extends DefaultCellEditor{
 
     private JButton button;
-    private MoreInfoCallback moreInfoCallback;
+    private UpdateExamMarksCallback updateExamMarksCallback;
 
-    public MoreInfoButtonEditor(JCheckBox checkBox, MoreInfoCallback moreInfoCallback) {
+    public UpdateMarksButtonEditor(JCheckBox checkBox, JTable table, UpdateExamMarksCallback updateExamMarksCallback) {
         super(checkBox);
-        this.moreInfoCallback = moreInfoCallback;
+        this.updateExamMarksCallback = updateExamMarksCallback;
     }
 
     public Component getTableCellEditorComponent(JTable table, Object value,
@@ -26,7 +27,9 @@ public class MoreInfoButtonEditor extends DefaultCellEditor{
 
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                moreInfoCallback.onMoreInfoCallback(table.getValueAt(row, 0).toString());
+
+                String examId = table.getValueAt(row, 0).toString();
+                updateExamMarksCallback.onExamMarkUpdateBtnClick(examId);
             }
         });
         return button;
