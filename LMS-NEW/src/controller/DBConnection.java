@@ -6,7 +6,7 @@ public class DBConnection {
 
     private static final String URL = "jdbc:mysql://localhost/java_lms ";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "Pasindu328@Bhathiya";
+    private static final String PASSWORD = "1234";
 
     private static Connection connection;
 
