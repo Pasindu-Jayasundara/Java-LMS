@@ -14,7 +14,7 @@ public class TimePickerDialog extends JDialog {
     private javax.swing.JPanel jPanel1;
     private raven.datetime.TimePicker timePicker1;
 
-    private TimeSelectCallback timeSelectCallback;
+    private final TimeSelectCallback timeSelectCallback;
     private String time;
 
     public TimePickerDialog(CoursePanel coursePanel, TimeSelectCallback timeSelectCallback) {

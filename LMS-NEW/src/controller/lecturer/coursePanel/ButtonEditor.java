@@ -16,9 +16,9 @@ import java.io.File;
 public class ButtonEditor extends DefaultCellEditor {
 
     private JButton button;
-    private Object coursePanel;
+    private final Object coursePanel;
     private MaterialTableLoadCallback materialTableLoadCallback;
-    private String basePath = System.getProperty("user.dir");
+    private final String basePath = System.getProperty("user.dir");
 
     public boolean deleteFromMarks;
 

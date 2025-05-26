@@ -71,7 +71,7 @@ public class ExamPanel extends JPanel {
                         "#", "Subject", "Date & Time", "Venue", "Description", "Type", ""
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false, false, false, true
             };
 
@@ -207,7 +207,7 @@ public class ExamPanel extends JPanel {
             try {
 
                 while (resultSet.next()) {
-
+                    
                     String examId = resultSet.getString("exam.exam_id");
                     String courseName = resultSet.getString("course.course");
                     String courseCode = resultSet.getString("course.course_code");

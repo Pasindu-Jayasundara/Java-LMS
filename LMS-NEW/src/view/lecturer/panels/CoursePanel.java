@@ -109,7 +109,7 @@ public class CoursePanel extends JPanel {
     public static HashMap<String, SemesterModel> semesterHashMap = new HashMap<>();
     public static HashMap<String, UndergraduateLevelModel> levelHashMap = new HashMap<>();
 
-    private static HashMap<String, String> lecturerHashMap = new HashMap<>();
+    private static final HashMap<String, String> lecturerHashMap = new HashMap<>();
 
     private HashMap<String, String> selectedPdfFile;
     private CourseModel courseModel;
@@ -221,7 +221,7 @@ public class CoursePanel extends JPanel {
                         "#", "Code", "Name", "Credit", "Days"
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
+            final boolean[] canEdit = new boolean[]{
                     false, false, false, false, false
             };
 
@@ -338,7 +338,7 @@ public class CoursePanel extends JPanel {
                         "#", "Day", "From", "To"
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
+            final boolean[] canEdit = new boolean[]{
                     false, false, false, false
             };
 
@@ -652,7 +652,7 @@ public class CoursePanel extends JPanel {
                         "#", "File Name", "Uploaded At", "", "", ""
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
+            final boolean[] canEdit = new boolean[]{
                     false, false, false, false, true, true
             };
 

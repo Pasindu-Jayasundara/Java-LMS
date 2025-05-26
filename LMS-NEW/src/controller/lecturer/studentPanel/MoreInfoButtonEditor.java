@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 public class MoreInfoButtonEditor extends DefaultCellEditor{
 
     private JButton button;
-    private MoreInfoCallback moreInfoCallback;
+    private final MoreInfoCallback moreInfoCallback;
 
     public MoreInfoButtonEditor(JCheckBox checkBox, MoreInfoCallback moreInfoCallback) {
         super(checkBox);

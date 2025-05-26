@@ -76,7 +76,7 @@ public class StudentPanel extends JPanel{
                         "TG Number", "Name", "Year", "Contact", ""
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false, true
             };
 

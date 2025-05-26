@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 public class UpdateMarksButtonEditor extends DefaultCellEditor{
 
     private JButton button;
-    private UpdateExamMarksCallback updateExamMarksCallback;
+    private final UpdateExamMarksCallback updateExamMarksCallback;
 
     public UpdateMarksButtonEditor(JCheckBox checkBox, JTable table, UpdateExamMarksCallback updateExamMarksCallback) {
         super(checkBox);

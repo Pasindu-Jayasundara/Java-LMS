@@ -308,7 +308,7 @@ public class StudentDetailDialog extends JDialog {
                         "#", "Subject", "Eligibility for Final Exam"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false
             };
 
@@ -368,7 +368,7 @@ public class StudentDetailDialog extends JDialog {
                         "Exam ID", "Date Time", "Exam Type", "Marks", "Grade"
                 }
         ) {
-            boolean[] canEdit = new boolean [] {
+            final boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
 

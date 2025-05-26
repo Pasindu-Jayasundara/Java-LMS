@@ -59,7 +59,7 @@ public class MarksDialog extends JDialog {
     private javax.swing.JTable jTable2;
     private javax.swing.JTextArea jTextArea1;
 
-    private ExamModel examModel;
+    private final ExamModel examModel;
     private HashMap<String, String> pdfFile;
     private final MarksUpdateCallBack marksUpdateCallBack;
 
@@ -194,7 +194,7 @@ public class MarksDialog extends JDialog {
                         "#", "File Name", "", "", ""
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
+            final boolean[] canEdit = new boolean[]{
                     false, false, false, true, true
             };
 
@@ -252,7 +252,7 @@ public class MarksDialog extends JDialog {
                         "#", "Reg Number", "Name", "Marks"
                 }
         ) {
-            boolean[] canEdit = new boolean[]{
+            final boolean[] canEdit = new boolean[]{
                     false, false, false, true
             };
 
@@ -637,7 +637,6 @@ public class MarksDialog extends JDialog {
                         defaultTableModel.setRowCount(0);
                         loadTableRows(defaultTableModel);
 
-                        return;
                     }
                 });
 
